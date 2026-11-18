@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+NOMBRE : CHRISTIAN FABIÁN CORTÉS PÉREZ
+RUT: 20.236.190-0
