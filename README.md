@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Vicente Diaz torrejon
+RUT: 21.812640-5
