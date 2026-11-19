@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Matias Ignacio Rojas Rojas
+RUT: 20.543.873-4
