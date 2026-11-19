@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+Nicole Pastenes Bravo
+21.640.082-8
