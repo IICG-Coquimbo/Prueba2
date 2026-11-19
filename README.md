@@ -1,2 +1,3 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+"# Juan Ega¤a Bianchi" 
+"" 
+"RUT: 21.178.291-9" 
