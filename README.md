@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+﻿# Benjamín Ignacio Mendoza López
+RUT: 21.381.628-4
