@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+"Nombre completo: Juan Pablo Salas" 
+"RUT: 21.606.329-5" 
