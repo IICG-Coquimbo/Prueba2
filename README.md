@@ -1,2 +1,6 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Sofia Parra
+
+# 
+
+# RUT: 22003436-4
+
