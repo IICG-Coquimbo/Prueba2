@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+Camilo Felipe Arcos Portilla
+RUT: 20.864.319-9
