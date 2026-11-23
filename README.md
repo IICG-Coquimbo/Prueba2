@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Benjamín Miranda Ramírez
+RUT: 21.987.026-4
