@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Josefa Constanza Diaz Tabilo
+Rut: 21.985.074-3
