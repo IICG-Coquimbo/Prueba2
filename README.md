@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Jonathan Gonzalez
+RUT: 22.117.771-1
