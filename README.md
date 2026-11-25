@@ -1,2 +1,6 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# \#Natalia Andrea Pastén Henríquez
+
+Rut: 22.014.132-2
+
+
+
