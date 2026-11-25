@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+Josue Illanes Mena 
+RUT: 22014416k
