@@ -1,2 +1,2 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+Rodrigo Michea Gonzalez 
+RUT: 21.742.305-8
