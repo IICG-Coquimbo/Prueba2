@@ -1,2 +1,3 @@
-# Antonia Navarro Guzman
-RUT: 21.892.355-0
+# Datos de la estudiante
+- Nombre completo: Martina Cortes
+- RUT: 21716576-8
