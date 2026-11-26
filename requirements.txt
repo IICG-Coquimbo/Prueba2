@@ -3,3 +3,9 @@ python-dotenv>=1.0.0
 psycopg2-binary>=2.9
 Pillow
 django-jazzmin>=3.0
+
+## Datos del estudiante
+
+**Nombre completo:** Anais Araya Gómez
+
+**RUT:** 21.520.337-9
