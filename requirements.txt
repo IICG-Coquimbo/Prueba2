@@ -3,3 +3,8 @@ python-dotenv>=1.0.0
 psycopg2-binary>=2.9
 Pillow
 django-jazzmin>=3.0
+
+##datos personales
+
+**nombre**: katalina venegas muñoz
+**rut**:21.650.772-k
