@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Ranking de repartidores</h2>
+<table class="table table-striped">
+  <thead>
+    <tr>
+      <th>Repartidor</th>
+      <th>Entregas</th>
+      <th>Minutos promedio</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for repartidor, entregas, minutos in ranking %}
+    <tr>
+      <td>{{ repartidor.get_full_name|default:repartidor.username }}</td>
+      <td>{{ entregas }}</td>
+      <td>{{ minutos|default:"—" }}</td>
+    </tr>
+    {% empty %}
+    <tr>
+      <td colspan="3">No hay datos de repartidores.</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Pasarela de pago</h2>
+<p>Referencia de pago: {{ referencia }}</p>
+<form method="post">
+  {% csrf_token %}
+  {{ form.as_p }}
+  <button type="submit" name="resultado" value="exitoso" class="btn btn-success mx-2">Pago exitoso</button>
+  <button type="submit" name="resultado" value="fallido" class="btn btn-danger">Pago fallido</button>
+</form>
+{% endblock %}

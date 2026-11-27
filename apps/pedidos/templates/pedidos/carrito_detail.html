@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Carrito</h2>
+
+{% if pedido.items.count > 0 %}
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Producto</th>
+        <th>Cantidad</th>
+        <th>Precio unit.</th>
+        <th>Opciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>{{ item.precio_unitario|floatformat:"0g" }}</td>
+        <td>
+          {% for op in item.opciones.all %}
+            {{ op.nombre }}({{ op.tipo }})<br>
+          {% empty %}
+            Ninguna
+          {% endfor %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="4">No hay items en el carrito.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+<p><strong>Descuento:</strong> ${{ pedido.descuento|floatformat:"0g" }}</p>
+<p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+{% else %}
+<p>El carrito está vacío. <a href="{% url 'catalogo:producto_list' %}">Agregar productos</a>.</p>
+{% endif %}
+{% endblock %}

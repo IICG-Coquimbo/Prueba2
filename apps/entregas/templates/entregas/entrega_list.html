@@ -1,0 +1,39 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Entregas</h2>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Pedido</th>
+        <th>Repartidor</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Minutos</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for e in entregas %}
+      <tr>
+        <td>{{ e.pedido.pk }}</td>
+        <td>{% if e.repartidor %}{{ e.repartidor.get_full_name|default:e.repartidor.username }}{% else %}Sin asignar{% endif %}</td>
+        <td{% if e.inicio %}{{ e.inicio|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+        <td{% if e.fin %}{{ e.fin|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+        <td{% if e.minutos is not None %}{{ e.minutos }}{% else %}—{% endif %}</td>
+        <td>
+          {% if user.is_staff %}
+          <a href="{% url 'entregas:asignar' e.pk %}" class="btn btn-sm btn-primary">Asignar repartidor</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="6">No hay entregas.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

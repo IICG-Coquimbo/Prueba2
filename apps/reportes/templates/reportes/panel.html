@@ -1,0 +1,15 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Panel de reportes</h2>
+<p>Ventas del día de hoy: ${{ ventas_hoy|floatformat:"0g" }}</p>
+<p>Ventas de los últimos 7 días: ${{ ventas_7dias|floatformat:"0g" }}</p>
+<h3>Productos más pedidos</h3>
+<ul>
+  {% for producto, total in productos_mas_pedidos %}
+  <li>{{ producto.nombre }} - {{ total }} unidades</li>
+  {% empty %}
+  <li>No hay datos de productos pedidos.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Producto: {{ producto.nombre }}</h2>
+<p><strong>Descripción:</strong> {{ producto.descripcion|default:"Sin descripción" }}</p>
+<p><strong>Precio:</strong> ${{ producto.precio|floatformat:"0g" }}</p>
+<p><strong>Disponible:</strong> {% if producto.disponible %}Sí{% else %}No{% endif %}</p>
+<p><strong>Categoría:</strong> {{ producto.categoria.nombre }}</p>
+
+<h3>Opciones</h3>
+<ul>
+  {% for opcion in producto.opciones.all %}
+  <li>{{ opcion.nombre }} - Recargo: ${{ opcion.recargo|floatformat:"0g" }}</li>
+  {% empty %}
+  <li>No hay opciones.</li>
+  {% endfor %}
+</ul>
+{% endblock %}

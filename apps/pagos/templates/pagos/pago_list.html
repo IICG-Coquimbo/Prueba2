@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Historial de pagos</h2>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Fecha</th>
+        <th>Pedido</th>
+        <th>Método</th>
+        <th>Monto</th>
+        <th>Estado</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for p in pagos %}
+      <tr>
+        <td>{{ p.fecha|date:"d/m/Y H:i" }}</td>
+        <td>{{ p.pedido.pk }}</td>
+        <td>{{ p.get_metodo_display }}</td>
+        <td>${{ p.monto|floatformat:"0g" }}</td>
+        <td>{{ p.get_estado_display }}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No hay pagos registrados.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

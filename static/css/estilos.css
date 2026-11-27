@@ -1,0 +1,47 @@
+:root {
+    --color-primario: #5D4037;   /* cafe: menu, botones principales */
+    --color-secundario: #3E2723; /* cafe oscuro: pie de pagina */
+    --color-acento: #E0A030;     /* ambar: detalles y alertas */
+    --color-fondo: #FAF6F0;      /* fondo de la pagina */
+    --color-texto: #2B2B2B;      /* texto */
+}
+
+/* Ajustes adicionales de Bootstrap */
+.btn-primary {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+.btn-primary:hover {
+    background-color: #4e342e;
+    border-color: #4e342e;
+}
+
+.alert {
+    border-color: var(--color-primario);
+}
+
+/* Contenedores con color de fondo */
+.bg-color-fondo {
+    background-color: var(--color-fondo);
+}
+
+.bg-color-secundario {
+    background-color: var(--color-secundario);
+    color: white;
+}
+
+/* Tablas responsivas */
+.table-responsive {
+    border: 1px solid var(--color-primario);
+}
+
+/* Tarjetas */
+.card {
+    border-color: var(--color-primario);
+}
+
+/* Hover effects para links */
+.nav-link:hover {
+    color: var(--color-acento);
+}

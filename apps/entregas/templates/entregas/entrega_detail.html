@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h2>Entrega #{{ entrega.pedido.pk }}</h2>
+<p><strong>Repartidor:</strong> {% if entrega.repartidor %}{{ entrega.repartidor.get_full_name|default:entrega.repartidor.username }}{% else %}Sin asignar{% endif %}</p>
+<p><strong>Inicio:</strong> {% if entrega.inicio %}{{ entrega.inicio|date:"d/m/Y H:i" }}{% else %}—{% endif %}</p>
+<p><strong>Fin:</strong> {% if entrega.fin %}{{ entrega.fin|date:"d/m/Y H:i" }}{% else %}—{% endif %}</p>
+<p><strong>Minutos:</strong> {% if entrega.minutos is not None %}{{ entrega.minutos }}{% else %}—{% endif %}</p>
+{% if user.is_staff %}
+<p><a href="{% url 'entregas:asignar' entrega.pk %}" class="btn btn-primary">Asignar o cambiar repartidor</a></p>
+{% endif %}
+{% endblock %}
