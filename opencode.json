@@ -1,4 +1,5 @@
 {
+  "$schema": "https://opencode.ai/config.json",
   "instructions": [
     "docs/modelo_datos.md",
     "docs/reglas_base_datos.md"
