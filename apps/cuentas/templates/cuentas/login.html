@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% block title %}Iniciar sesión{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 col-lg-4">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h3 mb-4 text-center">Iniciar sesión</h1>
+          <form method="post">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" %}
+            <button type="submit" class="btn btn-acento w-100">Iniciar sesión</button>
+          </form>
+          <p class="mt-3 mb-0 text-center">
+            ¿No tienes cuenta? <a href="{% url 'cuentas:registro' %}">Regístrate aquí</a>
+          </p>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

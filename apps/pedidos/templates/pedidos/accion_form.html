@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+{% block title %}Acción - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <h1 class="h3">Confirmar acción</h1>
+      <form method="post">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-primario w-100">Confirmar</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

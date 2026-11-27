@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Mis direcciones{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-3">
+    <h1 class="h3 mb-0">Mis direcciones</h1>
+    {% if perms.cuentas.add_direccion %}
+    <a class="btn btn-acento" href="{% url 'cuentas:direccion_create' %}">Nueva dirección</a>
+    {% endif %}
+  </div>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th scope="col">Alias</th>
+          <th scope="col">Dirección</th>
+          <th scope="col">Referencia</th>
+          <th scope="col">Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for direccion in object_list %}
+        <tr>
+          <td>{{ direccion.alias }}</td>
+          <td>{{ direccion.direccion }}</td>
+          <td>{{ direccion.referencia|default:"—" }}</td>
+          <td>
+            {% if perms.cuentas.change_direccion %}
+            <a class="btn btn-sm btn-outline-primary" href="{% url 'cuentas:direccion_update' direccion.pk %}">Editar</a>
+            {% endif %}
+            {% if perms.cuentas.delete_direccion %}
+            <a class="btn btn-sm btn-outline-danger" href="{% url 'cuentas:direccion_delete' direccion.pk %}">Borrar</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4" class="text-center">No tienes direcciones registradas.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}

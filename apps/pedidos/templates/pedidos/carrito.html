@@ -1,0 +1,94 @@
+{% extends "base.html" %}
+{% block title %}Carrito - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h3">Tu carrito</h1>
+      <p class="text-muted">Pedido #{{ object.pk }} · {{ object.get_estado_display }}</p>
+      {% if object.items.all %}
+      <div class="table-responsive">
+        <table class="table align-middle">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Subtotal</th>
+              <th></th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in object.items.all %}
+            <tr>
+              <td>
+                <strong>{{ item.producto.nombre }}</strong>
+                {% if item.opciones.all %}
+                <div class="small text-muted">
+                  {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                </div>
+                {% endif %}
+              </td>
+              <td>{{ item.cantidad }}</td>
+              <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+              <td>
+                {% widthratio item.cantidad 1 item.precio_unitario as importe %}
+                ${{ importe|floatformat:"0g" }}
+              </td>
+              <td>
+                {% url 'pedidos:item_quitar' item.pk as url_quitar %}
+                {% if url_quitar %}
+                <form method="post" action="{{ url_quitar }}">
+                  {% csrf_token %}
+                  {% include "parciales/form_campos.html" with form=quitar_form %}
+                  <button type="submit" class="btn btn-sm btn-outline-secondary">Quitar</button>
+                </form>
+                {% endif %}
+              </td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+      {% else %}
+      <p>Tu carrito está vacío.</p>
+      {% endif %}
+
+      <div class="card tarjeta-modulo mb-4">
+        <div class="card-body">
+          <p class="mb-1">Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+          {% if object.codigo_descuento %}
+          <p class="mb-1">Descuento ({{ object.codigo_descuento.codigo }}): ${{ object.descuento|floatformat:"0g" }}</p>
+          {% endif %}
+          <p class="h4 mb-0">Total: ${{ object.total|floatformat:"0g" }}</p>
+        </div>
+      </div>
+
+      <div class="row g-4">
+        <div class="col-12 col-md-6">
+          <h2 class="h5">Aplicar código de descuento</h2>
+          {% url 'pedidos:carrito_codigo' as url_codigo %}
+          {% if url_codigo %}
+          <form method="post" action="{{ url_codigo }}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" with form=codigo_form %}
+            <button type="submit" class="btn btn-acento">Aplicar código</button>
+          </form>
+          {% endif %}
+        </div>
+        <div class="col-12 col-md-6">
+          <h2 class="h5">Finalizar</h2>
+          {% url 'pedidos:carrito_confirmar' as url_confirmar %}
+          {% if url_confirmar %}
+          <form method="post" action="{{ url_confirmar }}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" with form=confirmar_form %}
+            <button type="submit" class="btn btn-lg btn-primario w-100">Confirmar pedido</button>
+          </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

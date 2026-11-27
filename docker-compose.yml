@@ -13,7 +13,8 @@ services:
 
   web:
     build: .
-    command: python manage.py runserver 127.0.0.1:8000
+    working_dir: /app/cafe_proyecto
+    command: python manage.py runserver 0.0.0.0:8000
     volumes:
       - .:/app
     ports:
@@ -21,7 +22,8 @@ services:
     env_file:
       - .env
     environment:
-      DJANGO_SETTINGS_MODULE: proyecto.settings
+      DJANGO_SETTINGS_MODULE: cafe_proyecto.settings
+      PYTHONPATH: /app
     depends_on:
       - db
 

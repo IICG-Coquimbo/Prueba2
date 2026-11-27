@@ -1,0 +1,63 @@
+{% extends "base.html" %}
+{% block title %}Reportes - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <h1>Reportes</h1>
+  <p class="lead">Indicadores de ventas y productos del negocio.</p>
+
+  <div class="row g-3">
+    <div class="col-12 col-md-6">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h2 class="h5 card-title">Ventas de hoy</h2>
+          <p class="card-text display-6">${{ ventas_hoy|floatformat:"0g" }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h2 class="h5 card-title">Ventas de los últimos 7 días</h2>
+          <p class="card-text display-6">${{ ventas_semana|floatformat:"0g" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="row g-3 mt-3">
+    <div class="col-12">
+      <div class="card h-100">
+        <div class="card-body">
+          <h2 class="h5 card-title">Productos más pedidos</h2>
+          <div class="table-responsive">
+            <table class="table">
+              <thead>
+                <tr>
+                  <th>Producto</th>
+                  <th>Unidades pedidas</th>
+                </tr>
+              </thead>
+              <tbody>
+                {% for producto in productos %}
+                <tr>
+                  <td>{{ producto.nombre }}</td>
+                  <td>{{ producto.total_unidades }}</td>
+                </tr>
+                {% empty %}
+                <tr>
+                  <td colspan="2">No hay productos pedidos.</td>
+                </tr>
+                {% endfor %}
+              </tbody>
+            </table>
+          </div>
+          {% url 'reportes:reporte_repartidores' as url_repartidores %}
+          {% if url_repartidores %}
+          <a class="btn btn-lg btn-primario w-100" href="{{ url_repartidores }}">Ver ranking de repartidores</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

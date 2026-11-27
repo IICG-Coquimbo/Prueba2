@@ -1,0 +1,87 @@
+{% extends "base.html" %}
+{% block title %}Pedido #{{ object.pk }} - Cafe Rincon{% endblock %}
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-12">
+      <h1 class="h3">Pedido #{{ object.pk }}</h1>
+      <p class="mb-1">Estado: <strong>{{ object.get_estado_display }}</strong></p>
+      <p class="text-muted">{{ object.creado|date:"d/m/Y H:i" }}</p>
+
+      <h2 class="h5 mt-4">Productos</h2>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Opciones</th>
+              <th>Cantidad</th>
+              <th>Precio unitario</th>
+              <th>Subtotal</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for item in object.items.all %}
+            <tr>
+              <td>{{ item.producto.nombre }}</td>
+              <td>
+                {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}-{% endfor %}
+              </td>
+              <td>{{ item.cantidad }}</td>
+              <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+              <td>
+                {% widthratio item.cantidad 1 item.precio_unitario as importe %}
+                ${{ importe|floatformat:"0g" }}
+              </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">Sin productos.</td></tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+
+      <div class="mb-4">
+        <p class="mb-1">Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+        {% if object.codigo_descuento %}
+        <p class="mb-1">Descuento ({{ object.codigo_descuento.codigo }}): ${{ object.descuento|floatformat:"0g" }}</p>
+        {% endif %}
+        <p class="h4">Total: ${{ object.total|floatformat:"0g" }}</p>
+      </div>
+
+      {% if ver_datos %}
+      <div class="card tarjeta-modulo mb-4">
+        <div class="card-body">
+          <h2 class="h5 card-title">Datos de entrega</h2>
+          <p class="card-text mb-1">{{ object.direccion.direccion }}</p>
+          {% if object.direccion.referencia %}
+          <p class="card-text mb-1">Referencia: {{ object.direccion.referencia }}</p>
+          {% endif %}
+          <p class="card-text mb-0">Teléfono: {{ object.cliente.perfil.telefono }}</p>
+        </div>
+      </div>
+      {% endif %}
+
+      <h2 class="h5">Historial</h2>
+      <ul class="list-group mb-4">
+        {% for cambio in historial %}
+        <li class="list-group-item d-flex justify-content-between gap-2">
+          <span>{{ cambio.get_estado_display }}</span>
+          <span class="text-muted">{{ cambio.fecha|date:"d/m/Y H:i" }}</span>
+        </li>
+        {% empty %}
+        <li class="list-group-item">Sin cambios registrados.</li>
+        {% endfor %}
+      </ul>
+
+      {% url 'pedidos:pedido_estado' object.pk as url_estado %}
+      {% if url_estado %}
+      {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+      <a class="btn btn-lg btn-primario" href="{{ url_estado }}">Cambiar estado</a>
+      {% endif %}
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+{% block title %}Pago - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <h1 class="h3">Pasarela de pago</h1>
+      <p class="mb-1">Pedido #{{ pago.pedido_id }}</p>
+      <p class="h4">Monto: ${{ pago.monto|floatformat:"0g" }}</p>
+      <p class="text-muted small">Referencia: {{ pago.referencia }}</p>
+      <form method="post">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-primario w-100">Enviar resultado</button>
+      </form>
+    </div>
+  </div>
+</div>
+{% endblock %}

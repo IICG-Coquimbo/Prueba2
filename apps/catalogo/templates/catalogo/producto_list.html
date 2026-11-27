@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+  <h1 class="h2 mb-4">Menú</h1>
+  <div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+    {% for producto in object_list %}
+    <div class="col">
+      <div class="card h-100 tarjeta-modulo">
+        {% if producto.imagen_url %}
+        <img src="{{ producto.imagen_url }}" class="card-img-top" alt="{{ producto.nombre }}">
+        {% endif %}
+        <div class="card-body d-flex flex-column">
+          <h2 class="h5 card-title">
+            {{ producto.nombre }}
+            {% if not producto.disponible %}<span class="badge text-bg-secondary">No disponible</span>{% endif %}
+          </h2>
+          {% if producto.descripcion %}<p class="card-text">{{ producto.descripcion }}</p>{% endif %}
+          <p class="card-text fw-bold">${{ producto.precio|floatformat:"0g" }}</p>
+          <a class="btn btn-lg btn-primario w-100 mt-auto" href="{% url 'catalogo:producto_detail' producto.pk %}">Ver detalle</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p>No hay productos.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

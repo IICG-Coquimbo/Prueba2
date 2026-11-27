@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container py-4">
+  <div class="row justify-content-center">
+    <div class="col-12 col-lg-6">
+      <div class="card tarjeta-modulo">
+        <div class="card-body">
+          <h1 class="h3 card-title">Agregar al carrito</h1>
+          <form method="post">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" %}
+            <button type="submit" class="btn btn-lg btn-primario w-100">Agregar al carrito</button>
+            <a class="btn btn-lg btn-outline-secondary w-100 mt-2" href="{% url 'catalogo:producto_list' %}">Cancelar</a>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

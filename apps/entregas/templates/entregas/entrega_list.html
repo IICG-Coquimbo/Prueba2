@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block title %}Entregas - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-4">
+  <div class="row">
+    <div class="col-12">
+      <h1>Entregas</h1>
+      <p class="lead">Pedidos listos para despacho y en camino.</p>
+    </div>
+  </div>
+
+  <div class="row g-3">
+    {% for pedido in object_list %}
+    <div class="col-12 col-md-6">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-2">
+            <h2 class="h5 card-title">Pedido #{{ pedido.pk }}</h2>
+            <span class="badge bg-acento">{{ pedido.get_estado_display }}</span>
+          </div>
+          <p class="card-text mb-1"><strong>Hora:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+          <p class="card-text mb-1">
+            <strong>Productos:</strong>
+            {% for item in pedido.items.all %}
+              {{ item.cantidad }} x {{ item.producto.nombre }}{% if not forloop.last %}, {% endif %}
+            {% empty %}
+              Sin productos
+            {% endfor %}
+          </p>
+          {% if pedido.direccion %}
+          <p class="card-text mb-1"><strong>Dirección:</strong> {{ pedido.direccion.direccion }}</p>
+          {% endif %}
+          <p class="card-text mb-1"><strong>Cliente:</strong> {{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</p>
+          {% if pedido.cliente.perfil.telefono %}
+          <p class="card-text mb-1"><strong>Teléfono:</strong> {{ pedido.cliente.perfil.telefono }}</p>
+          {% endif %}
+          <a class="btn btn-lg btn-primario w-100 mt-3" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <div class="col-12">
+      <p>No hay pedidos para despachar.</p>
+    </div>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}
