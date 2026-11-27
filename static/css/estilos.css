@@ -1,0 +1,82 @@
+:root {
+  --color-primario: #5D4037;
+  --color-secundario: #3E2723;
+  --color-acento: #E0A030;
+  --color-fondo: #FAF6F0;
+  --color-texto: #2B2B2B;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+a {
+  color: var(--color-primario);
+}
+
+a:hover,
+a:focus {
+  color: var(--color-secundario);
+}
+
+.navbar-cafe {
+  background-color: var(--color-primario);
+}
+
+.navbar-cafe .navbar-brand,
+.navbar-cafe .nav-link,
+.navbar-cafe .navbar-toggler {
+  color: var(--color-fondo);
+}
+
+.navbar-cafe .nav-link:hover,
+.navbar-cafe .nav-link:focus {
+  color: var(--color-acento);
+}
+
+.navbar-cafe .nav-link {
+  padding: 0.5rem 0.25rem;
+}
+
+@media (min-width: 992px) {
+  .navbar-cafe .nav-link {
+    padding: 0.5rem 0.75rem;
+  }
+}
+
+.btn-primary,
+.btn-outline-primary:hover,
+.btn-outline-primary:focus {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-fondo);
+}
+
+.btn-outline-primary {
+  border-color: var(--color-primario);
+  color: var(--color-primario);
+}
+
+.btn-lg,
+.btn-accion {
+  min-height: 3rem;
+}
+
+.card {
+  border-color: var(--color-acento);
+}
+
+.footer-cafe {
+  background-color: var(--color-secundario);
+}
+
+.con-barra-fija {
+  padding-bottom: 6rem;
+}
+
+@media (min-width: 768px) {
+  .con-barra-fija {
+    padding-bottom: 5rem;
+  }
+}

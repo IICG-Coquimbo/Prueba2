@@ -1,0 +1,35 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Entregas</h1>
+
+    {% if pedidos %}
+    <div class="row g-3">
+        {% for pedido in pedidos %}
+        <div class="col-12">
+            <div class="card shadow-sm">
+                <div class="card-body">
+                    <h2 class="h5">Pedido #{{ pedido.pk }}</h2>
+                    <p class="text-muted mb-2">Hora: {{ pedido.creado|time:"H:i" }}</p>
+                    <ul class="list-unstyled mb-2">
+                        {% for item in pedido.items.all %}
+                        <li>{{ item.cantidad }} x {{ item.producto.nombre }}</li>
+                        {% endfor %}
+                    </ul>
+                    <p class="mb-3">Estado: {{ pedido.get_estado_display }}</p>
+                    {% if pedido.estado == "listo_despacho" %}
+                    <a class="btn btn-lg w-100 btn-primary" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+                    {% elif pedido.estado == "en_camino" and pedido.entrega.repartidor_id == request.user.pk %}
+                    <a class="btn btn-lg w-100 btn-primary" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% endfor %}
+    </div>
+    {% else %}
+    <p>No hay pedidos para despachar</p>
+    {% endif %}
+</div>
+{% endblock %}

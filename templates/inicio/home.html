@@ -1,0 +1,115 @@
+{% extends 'base.html' %}
+
+{% block content %}
+{% url 'inicio' as url_inicio %}
+{% url 'catalogo:producto_list' as url_menu %}
+{% url 'pedidos:carrito_detail' as url_carrito %}
+{% url 'pedidos:pedido_list' as url_pedidos %}
+{% url 'entregas:entrega_list' as url_entregas %}
+{% url 'reportes:reporte_panel' as url_reportes %}
+{% url 'cuentas:direccion_list' as url_direcciones %}
+{% url 'admin:index' as url_admin %}
+
+<div class="container py-4">
+    <div class="mb-4">
+        <h1>Hola, {{ user.username }}</h1>
+        <p class="lead">Tu rol: {{ rol }}</p>
+    </div>
+
+    <div class="row g-3">
+        {% if url_inicio %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Inicio</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_inicio }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_menu and perms.catalogo.view_producto %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Menu</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_menu }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_carrito and perms.pedidos.add_pedido %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Carrito</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_carrito }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_pedidos and perms.pedidos.view_pedido %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">
+                        {% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}
+                    </h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_pedidos }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_entregas and perms.pedidos.despachar_pedido %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Entregas</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_entregas }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_reportes and perms.pedidos.ver_reportes %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Reportes</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_reportes }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_direcciones and perms.cuentas.view_direccion %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Mis direcciones</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_direcciones }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_admin and user.is_staff %}
+        <div class="col-12 col-md-6 col-lg-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="card-title h5">Administracion</h2>
+                    <a class="btn btn-lg btn-primary w-100" href="{{ url_admin }}">Entrar</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+    </div>
+
+    {% if not perms.catalogo.view_producto and not perms.pedidos.add_pedido and not perms.pedidos.view_pedido and not perms.pedidos.despachar_pedido and not perms.pedidos.ver_reportes and not perms.cuentas.view_direccion and not user.is_staff %}
+    <p class="mt-3">Aun no hay modulos disponibles</p>
+    {% endif %}
+</div>
+{% endblock %}

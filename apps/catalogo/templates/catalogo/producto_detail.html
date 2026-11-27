@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h1>{{ object.nombre }}</h1>
+
+    {% if object.imagen_url %}
+    <img src="{{ object.imagen_url }}" alt="{{ object.nombre }}" class="img-fluid mb-3">
+    {% endif %}
+
+    {% if object.descripcion %}<p class="lead">{{ object.descripcion }}</p>{% endif %}
+    <p class="fs-4">${{ object.precio|floatformat:"0g" }}</p>
+    <p>{% if object.disponible %}Disponible{% else %}No disponible{% endif %}</p>
+
+    {% if object.opciones.all %}
+    <section class="mb-4">
+        <h2 class="h4">Opciones</h2>
+        {% regroup object.opciones.all|dictsort:"tipo" by get_tipo_display as grupos_opciones %}
+        {% for grupo in grupos_opciones %}
+        <h3 class="h5">{{ grupo.grouper }}</h3>
+        <ul>
+            {% for opcion in grupo.list %}
+            <li>
+                {{ opcion.nombre }}
+                {% if opcion.recargo %}(+${{ opcion.recargo|floatformat:"0g" }}){% endif %}
+            </li>
+            {% endfor %}
+        </ul>
+        {% endfor %}
+    </section>
+    {% endif %}
+
+    {% if perms.pedidos.add_pedido %}
+    <form method="post" action="{% url 'catalogo:producto_agregar' object.pk %}">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-primary w-100">Agregar al carrito</button>
+    </form>
+    {% endif %}
+</div>
+{% endblock %}

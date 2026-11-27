@@ -1,0 +1,40 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Menu</h1>
+
+    {% if productos %}
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Nombre</th>
+                    <th>Precio</th>
+                    <th>Disponibilidad</th>
+                    {% if perms.catalogo.view_producto %}<th>Accion</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>${{ producto.precio|floatformat:"0g" }}</td>
+                    <td>
+                        {% if producto.disponible %}Disponible{% else %}No disponible{% endif %}
+                    </td>
+                    {% if perms.catalogo.view_producto %}
+                    <td>
+                        <a class="btn btn-lg btn-primary" href="{% url 'catalogo:producto_detail' producto.pk %}">Ver detalle</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No hay productos disponibles.</p>
+    {% endif %}
+</div>
+{% endblock %}

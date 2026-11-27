@@ -1,0 +1,70 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Carrito</h1>
+
+    {% if pedido.items.all %}
+    <div class="table-responsive">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Variantes</th>
+                    <th>Cantidad</th>
+                    <th>Precio unitario</th>
+                    <th>Subtotal</th>
+                    {% if perms.pedidos.add_pedido %}<th>Accion</th>{% endif %}
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in pedido.items.all %}
+                {% widthratio item.cantidad 1 item.precio_unitario as item_subtotal %}
+                <tr>
+                    <td>{{ item.producto.nombre }}</td>
+                    <td>
+                        {% for opcion in item.opciones.all %}
+                        {{ opcion.nombre }}{% if not forloop.last %}, {% endif %}
+                        {% empty %}-{% endfor %}
+                    </td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                    <td>${{ item_subtotal|floatformat:"0g" }}</td>
+                    {% if perms.pedidos.add_pedido %}
+                    <td>
+                        <a class="btn btn-outline-danger" href="{% url 'pedidos:item_quitar' item.pk %}">Quitar</a>
+                    </td>
+                    {% endif %}
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <ul class="list-unstyled fs-5">
+        <li>Subtotal: ${{ pedido.subtotal|floatformat:"0g" }}</li>
+        <li>Descuento: ${{ pedido.descuento|floatformat:"0g" }}</li>
+        <li>Total: ${{ pedido.total|floatformat:"0g" }}</li>
+    </ul>
+
+    <form method="post" action="{% url 'pedidos:carrito_codigo' %}" class="mb-4">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-outline-primary w-100">Aplicar codigo</button>
+    </form>
+
+    {% if perms.pedidos.add_pedido %}
+    <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+        {% csrf_token %}
+        {% with form=confirmar_form %}
+        {% include "parciales/form_campos.html" %}
+        {% endwith %}
+        <button type="submit" class="btn btn-lg btn-primary w-100">Confirmar pedido</button>
+    </form>
+    {% endif %}
+    {% else %}
+    <p class="lead">Tu carrito esta vacio</p>
+    <a class="btn btn-lg btn-primary" href="{% url 'catalogo:producto_list' %}">Ir al menu</a>
+    {% endif %}
+</div>
+{% endblock %}

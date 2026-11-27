@@ -1,0 +1,52 @@
+{% extends 'base.html' %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-4">Reportes</h1>
+
+    <div class="row g-3 mb-4">
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="h5">Ventas de hoy</h2>
+                    <p class="fs-4">${{ ventas_hoy|floatformat:"0g" }}</p>
+                </div>
+            </div>
+        </div>
+        <div class="col-12 col-md-6">
+            <div class="card shadow-sm h-100">
+                <div class="card-body">
+                    <h2 class="h5">Ventas de 7 dias</h2>
+                    <p class="fs-4">${{ ventas_7dias|floatformat:"0g" }}</p>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <h2 class="h4">Productos mas pedidos</h2>
+    {% if productos %}
+    <div class="table-responsive mb-4">
+        <table class="table table-striped align-middle">
+            <thead>
+                <tr>
+                    <th>Producto</th>
+                    <th>Unidades</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for producto in productos %}
+                <tr>
+                    <td>{{ producto.nombre }}</td>
+                    <td>{{ producto.unidades }}</td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    {% else %}
+    <p>No hay productos pedidos.</p>
+    {% endif %}
+
+    <a class="btn btn-lg btn-primary" href="{% url 'reportes:reporte_repartidores' %}">Ver ranking de repartidores</a>
+</div>
+{% endblock %}

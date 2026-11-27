@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <h1 class="mb-3">Pedido #{{ pedido.pk }}</h1>
+    <p class="fs-5">Estado: {{ pedido.get_estado_display }}</p>
+    <p class="text-muted">Fecha: {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+
+    {% if pedido.estado == "pendiente_pago" and pedido.cliente_id == request.user.pk %}
+    <a class="btn btn-lg btn-warning mb-3" href="{% url 'pagos:pasarela' pedido.pago.referencia %}">Ir a la pasarela de pago</a>
+    {% endif %}
+
+    {% if ver_datos_contacto %}
+    <section class="mb-4">
+        <h2 class="h4">Datos de contacto</h2>
+        <p>Direccion: {{ pedido.direccion|default:"-" }}</p>
+        <p>Telefono: {{ telefono|default:"-" }}</p>
+    </section>
+    {% endif %}
+
+    <section class="mb-4">
+        <h2 class="h4">Productos</h2>
+        <div class="table-responsive">
+            <table class="table table-striped align-middle">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Variantes</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in pedido.items.all %}
+                    <tr>
+                        <td>{{ item.producto.nombre }}</td>
+                        <td>
+                            {% for opcion in item.opciones.all %}
+                            {{ opcion.nombre }}{% if not forloop.last %}, {% endif %}
+                            {% empty %}-{% endfor %}
+                        </td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                    </tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </section>
+
+    <ul class="list-unstyled fs-5">
+        <li>Subtotal: ${{ pedido.subtotal|floatformat:"0g" }}</li>
+        <li>Descuento: ${{ pedido.descuento|floatformat:"0g" }}</li>
+        <li>Total: ${{ pedido.total|floatformat:"0g" }}</li>
+    </ul>
+
+    <section class="mb-4">
+        <h2 class="h4">Historial</h2>
+        <ul>
+            {% for cambio in pedido.historial.all %}
+            <li>{{ cambio.get_estado_display }} - {{ cambio.fecha|date:"d/m/Y H:i" }}</li>
+            {% empty %}
+            <li>Sin cambios registrados.</li>
+            {% endfor %}
+        </ul>
+    </section>
+
+    {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    {% if puede_cambiar_estado %}
+    <a class="btn btn-lg btn-primary w-100" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+    {% endif %}
+    {% endif %}
+</div>
+{% endblock %}
