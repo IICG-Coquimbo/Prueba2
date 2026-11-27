@@ -1,0 +1,43 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ object.nombre }} | Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm">
+        {% if object.imagen_url %}
+        <img src="{{ object.imagen_url }}" class="card-img-top" alt="{{ object.nombre }}">
+        {% endif %}
+        <div class="card-body">
+          <span class="text-muted small">{{ object.categoria.nombre }}</span>
+          <h1 class="h3 mt-1">{{ object.nombre }}</h1>
+          {% if object.descripcion %}<p>{{ object.descripcion }}</p>{% endif %}
+          <p class="fw-bold fs-4">${{ object.precio|floatformat:"0g" }}</p>
+          {% if not object.disponible %}
+          <div class="alert alert-warning">Este producto no está disponible.</div>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      {% if object.disponible and perms.pedidos.add_pedido %}
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h4 mb-3">Agregar al carrito</h2>
+          <form method="post" action="{% url 'catalogo:producto_agregar' object.pk %}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" with form=form_agregar %}
+            <button type="submit" class="btn btn-primary btn-lg w-100">Agregar al carrito</button>
+          </form>
+        </div>
+      </div>
+      {% elif not perms.pedidos.add_pedido %}
+      <div class="alert alert-info">Inicia sesión como cliente para agregar productos al carrito.</div>
+      {% endif %}
+      <a href="{% url 'catalogo:producto_list' %}" class="btn btn-outline-secondary btn-lg w-100 mt-3">Volver al menú</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

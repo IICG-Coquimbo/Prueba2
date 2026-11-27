@@ -1,0 +1,72 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Carrito | Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Carrito</h1>
+  {% if pedido.items.all %}
+  <div class="row g-3 mb-4">
+    {% for item in pedido.items.all %}
+    <div class="col-12">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <div class="d-flex justify-content-between align-items-start gap-3">
+            <div>
+              <h2 class="h5 mb-1">{{ item.producto.nombre }}</h2>
+              <p class="mb-1">Cantidad: {{ item.cantidad }}</p>
+              <p class="mb-1">Precio unitario: ${{ item.precio_unitario|floatformat:"0g" }}</p>
+              {% if item.opciones.all %}
+              <p class="mb-1 small text-muted">Opciones:
+                {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}
+              </p>
+              {% endif %}
+            </div>
+            <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-outline-danger btn-lg">Quitar</button>
+            </form>
+          </div>
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Código de descuento</h2>
+          <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" with form=form_codigo %}
+            <button type="submit" class="btn btn-outline-primary btn-lg w-100">Aplicar código</button>
+          </form>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Resumen</h2>
+          <p class="d-flex justify-content-between"><span>Subtotal</span><strong>${{ pedido.subtotal|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between"><span>Descuento</span><strong>${{ pedido.descuento|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between fs-5"><span>Total</span><strong>${{ pedido.total|floatformat:"0g" }}</strong></p>
+          <hr>
+          <h3 class="h6 mb-3">Confirmar pedido</h3>
+          <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" with form=form_confirmar %}
+            <button type="submit" class="btn btn-primary btn-lg w-100">Confirmar pedido</button>
+          </form>
+        </div>
+      </div>
+    </div>
+  </div>
+  {% else %}
+  <div class="alert alert-info">Tu carrito está vacío.</div>
+  <a href="{% url 'catalogo:producto_list' %}" class="btn btn-primary btn-lg">Ir al menú</a>
+  {% endif %}
+</div>
+{% endblock %}

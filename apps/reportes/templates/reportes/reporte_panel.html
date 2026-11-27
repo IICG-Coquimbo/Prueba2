@@ -1,0 +1,47 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Reportes | Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Reportes</h1>
+  <div class="row g-3 mb-4">
+    <div class="col-12 col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5">Ventas de hoy</h2>
+          <p class="display-6 mb-0">${{ ventas_hoy|floatformat:"0g" }}</p>
+        </div>
+      </div>
+    </div>
+    <div class="col-12 col-md-6">
+      <div class="card shadow-sm h-100">
+        <div class="card-body">
+          <h2 class="h5">Ventas últimos 7 días</h2>
+          <p class="display-6 mb-0">${{ ventas_7_dias|floatformat:"0g" }}</p>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="card shadow-sm mb-4">
+    <div class="card-body">
+      <h2 class="h5 mb-3">Productos más pedidos</h2>
+      {% if productos_mas_pedidos %}
+      <div class="list-group list-group-flush">
+        {% for producto in productos_mas_pedidos %}
+        <div class="list-group-item px-0 d-flex justify-content-between">
+          <span>{{ producto.nombre }}</span>
+          <strong>{{ producto.unidades }} unidades</strong>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="mb-0">No hay datos disponibles.</p>
+      {% endif %}
+    </div>
+  </div>
+
+  <a href="{% url 'reportes:reporte_repartidores' %}" class="btn btn-primary btn-lg">Ver ranking de repartidores</a>
+</div>
+{% endblock %}

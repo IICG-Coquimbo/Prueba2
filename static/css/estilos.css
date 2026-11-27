@@ -1,0 +1,43 @@
+:root {
+  --color-primario: #5D4037;
+  --color-secundario: #3E2723;
+  --color-acento: #E0A030;
+  --color-fondo: #FAF6F0;
+  --color-texto: #2B2B2B;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.navbar {
+  background-color: var(--color-primario);
+}
+
+.navbar.navbar-dark .navbar-brand,
+.navbar.navbar-dark .navbar-nav .nav-link {
+  color: var(--color-fondo);
+}
+
+.navbar-toggler {
+  border-color: var(--color-acento);
+}
+
+footer {
+  background-color: var(--color-secundario);
+}
+
+.btn-primary {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+}
+
+.btn-primary:hover {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+}
+
+.alert-danger {
+  border-color: var(--color-acento);
+}

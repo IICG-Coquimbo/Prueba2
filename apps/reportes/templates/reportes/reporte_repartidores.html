@@ -1,0 +1,29 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Ranking de repartidores | Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <h1 class="mb-4">Ranking de repartidores</h1>
+  <div class="card shadow-sm">
+    <div class="card-body">
+      {% if ranking_repartidores %}
+      <div class="list-group list-group-flush">
+        {% for fila in ranking_repartidores %}
+        <div class="list-group-item px-0">
+          <div class="d-flex justify-content-between align-items-center">
+            <strong>{{ fila.repartidor.get_full_name|default:fila.repartidor.username }}</strong>
+            <span class="badge text-bg-primary">{{ fila.entregas }} entregas</span>
+          </div>
+          <div class="small text-muted">Promedio: {{ fila.minutos_promedio }} minutos</div>
+        </div>
+        {% endfor %}
+      </div>
+      {% else %}
+      <p class="mb-0">No hay entregas finalizadas para mostrar.</p>
+      {% endif %}
+    </div>
+  </div>
+  <a href="{% url 'reportes:reporte_panel' %}" class="btn btn-outline-secondary btn-lg mt-3">Volver al panel</a>
+</div>
+{% endblock %}

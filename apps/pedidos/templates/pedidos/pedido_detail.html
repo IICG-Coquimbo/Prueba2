@@ -1,0 +1,77 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Pedido #{{ pedido.pk }} | Café Rincón{% endblock %}
+
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+  <div class="d-flex justify-content-between align-items-center mb-4 gap-2 flex-wrap">
+    <h1 class="mb-0">Pedido #{{ pedido.pk }}</h1>
+    <span class="badge text-bg-primary fs-6">{{ pedido.get_estado_display }}</span>
+  </div>
+
+  <div class="row g-4">
+    <div class="col-12 col-lg-7">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Detalle</h2>
+          <p class="mb-1"><strong>Fecha:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+          <p class="mb-1"><strong>Método de pago:</strong> {{ pedido.get_metodo_pago_display|default:"-" }}</p>
+          {% if puede_ver_direccion %}
+          <p class="mb-1"><strong>Cliente:</strong> {{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</p>
+          <p class="mb-1"><strong>Teléfono:</strong> {{ pedido.cliente.perfil.telefono|default:"-" }}</p>
+          <p class="mb-1"><strong>Dirección:</strong> {% if pedido.direccion %}{{ pedido.direccion.direccion }}{% if pedido.direccion.referencia %} ({{ pedido.direccion.referencia }}){% endif %}{% else %}-{% endif %}</p>
+          {% endif %}
+        </div>
+      </div>
+
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Ítems</h2>
+          {% for item in pedido.items.all %}
+          <div class="border-bottom py-2">
+            <div class="d-flex justify-content-between">
+              <strong>{{ item.producto.nombre }}</strong>
+              <span>${{ item.precio_unitario|floatformat:"0g" }}</span>
+            </div>
+            <div class="small text-muted">Cantidad: {{ item.cantidad }}</div>
+            {% if item.opciones.all %}
+            <div class="small text-muted">Opciones: {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>
+            {% endif %}
+          </div>
+          {% empty %}
+          <p class="mb-0">Sin ítems.</p>
+          {% endfor %}
+          <hr>
+          <p class="d-flex justify-content-between mb-1"><span>Subtotal</span><strong>${{ pedido.subtotal|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between mb-1"><span>Descuento</span><strong>${{ pedido.descuento|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between fs-5 mb-0"><span>Total</span><strong>${{ pedido.total|floatformat:"0g" }}</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="col-12 col-lg-5">
+      <div class="card shadow-sm mb-4">
+        <div class="card-body">
+          <h2 class="h5">Historial de estado</h2>
+          <ul class="list-group list-group-flush">
+            {% for evento in pedido.historial.all %}
+            <li class="list-group-item px-0">
+              <div class="fw-semibold">{{ evento.get_estado_display }}</div>
+              <div class="small text-muted">{{ evento.fecha|date:"d/m/Y H:i" }}{% if evento.usuario %} - {{ evento.usuario.username }}{% endif %}</div>
+            </li>
+            {% empty %}
+            <li class="list-group-item px-0">Sin historial.</li>
+            {% endfor %}
+          </ul>
+        </div>
+      </div>
+
+      {% if estados_permitidos %}
+      <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Cambiar estado</a>
+      {% endif %}
+    </div>
+  </div>
+</div>
+{% endblock %}
