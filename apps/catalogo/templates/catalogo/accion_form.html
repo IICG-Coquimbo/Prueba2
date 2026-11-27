@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Agregar al carrito: {{ producto.nombre }}</h1>
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-primary">Agregar al carrito</button>
+</form>
+{% endblock %}

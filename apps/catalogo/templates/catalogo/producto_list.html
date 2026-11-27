@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Menu</h1>
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Imagen</th>
+        <th>Nombre</th>
+        <th>Categoria</th>
+        <th>Precio</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for producto in object_list %}
+      <tr>
+        <td>
+          {% if producto.imagen_url %}
+          <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="img-thumbnail" width="80">
+          {% endif %}
+        </td>
+        <td><a href="{% url 'catalogo:producto_detail' producto.pk %}">{{ producto.nombre }}</a></td>
+        <td>{{ producto.categoria.nombre }}</td>
+        <td>${{ producto.precio|floatformat:"0g" }}</td>
+        <td>
+          <a class="btn btn-lg btn-outline-primary" href="{% url 'catalogo:producto_detail' producto.pk %}">Ver</a>
+          {% if perms.pedidos.add_pedido and producto.disponible %}
+          <a class="btn btn-lg btn-success" href="{% url 'catalogo:producto_agregar' producto.pk %}">Agregar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5">No hay productos para mostrar.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

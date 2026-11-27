@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ producto.nombre }}</h1>
+<dl class="row">
+  <dt class="col-sm-3">Categoria</dt>
+  <dd class="col-sm-9">{{ producto.categoria.nombre }}</dd>
+  <dt class="col-sm-3">Descripcion</dt>
+  <dd class="col-sm-9">{{ producto.descripcion }}</dd>
+  <dt class="col-sm-3">Precio</dt>
+  <dd class="col-sm-9">${{ producto.precio|floatformat:"0g" }}</dd>
+  <dt class="col-sm-3">Disponibilidad</dt>
+  <dd class="col-sm-9">
+    {% if producto.disponible %}Disponible{% else %}No disponible{% endif %}
+  </dd>
+</dl>
+{% if producto.imagen_url %}
+<img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="img-fluid" width="300">
+{% endif %}
+<h2>Opciones</h2>
+{% regroup producto.opciones.all by tipo as opciones_por_tipo %}
+{% for grupo in opciones_por_tipo %}
+<h3>{{ grupo.grouper|capfirst }}</h3>
+<ul>
+  {% for opcion in grupo.list %}
+  <li>{{ opcion.nombre }} (recargo: ${{ opcion.recargo|floatformat:"0g" }})</li>
+  {% endfor %}
+</ul>
+{% empty %}
+<p>Este producto no tiene opciones.</p>
+{% endfor %}
+<p>
+  <a class="btn btn-lg btn-secondary" href="{% url 'catalogo:producto_list' %}">Volver al menu</a>
+  {% if perms.pedidos.add_pedido and producto.disponible %}
+  <a class="btn btn-lg btn-success" href="{% url 'catalogo:producto_agregar' producto.pk %}">Agregar al carrito</a>
+  {% endif %}
+</p>
+{% endblock %}
