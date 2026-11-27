@@ -2,7 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
-from django.contrib.auth.models import Group
+from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from apps.cuentas.models import Direccion
 from apps.cuentas.forms import LoginForm, DireccionForm
@@ -20,6 +20,7 @@ class CustomLogoutView(LoginRequiredMixin, LogoutView):
 
 
 class RegistroView(CreateView):
+    model = User
     template_name = "cuentas/registro.html"
     fields = ["username", "email", "password"]
     success_url = reverse_lazy("inicio")

@@ -113,6 +113,7 @@ class CarritoCodigoView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
 
 class CarritoConfirmarView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     form_class = ConfirmarPedidoForm
+    template_name = "pedidos/carrito_detail.html"
     permission_required = "pedidos.add_pedido"
 
     def get_form_kwargs(self):
