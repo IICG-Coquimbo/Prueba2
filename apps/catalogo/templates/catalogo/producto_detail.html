@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>{{ object.nombre }}</h1>
+    <p>{{ object.categoria }}</p>
+    <p>${{ object.precio|floatformat:"0g" }}</p>
+    {% if object.descripcion %}<p>{{ object.descripcion }}</p>{% endif %}
+    {% if object.imagen_url %}<img src="{{ object.imagen_url }}" alt="{{ object.nombre }}" class="img-fluid">{% endif %}
+    {% if perms.pedidos.add_pedido %}
+    <a class="btn btn-lg btn-primary" href="{% url 'pedidos:producto_agregar' object.pk %}">Agregar al carrito</a>
+    {% endif %}
+</section>
+{% endblock %}

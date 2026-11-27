@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Carrito</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Producto</th><th>Opciones</th><th>Cantidad</th><th>Precio</th><th></th></tr></thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>{{ item.producto }}</td>
+                    <td>{% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                    <td>
+                        <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-lg btn-danger">Quitar</button>
+                        </form>
+                    </td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="5">Carrito vacio.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <p>Subtotal: ${{ pedido.subtotal|floatformat:"0g" }}</p>
+    <p>Descuento: ${{ pedido.descuento|floatformat:"0g" }}</p>
+    <p>Total: ${{ pedido.total|floatformat:"0g" }}</p>
+
+    <h2>Codigo</h2>
+    <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" with form=codigo_form %}
+        <button type="submit" class="btn btn-lg btn-primary">Aplicar codigo</button>
+    </form>
+
+    <h2>Confirmar</h2>
+    <p><a class="btn btn-lg btn-primary" href="{% url 'cuentas:direccion_create' %}">Nueva direccion</a></p>
+    <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" with form=confirmar_form %}
+        <button type="submit" class="btn btn-lg btn-primary">Confirmar pedido</button>
+    </form>
+</section>
+{% endblock %}

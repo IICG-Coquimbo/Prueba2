@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>{{ titulo|default:"Accion" }}</h1>
+    {% if producto %}<p>{{ producto.nombre }}</p>{% endif %}
+    {% if pago %}<p>Monto: ${{ pago.monto|floatformat:"0g" }}</p>{% endif %}
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-primary">Continuar</button>
+    </form>
+</section>
+{% endblock %}

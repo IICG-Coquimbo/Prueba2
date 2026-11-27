@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Registro</h1>
+    <form method="post" novalidate>
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-primary">Registrarse</button>
+    </form>
+    <p><a href="{% url 'cuentas:login' %}">Iniciar sesion</a></p>
+</section>
+{% endblock %}

@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Mis pedidos</h1>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Pedido</th><th>Estado</th><th>Total</th><th>Creado</th></tr></thead>
+            <tbody>
+                {% for pedido in object_list %}
+                <tr>
+                    <td><a href="{% url 'pedidos:pedido_detail' pedido.pk %}">Pedido {{ pedido.pk }}</a></td>
+                    <td>{{ pedido.estado }}</td>
+                    <td>${{ pedido.total|floatformat:"0g" }}</td>
+                    <td>{{ pedido.creado }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No hay pedidos.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+</section>
+{% endblock %}

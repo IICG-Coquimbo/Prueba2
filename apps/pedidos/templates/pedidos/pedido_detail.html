@@ -1,0 +1,38 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Pedido {{ object.pk }}</h1>
+    <p>Estado: {{ object.estado }}</p>
+    <p>Metodo: {{ object.metodo_pago }}</p>
+    <p>Direccion: {{ object.direccion }}</p>
+    <p>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+    <p>Descuento: ${{ object.descuento|floatformat:"0g" }}</p>
+    <p>Total: ${{ object.total|floatformat:"0g" }}</p>
+    <div class="table-responsive">
+        <table class="table">
+            <thead><tr><th>Producto</th><th>Opciones</th><th>Cantidad</th><th>Precio</th></tr></thead>
+            <tbody>
+                {% for item in object.items.all %}
+                <tr>
+                    <td>{{ item.producto }}</td>
+                    <td>{% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+                    <td>{{ item.cantidad }}</td>
+                    <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                </tr>
+                {% empty %}
+                <tr><td colspan="4">No hay items.</td></tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+    <h2>Historial</h2>
+    <ul>
+        {% for historial in object.historial.all %}
+        <li>{{ historial.estado }} - {{ historial.fecha }}{% if historial.usuario %} - {{ historial.usuario }}{% endif %}</li>
+        {% empty %}
+        <li>No hay historial.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

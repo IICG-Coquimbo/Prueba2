@@ -1,0 +1,19 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Mis direcciones</h1>
+    <p><a class="btn btn-lg btn-primary" href="{% url 'cuentas:direccion_create' %}">Nueva direccion</a></p>
+    <ul class="list-group">
+        {% for direccion in object_list %}
+        <li class="list-group-item">
+            <strong>{{ direccion.alias }}</strong><br>
+            {{ direccion.direccion }}
+            {% if direccion.referencia %}<br>{{ direccion.referencia }}{% endif %}
+        </li>
+        {% empty %}
+        <li class="list-group-item">No hay direcciones.</li>
+        {% endfor %}
+    </ul>
+</section>
+{% endblock %}

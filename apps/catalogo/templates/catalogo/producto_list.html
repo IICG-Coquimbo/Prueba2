@@ -1,0 +1,27 @@
+{% extends "base.html" %}
+
+{% block content %}
+<section class="container py-4">
+    <h1>Menu</h1>
+    <div class="row g-3">
+        {% for producto in object_list %}
+        <div class="col-md-4">
+            <div class="card h-100">
+                <div class="card-body">
+                    <h2 class="h5 card-title">{{ producto.nombre }}</h2>
+                    <p>{{ producto.categoria }}</p>
+                    <p>${{ producto.precio|floatformat:"0g" }}</p>
+                    {% if producto.descripcion %}<p>{{ producto.descripcion }}</p>{% endif %}
+                    <a class="btn btn-lg btn-primary" href="{% url 'catalogo:producto_detail' producto.pk %}">Ver</a>
+                    {% if perms.pedidos.add_pedido %}
+                    <a class="btn btn-lg btn-primary" href="{% url 'pedidos:producto_agregar' producto.pk %}">Agregar</a>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+        {% empty %}
+        <p>No hay productos disponibles.</p>
+        {% endfor %}
+    </div>
+</section>
+{% endblock %}
