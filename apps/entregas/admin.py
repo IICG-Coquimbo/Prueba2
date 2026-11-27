@@ -1,0 +1,11 @@
+from django.contrib import admin
+from .models import Entrega
+
+
+@admin.register(Entrega)
+class EntregaAdmin(admin.ModelAdmin):
+    list_display = ("pedido", "repartidor", "inicio", "fin", "minutos")
+    list_filter = ("repartidor", "inicio")
+    search_fields = ("pedido__id", "repartidor__username")
+    readonly_fields = ("minutos",)
+    date_hierarchy = "inicio"
