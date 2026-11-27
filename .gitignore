@@ -1,0 +1,5 @@
+.env
+opencode.json
+.vscode/
+__pycache__/
+*.pyc
