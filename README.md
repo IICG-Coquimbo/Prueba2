@@ -1,3 +1,4 @@
+<<<<<<< HEAD
 
 # Café Rincón: prueba de usuario paso a paso
 En este ejercicio **no programas el sistema**: lo construyen agentes de OpenCode a partir de los requerimientos de `docs/requerimientos.csv`, y tú lo **pruebas como usuario**. Escribes escenarios de prueba, los ejecutas, y subes las capturas de pantalla como evidencia a un issue de GitHub.
@@ -264,3 +265,7 @@ Clave de todos: `clave1234` (solo para el curso).
 | La imagen del issue no se ve | Arrastra la imagen al cuadro de comentario; si es un enlace, el repositorio privado solo lo muestra a quien tiene acceso |
 | La tarea no suma al avance | La línea debe empezar con `- [ ]` (guion, espacio, corchetes) |
 Displaying README.md.Inserted margareth.cleveland@ucn.cl.
+=======
+# Franco Paredes Vivar
+RUT: 21.714.507-4
+>>>>>>> f9fdd0233bc98331bd0fb12c3cfe37afc0ab0aa2
