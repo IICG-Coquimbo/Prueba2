@@ -5,7 +5,7 @@ from django.urls import reverse_lazy
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from apps.cuentas.models import Direccion
-from apps.cuentas.forms import LoginForm, DireccionForm
+from apps.cuentas.forms import LoginForm, DireccionForm, RegistroForm
 from apps.cuentas.models import PerfilCliente
 
 
@@ -21,27 +21,14 @@ class CustomLogoutView(LoginRequiredMixin, LogoutView):
 
 class RegistroView(CreateView):
     model = User
+    form_class = RegistroForm
     template_name = "cuentas/registro.html"
-    fields = ["username", "email", "password"]
     success_url = reverse_lazy("inicio")
 
-    def get_form(self, form_class=None):
-        form = super().get_form(form_class)
-        form.fields["username"].widget.attrs.update({"class": "form-control"})
-        form.fields["email"].widget.attrs.update({"class": "form-control", "type": "email"})
-        form.fields["password"].widget.attrs.update({"class": "form-control", "type": "password"})
-        form.fields["password"].help_text = ""
-        return form
-
     def form_valid(self, form):
-        user = form.save(commit=False)
-        user.set_password(form.cleaned_data["password"])
-        user.save()
-
-        PerfilCliente.objects.create(usuario=user, telefono="")
+        user = form.save()
         grupo_cliente = Group.objects.get(name="Cliente")
         user.groups.add(grupo_cliente)
-
         messages.success(self.request, "Registro exitoso. Bienvenido!")
         return super().form_valid(form)
 
