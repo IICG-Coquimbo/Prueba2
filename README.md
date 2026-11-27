@@ -1,21 +1,4 @@
-None selected 
 
-Skip to content
-Using Universidad Católica del Norte Mail with screen readers
-
-Conversations
- 
-Program Policies
-Powered by Google
-Last account activity: 1 minute ago
-Open in 1 other location · Details
-
-README.md
-100%
-
-Markdown
-
-Preview
 # Café Rincón: prueba de usuario paso a paso
 En este ejercicio **no programas el sistema**: lo construyen agentes de OpenCode a partir de los requerimientos de `docs/requerimientos.csv`, y tú lo **pruebas como usuario**. Escribes escenarios de prueba, los ejecutas, y subes las capturas de pantalla como evidencia a un issue de GitHub.
 Hay tres etapas. No pases a la siguiente si la actual tiene pruebas fallando.
