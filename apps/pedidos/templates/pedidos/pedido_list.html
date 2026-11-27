@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Pedidos - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Pedidos</h1>
+<div class="row g-3">
+  {% for pedido in pedidos %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5">{{ pedido }} - {{ pedido.get_estado_display }}</h2>
+        <p class="text-muted mb-2">{{ pedido.creado }}</p>
+        <ul>
+          {% for item in pedido.items.all %}
+          <li>{{ item.cantidad }} x {{ item.producto.nombre }}{% if item.opciones.all %} ({{ item.opciones.all|join:", " }}){% endif %}</li>
+          {% endfor %}
+        </ul>
+        <div class="d-flex flex-wrap gap-2">
+          <a class="btn btn-lg btn-primary" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Ver detalle</a>
+          {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+            {% if pedido.estado == "recibido" or pedido.estado == "en_preparacion" or pedido.estado == "listo_despacho" or pedido.estado == "en_camino" %}
+            <a class="btn btn-lg btn-warning w-100" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+            {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><p>No hay pedidos para mostrar.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+
+{% block title %}Registro - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Registro de cliente</h1>
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-primary">Registrarme</button>
+</form>
+{% endblock %}

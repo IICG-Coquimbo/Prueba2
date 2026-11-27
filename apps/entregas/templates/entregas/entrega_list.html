@@ -1,0 +1,29 @@
+{% extends "base.html" %}
+
+{% block title %}Entregas - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Entregas</h1>
+<div class="row g-3">
+  {% for pedido in pedidos %}
+  <div class="col-12">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5">{{ pedido }} - {{ pedido.get_estado_display }}</h2>
+        <p class="text-muted mb-2">{{ pedido.creado }}</p>
+        <ul>
+          {% for item in pedido.items.all %}
+          <li>{{ item.cantidad }} x {{ item.producto.nombre }}{% if item.opciones.all %} ({{ item.opciones.all|join:", " }}){% endif %}</li>
+          {% endfor %}
+        </ul>
+        <p><strong>Direccion:</strong> {{ pedido.direccion|default:"Sin direccion" }}</p>
+        <p><strong>Telefono:</strong> {{ pedido.cliente.perfil.telefono|default:"Sin telefono" }}</p>
+        <a class="btn btn-lg btn-primary w-100" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12"><p>No hay entregas pendientes.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+
+{% block title %}Carrito - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Carrito</h1>
+<div class="table-responsive mb-4">
+  <table class="table align-middle">
+    <thead>
+      <tr><th>Producto</th><th>Opciones</th><th>Cantidad</th><th>Precio unitario</th><th>Subtotal</th><th></th></tr>
+    </thead>
+    <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{{ item.opciones.all|join:", " }}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+        <td>${{ item.precio_unitario|floatformat:"0g" }} x {{ item.cantidad }}</td>
+        <td>
+          <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-lg btn-outline-danger">Quitar</button>
+          </form>
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">El carrito esta vacio.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+<div class="row g-4">
+  <div class="col-12 col-md-6">
+    <div class="card"><div class="card-body">
+      <h2 class="h5">Resumen</h2>
+      <p>Subtotal: ${{ pedido.subtotal|floatformat:"0g" }}</p>
+      <p>Descuento: ${{ pedido.descuento|floatformat:"0g" }}</p>
+      <p class="h4">Total: ${{ pedido.total|floatformat:"0g" }}</p>
+    </div></div>
+  </div>
+  <div class="col-12 col-md-6">
+    <div class="card mb-3"><div class="card-body">
+      <h2 class="h5">Codigo de descuento</h2>
+      <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+        {% csrf_token %}
+        {% with form=codigo_form %}{% include "parciales/form_campos.html" %}{% endwith %}
+        <button type="submit" class="btn btn-lg btn-primary">Aplicar codigo</button>
+      </form>
+    </div></div>
+    <div class="card"><div class="card-body">
+      <h2 class="h5">Confirmar pedido</h2>
+      <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+        {% csrf_token %}
+        {% with form=confirmar_form %}{% include "parciales/form_campos.html" %}{% endwith %}
+        <button type="submit" class="btn btn-lg btn-primary">Confirmar pedido</button>
+      </form>
+    </div></div>
+  </div>
+</div>
+{% endblock %}

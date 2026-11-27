@@ -1,0 +1,16 @@
+{% extends "base.html" %}
+
+{% block title %}Pasarela de pago - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Pasarela de pago</h1>
+<div class="alert alert-secondary">
+  Pedido: {{ pago.pedido }}<br>
+  Monto a pagar: ${{ pago.monto|floatformat:"0g" }}
+</div>
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-primary">Confirmar pago</button>
+</form>
+{% endblock %}

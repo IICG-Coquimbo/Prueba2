@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block title %}Borrar direccion - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Borrar direccion</h1>
+<p>¿Seguro que quieres borrar {{ object.alias }} - {{ object.direccion }}?</p>
+<form method="post">
+  {% csrf_token %}
+  <button type="submit" class="btn btn-lg btn-danger">Borrar</button>
+  <a class="btn btn-lg btn-secondary" href="{% url 'cuentas:direccion_list' %}">Cancelar</a>
+</form>
+{% endblock %}

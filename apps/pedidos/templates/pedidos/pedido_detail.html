@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+
+{% block title %}{{ object }} - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">{{ object }} - {{ object.get_estado_display }}</h1>
+<p class="text-muted">Creado: {{ object.creado }}</p>
+{% if perms.pedidos.despachar_pedido or user.is_staff %}
+<div class="alert alert-info">
+  <strong>Direccion:</strong> {{ object.direccion|default:"Sin direccion" }}<br>
+  <strong>Telefono:</strong> {{ object.cliente.perfil.telefono|default:"Sin telefono" }}
+</div>
+{% endif %}
+<h2 class="h5">Productos</h2>
+<ul class="list-group mb-4">
+  {% for item in object.items.all %}
+  <li class="list-group-item">
+    {{ item.cantidad }} x {{ item.producto.nombre }}
+    {% if item.opciones.all %}({{ item.opciones.all|join:", " }}){% endif %}
+    - ${{ item.precio_unitario|floatformat:"0g" }}
+  </li>
+  {% endfor %}
+</ul>
+<p>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+<p>Descuento: ${{ object.descuento|floatformat:"0g" }}</p>
+<p class="h4">Total: ${{ object.total|floatformat:"0g" }}</p>
+{% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+  {% if object.estado == "recibido" or object.estado == "en_preparacion" or object.estado == "listo_despacho" or object.estado == "en_camino" %}
+  <a class="btn btn-lg btn-primary w-100 mb-4" href="{% url 'pedidos:pedido_estado' object.pk %}">Cambiar estado</a>
+  {% endif %}
+{% endif %}
+<h2 class="h5">Historial de estados</h2>
+<div class="table-responsive">
+  <table class="table">
+    <thead><tr><th>Estado</th><th>Fecha y hora</th><th>Usuario</th></tr></thead>
+    <tbody>
+      {% for cambio in object.historial.all %}
+      <tr>
+        <td>{{ cambio.get_estado_display }}</td>
+        <td>{{ cambio.fecha }}</td>
+        <td>{{ cambio.usuario|default:"-" }}</td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="3">Sin historial.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

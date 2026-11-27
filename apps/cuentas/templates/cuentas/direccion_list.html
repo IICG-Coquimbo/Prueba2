@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Mis direcciones - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Mis direcciones</h1>
+{% if perms.cuentas.add_direccion %}
+<a class="btn btn-lg btn-primary mb-3" href="{% url 'cuentas:direccion_create' %}">Nueva direccion</a>
+{% endif %}
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead><tr><th>Alias</th><th>Direccion</th><th>Referencia</th><th></th></tr></thead>
+    <tbody>
+      {% for direccion in direcciones %}
+      <tr>
+        <td>{{ direccion.alias }}</td>
+        <td>{{ direccion.direccion }}</td>
+        <td>{{ direccion.referencia }}</td>
+        <td>
+          {% if perms.cuentas.change_direccion %}
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'cuentas:direccion_update' direccion.pk %}">Editar</a>
+          {% endif %}
+          {% if perms.cuentas.delete_direccion %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'cuentas:direccion_delete' direccion.pk %}">Borrar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No tienes direcciones guardadas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

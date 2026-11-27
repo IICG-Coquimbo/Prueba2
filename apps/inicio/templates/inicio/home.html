@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="mb-4">Hola, {{ user.username }}</h1>
+<p class="lead">Tu rol: {{ rol }}</p>
+<div class="row g-3">
+  {% url 'catalogo:producto_list' as url_menu %}
+  {% if url_menu and perms.catalogo.view_producto %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_menu }}">Menu</a></div>
+  {% endif %}
+  {% url 'pedidos:carrito_detail' as url_carrito %}
+  {% if url_carrito and perms.pedidos.add_pedido %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_carrito }}">Carrito</a></div>
+  {% endif %}
+  {% url 'pedidos:pedido_list' as url_pedidos %}
+  {% if url_pedidos and perms.pedidos.view_pedido %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_pedidos }}">Pedidos</a></div>
+  {% endif %}
+  {% url 'entregas:entrega_list' as url_entregas %}
+  {% if url_entregas and perms.pedidos.despachar_pedido %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_entregas }}">Entregas</a></div>
+  {% endif %}
+  {% url 'reportes:reporte_panel' as url_reportes %}
+  {% if url_reportes and perms.pedidos.ver_reportes %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_reportes }}">Reportes</a></div>
+  {% endif %}
+  {% url 'cuentas:direccion_list' as url_direcciones %}
+  {% if url_direcciones and perms.cuentas.view_direccion %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_direcciones }}">Mis direcciones</a></div>
+  {% endif %}
+  {% url 'admin:index' as url_admin %}
+  {% if url_admin and user.is_staff %}
+  <div class="col-12 col-md-4"><a class="btn btn-lg btn-primary w-100" href="{{ url_admin }}">Administracion</a></div>
+  {% endif %}
+</div>
+{% if not perms.catalogo.view_producto and not perms.pedidos.add_pedido and not perms.pedidos.view_pedido and not perms.pedidos.despachar_pedido and not perms.pedidos.ver_reportes and not perms.cuentas.view_direccion and not user.is_staff %}
+<p>Aun no hay modulos disponibles</p>
+{% endif %}
+{% endblock %}

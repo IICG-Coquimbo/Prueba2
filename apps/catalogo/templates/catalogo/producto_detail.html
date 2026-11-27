@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}{{ object.nombre }} - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="card mb-4">
+  <div class="card-body">
+    {% if object.imagen_url %}
+    <img src="{{ object.imagen_url }}" alt="{{ object.nombre }}" class="img-fluid mb-3" style="max-height: 260px;">
+    {% endif %}
+    <h1>{{ object.nombre }}</h1>
+    <p>{{ object.descripcion }}</p>
+    <p class="h4">${{ object.precio|floatformat:"0g" }}</p>
+    <h2 class="h5 mt-4">Opciones</h2>
+    <ul>
+      {% for opcion in object.opciones.all %}
+      <li>{{ opcion.get_tipo_display }}: {{ opcion.nombre }} (+${{ opcion.recargo|floatformat:"0g" }})</li>
+      {% empty %}
+      <li>Sin opciones</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% if perms.pedidos.add_pedido %}
+<h2 class="h5">Agregar al carrito</h2>
+<form method="post" action="{% url 'pedidos:producto_agregar' object.pk %}">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-primary">Agregar al carrito</button>
+</form>
+{% else %}
+<div class="alert alert-info">No tienes permiso para agregar productos al carrito.</div>
+{% endif %}
+{% endblock %}
