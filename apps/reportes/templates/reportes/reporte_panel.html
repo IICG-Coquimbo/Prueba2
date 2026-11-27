@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Reporte de ventas</h1>
+
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Periodo</th>
+          <th>Ventas</th>
+        </tr>
+      </thead>
+      <tbody>
+        <tr>
+          <td>Hoy</td>
+          <td>${{ ventas_hoy|floatformat:"0g" }}</td>
+        </tr>
+        <tr>
+          <td>Ultimos 7 dias</td>
+          <td>${{ ventas_7_dias|floatformat:"0g" }}</td>
+        </tr>
+      </tbody>
+    </table>
+  </div>
+
+  <h2 class="h4 mt-4">Productos mas pedidos</h2>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Unidades</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for producto in productos %}
+          <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.unidades }}</td>
+          </tr>
+        {% empty %}
+          <tr>
+            <td colspan="2">No hay productos en pedidos recibidos.</td>
+          </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+
+  <p><a class="btn btn-cafe" href="{% url 'reportes:reporte_repartidores' %}">Ver ranking de repartidores</a></p>
+{% endblock %}

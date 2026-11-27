@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+{% block content %}
+  <h1>Carrito</h1>
+  <div class="row">
+    <div class="col-12 col-md-8">
+      {% if items %}
+        <ul class="list-group mb-3">
+          {% for item in items %}
+            <li class="list-group-item">
+              <div class="d-flex flex-wrap justify-content-between gap-2">
+                <div>
+                  <strong>{{ item.cantidad }} x {{ item.producto.nombre }}</strong>
+                  <br>${{ item.precio_unitario|floatformat:"0g" }} c/u
+                  {% if item.opciones.all %}
+                    <br>
+                    {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}
+                  {% endif %}
+                </div>
+                <div class="text-end">
+                  <span class="d-block">${{ item.cantidad|floatformat:"0g" }} x ${{ item.precio_unitario|floatformat:"0g" }}</span>
+                  {% if perms.pedidos.add_pedido %}
+                    <a class="btn btn-lg btn-outline-danger mt-2" href="{% url 'pedidos:item_quitar' item.pk %}">Quitar</a>
+                  {% endif %}
+                </div>
+              </div>
+            </li>
+          {% endfor %}
+        </ul>
+      {% else %}
+        <p>El carrito está vacío.</p>
+      {% endif %}
+      <p><a href="{% url 'catalogo:producto_list' %}">Volver al menú</a></p>
+    </div>
+
+    <div class="col-12 col-md-4">
+      <h2>Código de descuento</h2>
+      {% if pedido.codigo_descuento %}
+        <p>Código aplicado: <strong>{{ pedido.codigo_descuento.codigo }}</strong></p>
+      {% endif %}
+      <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-lg btn-cafe w-100">Aplicar código</button>
+      </form>
+
+      <h2 class="mt-4">Totales</h2>
+      <p>Subtotal: ${{ subtotal|floatformat:"0g" }}</p>
+      <p>Descuento: ${{ descuento|floatformat:"0g" }}</p>
+      <p><strong>Total: ${{ total|floatformat:"0g" }}</strong></p>
+      {% if perms.pedidos.add_pedido and items %}
+        <a class="btn btn-lg btn-cafe w-100" href="{% url 'pedidos:carrito_confirmar' %}">Confirmar pedido</a>
+      {% endif %}
+    </div>
+  </div>
+{% endblock %}

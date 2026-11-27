@@ -1,0 +1,37 @@
+{% extends "base.html" %}
+{% block content %}
+  {% if accion == "quitar" %}
+    <h1>Quitar del carrito</h1>
+    <p class="lead">¿Quitar {{ item.cantidad }} x {{ item.producto.nombre }} del carrito?</p>
+  {% elif accion == "codigo" %}
+    <h1>Aplicar código de descuento</h1>
+  {% elif accion == "confirmar" %}
+    <h1>Confirmar pedido</h1>
+    <p>Subtotal: ${{ pedido.subtotal|floatformat:"0g" }}</p>
+    <p>Descuento: ${{ pedido.descuento|floatformat:"0g" }}</p>
+    <p><strong>Total: ${{ pedido.total|floatformat:"0g" }}</strong></p>
+  {% else %}
+    <h1>Cambiar estado del pedido</h1>
+    <p class="lead">Pedido #{{ pedido.pk }} — estado actual: {{ pedido.get_estado_display }}</p>
+  {% endif %}
+
+  <form method="post">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    {% if accion == "quitar" %}
+      <button type="submit" class="btn btn-lg btn-danger">Quitar</button>
+    {% elif accion == "codigo" %}
+      <button type="submit" class="btn btn-lg btn-cafe">Aplicar código</button>
+    {% elif accion == "confirmar" %}
+      <button type="submit" class="btn btn-lg btn-cafe">Confirmar pedido</button>
+    {% else %}
+      <button type="submit" class="btn btn-lg btn-cafe">Cambiar estado</button>
+    {% endif %}
+  </form>
+
+  {% if accion == "estado" %}
+    <p><a href="{% url 'pedidos:pedido_detail' pedido.pk %}">Volver al pedido</a></p>
+  {% else %}
+    <p><a href="{% url 'pedidos:carrito_detail' %}">Volver al carrito</a></p>
+  {% endif %}
+{% endblock %}

@@ -1,0 +1,73 @@
+:root {
+  --color-primario: #5D4037;
+  --color-secundario: #3E2723;
+  --color-acento: #E0A030;
+  --color-fondo: #FAF6F0;
+  --color-texto: #2B2B2B;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+main {
+  padding-bottom: 4rem;
+}
+
+.navbar-cafe {
+  background-color: var(--color-primario);
+}
+
+.navbar-cafe .navbar-brand,
+.navbar-cafe .nav-link,
+.navbar-cafe .navbar-text {
+  color: var(--color-fondo);
+}
+
+.navbar-cafe .navbar-brand:hover,
+.navbar-cafe .nav-link:hover {
+  color: var(--color-acento);
+}
+
+.navbar-cafe .navbar-toggler {
+  border-color: var(--color-acento);
+}
+
+.footer-cafe {
+  background-color: var(--color-secundario);
+  color: var(--color-fondo);
+}
+
+.btn-cafe {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-fondo);
+}
+
+.btn-cafe:hover,
+.btn-cafe:focus {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  color: var(--color-fondo);
+}
+
+.btn-acento {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+.badge-acento {
+  background-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+.card-cafe {
+  border-color: var(--color-acento);
+}
+
+.card-cafe .card-header {
+  background-color: var(--color-primario);
+  color: var(--color-fondo);
+}

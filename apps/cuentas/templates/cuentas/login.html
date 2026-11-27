@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-6 col-lg-5">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h3 mb-4">Iniciar sesion</h1>
+          <form method="post" action="{% url 'cuentas:login' %}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" %}
+            <button type="submit" class="btn btn-lg btn-cafe w-100">Ingresar</button>
+          </form>
+          <hr>
+          <p class="mb-2">¿Aun no tienes cuenta?</p>
+          <a class="btn btn-lg btn-outline-cafe w-100" href="{% url 'cuentas:registro' %}">Registrarme</a>
+          {% if user.is_authenticated %}
+            <form method="post" action="{% url 'cuentas:logout' %}" class="mt-3">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-lg btn-outline-cafe w-100">Salir</button>
+            </form>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}
