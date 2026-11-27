@@ -1,0 +1,63 @@
+{% load static %}
+<nav class="navbar navbar-expand-lg navbar-dark" style="background-color: var(--color-primario);">
+    <div class="container">
+        <a class="navbar-brand" href="{% url 'inicio' %}">
+            <img src="{% static 'img/logo.svg' %}" alt="Logo" height="40">
+            Cafe Rincon
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#menu">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="menu">
+            <ul class="navbar-nav me-auto">
+                {% url 'inicio' as url_inicio %}
+                {% if url_inicio %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_inicio }}">Inicio</a></li>
+                {% endif %}
+                {% url 'catalogo:producto_list' as url_menu %}
+                {% if url_menu and perms.catalogo.view_producto %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_menu }}">Menu</a></li>
+                {% endif %}
+                {% url 'pedidos:carrito_detail' as url_carrito %}
+                {% if url_carrito and perms.pedidos.add_pedido %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_carrito }}">Carrito</a></li>
+                {% endif %}
+                {% url 'pedidos:pedido_list' as url_pedidos %}
+                {% if url_pedidos and perms.pedidos.view_pedido %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_pedidos }}">
+                    {% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}
+                </a></li>
+                {% endif %}
+                {% url 'entregas:entrega_list' as url_entregas %}
+                {% if url_entregas and perms.pedidos.despachar_pedido %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_entregas }}">Entregas</a></li>
+                {% endif %}
+                {% url 'reportes:reporte_panel' as url_reportes %}
+                {% if url_reportes and perms.pedidos.ver_reportes %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_reportes }}">Reportes</a></li>
+                {% endif %}
+                {% url 'cuentas:direccion_list' as url_direcciones %}
+                {% if url_direcciones and perms.cuentas.view_direccion %}
+                <li class="nav-item"><a class="nav-link" href="{{ url_direcciones }}">Mis direcciones</a></li>
+                {% endif %}
+                {% if user.is_staff %}
+                <li class="nav-item"><a class="nav-link" href="{% url 'admin:index' %}">Administracion</a></li>
+                {% endif %}
+            </ul>
+            <ul class="navbar-nav">
+                {% if user.is_authenticated %}
+                <li class="nav-item">
+                    <form method="post" action="{% url 'cuentas:logout' %}" style="display:inline;">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-link text-light p-0">Salir ({{ user.username }})</button>
+                    </form>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    <a class="nav-link" href="{% url 'cuentas:login' %}">Iniciar sesion</a>
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</nav>

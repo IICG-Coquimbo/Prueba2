@@ -1,0 +1,7 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="alert alert-danger">
+    No tienes permiso para ver esta pagina.
+</div>
+<a href="{% url 'inicio' %}" class="btn btn-outline-secondary">Volver al inicio</a>
+{% endblock %}

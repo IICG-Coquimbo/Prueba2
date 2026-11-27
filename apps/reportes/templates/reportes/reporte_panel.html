@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Reportes</h2>
+<div class="row">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5>Ventas del dia</h5>
+                <p class="display-4">${{ ventas_hoy|floatformat:"0g" }}</p>
+                <h5>Ventas de la semana</h5>
+                <p class="display-4">${{ ventas_semana|floatformat:"0g" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5>Productos mas pedidos</h5>
+                <ul class="list-group">
+                    {% for p in productos_top %}
+                    <li class="list-group-item">{{ p.producto__nombre }} - {{ p.total_cantidad }} unidades</li>
+                    {% empty %}
+                    <li class="list-group-item">Sin datos.</li>
+                    {% endfor %}
+                </ul>
+            </div>
+        </div>
+    </div>
+</div>
+<a href="{% url 'reportes:reporte_repartidores' %}" class="btn btn-primary btn-lg mt-3 w-100">Ver ranking de repartidores</a>
+{% endblock %}

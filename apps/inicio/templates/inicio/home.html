@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h2>Bienvenido, {{ user.get_username }}</h2>
+        <p>Rol: {% for g in user.groups.all %}{{ g.name }}{% endfor %}</p>
+    </div>
+</div>
+<div class="row">
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Menu</h5>
+                {% url 'catalogo:producto_list' as u %}
+                {% if u and perms.catalogo.view_producto %}
+                <a href="{{ u }}" class="btn btn-primary w-100 btn-lg">Ver menu</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Carrito</h5>
+                {% url 'pedidos:carrito_detail' as u %}
+                {% if u and perms.pedidos.add_pedido %}
+                <a href="{{ u }}" class="btn btn-primary w-100 btn-lg">Ver carrito</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    <div class="col-md-4">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Mis pedidos</h5>
+                {% url 'pedidos:pedido_list' as u %}
+                {% if u and perms.pedidos.view_pedido %}
+                <a href="{{ u }}" class="btn btn-primary w-100 btn-lg">Ver pedidos</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

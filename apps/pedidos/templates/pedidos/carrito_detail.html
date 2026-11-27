@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load pedidos_extras %}
+{% block content %}
+<h2>Tu carrito</h2>
+{% if pedido.items.exists %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Producto</th><th>Cantidad</th><th>Precio unit.</th><th>Subtotal</th><th>Accion</th></tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.items.all %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td>${{ item.cantidad|mul:item.precio_unitario|floatformat:"0g" }}</td>
+                <td>
+                    {% url 'pedidos:item_quitar' item.pk as u_quitar %}
+                    {% if u_quitar and perms.pedidos.add_pedido %}
+                    <a href="{{ u_quitar }}" class="btn btn-sm btn-danger">Quitar</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+{% if pedido.codigo_descuento %}
+<p><strong>Descuento ({{ pedido.codigo_descuento.porcentaje }}%):</strong> -${{ pedido.descuento|floatformat:"0g" }}</p>
+{% endif %}
+<p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+
+<h4>Aplicar codigo de descuento</h4>
+<form method="post" action="{% url 'pedidos:carrito_codigo' %}" class="d-inline">
+    {% csrf_token %}
+    {{ codigo_form.codigo }}
+    <button type="submit" class="btn btn-outline-secondary btn-lg">Aplicar</button>
+</form>
+
+<h4 class="mt-4">Confirmar pedido</h4>
+<form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" with form=confirmar_form %}
+    <button type="submit" class="btn btn-success btn-lg w-100">Confirmar pedido</button>
+</form>
+{% else %}
+<p>Tu carrito esta vacio.</p>
+<a href="{% url 'catalogo:producto_list' %}" class="btn btn-primary btn-lg">Ver menu</a>
+{% endif %}
+{% endblock %}

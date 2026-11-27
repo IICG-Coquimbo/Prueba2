@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>{% if object.pk %}Editar direccion{% else %}Nueva direccion{% endif %}</h2>
+<form method="post">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-primary btn-lg">{% if object.pk %}Guardar{% else %}Crear{% endif %}</button>
+    <a href="{% url 'cuentas:direccion_list' %}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+</form>
+{% endblock %}

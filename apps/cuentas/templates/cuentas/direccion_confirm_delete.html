@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>¿Borrar direccion "{{ object.alias }}"?</h2>
+<form method="post">
+    {% csrf_token %}
+    <button type="submit" class="btn btn-danger btn-lg">Sí, borrar</button>
+    <a href="{% url 'cuentas:direccion_list' %}" class="btn btn-outline-secondary ms-2">Cancelar</a>
+</form>
+{% endblock %}

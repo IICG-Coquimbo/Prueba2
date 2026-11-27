@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Menu</h2>
+{% if not perms.catalogo.change_producto %}
+<p class="text-muted">Solo productos disponibles.</p>
+{% endif %}
+<div class="row">
+    {% for p in productos %}
+    <div class="col-md-4 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">{{ p.nombre }}</h5>
+                <p class="card-text">{{ p.descripcion }}</p>
+                <p class="card-text"><strong>${{ p.precio|floatformat:"0g" }}</strong></p>
+                <span class="badge {% if p.disponible %}bg-success{% else %}bg-secondary{% endif %}">
+                    {% if p.disponible %}Disponible{% else %}No disponible{% endif %}
+                </span>
+                <a href="{% url 'catalogo:producto_detail' p.pk %}" class="btn btn-outline-primary mt-2">Ver</a>
+                {% url 'pedidos:producto_agregar' p.pk as u_agregar %}
+                {% if u_agregar and perms.pedidos.add_pedido and p.disponible %}
+                <a href="{{ u_agregar }}" class="btn btn-primary mt-2 w-100 btn-lg">Agregar al carrito</a>
+                {% endif %}
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <p>No hay productos.</p>
+    {% endfor %}
+</div>
+{% endblock %}

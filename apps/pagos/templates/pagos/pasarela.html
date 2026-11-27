@@ -1,0 +1,12 @@
+{% extends "base.html" %}
+{% block content %}
+<h2>Pasarela de pago (simulada)</h2>
+<p>Referencia: <strong>{{ pago.referencia }}</strong></p>
+<p>Monto: <strong>${{ pago.pedido.total|floatformat:"0g" }}</strong></p>
+<form method="post">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-success btn-lg w-100">Confirmar resultado</button>
+</form>
+<a href="{% url 'pedidos:pedido_detail' pago.pedido.pk %}" class="btn btn-secondary mt-2">Volver al pedido</a>
+{% endblock %}

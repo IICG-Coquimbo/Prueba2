@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+{% load catalogo_extras %}
+{% block content %}
+<h2>{{ producto.nombre }}</h2>
+<div class="row">
+    <div class="col-md-6">
+        {% if producto.imagen_url %}
+        <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="img-fluid" style="max-height: 300px;">
+        {% else %}
+        <p class="text-muted">Sin imagen</p>
+        {% endif %}
+        <p>{{ producto.descripcion }}</p>
+        <p><strong>Categoria:</strong> {{ producto.categoria.nombre }}</p>
+        <p><strong>Precio:</strong> ${{ producto.precio|floatformat:"0g" }}</p>
+        <span class="badge {% if producto.disponible %}bg-success{% else %}bg-secondary{% endif %}">
+            {% if producto.disponible %}Disponible{% else %}No disponible{% endif %}
+        </span>
+    </div>
+    <div class="col-md-6">
+        <h5>Opciones</h5>
+        {% for tipo in "tamano,leche,azucar"|split:"," %}
+        <h6>{{ tipo|title }}</h6>
+        {% for o in producto.opciones.all %}
+        {% if o.tipo == tipo %}
+        <span class="badge bg-info">{{ o.nombre }} (+${{ o.recargo|floatformat:"0g" }})</span>
+        {% endif %}
+        {% endfor %}
+        {% endfor %}
+    </div>
+</div>
+<a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary">Volver al menu</a>
+{% url 'pedidos:producto_agregar' producto.pk as u_agregar %}
+{% if u_agregar and perms.pedidos.add_pedido and producto.disponible %}
+<a href="{{ u_agregar }}" class="btn btn-primary btn-lg w-100">Agregar al carrito</a>
+{% endif %}
+{% endblock %}
