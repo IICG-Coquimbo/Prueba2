@@ -1,0 +1,6 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 64 64" width="64" height="64" role="img" aria-label="Taza de cafe">
+  <path d="M10 24h36v16a14 14 0 0 1-14 14h-8a14 14 0 0 1-14-14z" fill="#E0A030"/>
+  <path d="M46 28h4a7 7 0 0 1 0 14h-5" fill="none" stroke="#E0A030" stroke-width="4" stroke-linecap="round"/>
+  <path d="M20 8c-3 4 3 6 0 10M30 8c-3 4 3 6 0 10M40 8c-3 4 3 6 0 10" fill="none" stroke="#E0A030" stroke-width="3" stroke-linecap="round"/>
+  <rect x="8" y="56" width="40" height="4" rx="2" fill="#E0A030"/>
+</svg>
