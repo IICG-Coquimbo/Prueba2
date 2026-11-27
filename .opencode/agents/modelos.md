@@ -1,5 +1,5 @@
 ---
-description: Modelos y admin de cada app a partir de docs/modelo_datos.md
+description: "Modelos y admin de cada app a partir de docs/modelo_datos.md"
 mode: all
 ---
 
