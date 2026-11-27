@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Entregas{% endblock %}
+
+{% block content %}
+<div class="table-responsive">
+  <table class="table table-striped table-hover align-middle">
+    <thead class="table-light">
+      <tr>
+        <th>Pedido</th>
+        <th>Repartidor</th>
+        <th>Inicio</th>
+        <th>Fin</th>
+        <th>Minutos</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for entrega in object_list %}
+      <tr>
+        <td>{{ entrega.pedido.id }}</td>
+        <td>{{ entrega.repartidor }}</td>
+        <td>{{ entrega.inicio|date:"d/m/Y H:i" }}</td>
+        <td>{% if entrega.fin %}{{ entrega.fin|date:"d/m/Y H:i" }}{% else %}—{% endif %}</td>
+        <td>{% if entrega.minutos is not none %}{{ entrega.minutos }}{% else %}—{% endif %}</td>
+      </tr>
+      {% empty %}
+      <tr>
+        <td colspan="5" class="text-center">No hay entregas pendientes.</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

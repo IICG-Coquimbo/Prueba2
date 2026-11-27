@@ -16,7 +16,7 @@
         <div class="card-body text-center">
           <h5 class="card-title">{{ modulo.label }}</h5>
           {% if modulo.url %}
-            <a href="{{ modulo.url }}" class="btn btn-primario w-100">Ir</a>
+            <a href="{% url modulo.url %}" class="btn btn-primario w-100">Ir</a>
           {% endif %}
         </div>
       </div>

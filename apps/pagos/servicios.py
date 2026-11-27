@@ -3,7 +3,8 @@ from django.core.exceptions import ValidationError
 from django.utils import timezone
 
 from .models import Pago, EstadoPago
-from apps.pedidos.models import Pedido, EstadoPedido, registrar_estado as _registrar_estado
+from apps.pedidos.models import Pedido, EstadoPedido
+from apps.pedidos.servicios import registrar_estado as _registrar_estado
 
 
 def resultado_pago(referencia, exitoso):

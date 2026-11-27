@@ -11,7 +11,6 @@
           <th>Producto</th>
           <th>Precio unitario</th>
           <th>Cantidad</th>
-          <th>Subtotal</th>
           <th>Accion</th>
         </tr>
       </thead>
@@ -21,7 +20,6 @@
           <td>{{ item.producto.nombre }}</td>
           <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
           <td>{{ item.cantidad }}</td>
-          <td>${{ item.cantidad|mul:item.precio_unitario|floatformat:"0g" }}</td>
           <td>
             <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}" class="d-inline" onsubmit="return confirm('¿Quieres quitar este item?');">
               {% csrf_token %}

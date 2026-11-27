@@ -1,0 +1,92 @@
+{% extends 'base.html' %}
+{% block title %}Pedido #{{ pedido.id }} - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Pedido #{{ pedido.id }}</h2>
+<div class="row mb-4">
+  <div class="col-12 col-md-6">
+    <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+    <p><strong>Fecha:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+    <p><strong>Cliente:</strong> {{ pedido.cliente.username }}</p>
+    {% if perms.pedidos.despachar_pedido or user.is_staff %}
+    {% if pedido.direccion %}
+    <p><strong>Direccion:</strong> {{ pedido.direccion.alias }} - {{ pedido.direccion.direccion }}</p>
+    {% endif %}
+    {% if pedido.metodo_pago %}
+    <p><strong>Metodo de pago:</strong> {{ pedido.metodo_pago }}</p>
+    {% endif %}
+    {% endif %}
+    {% if pedido.codigo_descuento %}
+    <p><strong>Codigo de descuento:</strong> {{ pedido.codigo_descuento.codigo }} (-{{ pedido.codigo_descuento.porcentaje }}%)</p>
+    {% endif %}
+  </div>
+  <div class="col-12 col-md-6">
+    <p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+    {% if pedido.descuento > 0 %}
+    <p class="text-success"><strong>Descuento:</strong> -${{ pedido.descuento|floatformat:"0g" }}</p>
+    {% endif %}
+    <p class="fw-bold"><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+  </div>
+</div>
+
+<h3>Items</h3>
+{% if pedido.items.exists %}
+<div class="table-responsive">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Producto</th>
+      <th>Opciones</th>
+      <th>Cantidad</th>
+      <th>Precio unitario</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for item in pedido.items.all %}
+    <tr>
+      <td>{{ item.producto.nombre }}</td>
+      <td>
+        {% for opcion in item.opciones.all %}
+          {{ opcion.nombre }}{% if not forloop.last %}, {% endif %}
+        {% empty %}
+          -
+        {% endfor %}
+      </td>
+      <td>{{ item.cantidad }}</td>
+      <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="alert alert-info">Sin items.</div>
+{% endif %}
+
+<h3>Historial de estados</h3>
+{% if pedido.historial.exists %}
+<div class="table-responsive">
+<table class="table">
+  <thead>
+    <tr>
+      <th>Fecha</th>
+      <th>Estado</th>
+      <th>Usuario</th>
+    </tr>
+  </thead>
+  <tbody>
+    {% for h in pedido.historial.all %}
+    <tr>
+      <td>{{ h.fecha|date:"d/m/Y H:i" }}</td>
+      <td>{{ h.get_estado_display }}</td>
+      <td>{{ h.usuario.username|default:"-" }}</td>
+    </tr>
+    {% endfor %}
+  </tbody>
+</table>
+</div>
+{% else %}
+<div class="alert alert-info">Sin historial de estados.</div>
+{% endif %}
+
+<a href="{% url 'pedidos:pedido_list' %}" class="btn btn-primario">Volver a mis pedidos</a>
+{% endblock %}

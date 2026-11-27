@@ -21,9 +21,8 @@ class HomeView(LoginRequiredMixin, TemplateView):
         agregar("pedidos:carrito", "Carrito", perm="pedidos.add_pedido")
         label_pedidos = "Mis pedidos" if user.has_perm("pedidos.add_pedido") else "Pedidos"
         agregar("pedidos:pedido_list", label_pedidos, perm="pedidos.view_pedido")
-        agregar("cuentas:direccion_list", "Mis direcciones", perm="cuentas.view_direccion")
         agregar("entregas:entrega_list", "Entregas", perm="pedidos.despachar_pedido")
-        agregar("reportes:reporte_list", "Reportes", perm="pedidos.ver_reportes")
+        agregar("reportes:reporte_panel", "Reportes", perm="pedidos.ver_reportes")
         agregar("admin:index", "Administracion", staff=True)
 
         return ctx
