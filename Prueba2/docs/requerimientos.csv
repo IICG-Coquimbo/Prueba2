@@ -1,0 +1,26 @@
+id,tipo,descripcion,actor,app,prioridad
+RF-01,Funcional,"Como cliente quiero registrarme con nombre, correo, teléfono y contraseña para poder hacer pedidos.",Cliente,cuentas,Alta
+RF-02,Funcional,"Como cliente quiero iniciar y cerrar sesión para acceder a mi cuenta de forma segura.",Cliente,cuentas,Alta
+RF-03,Funcional,"Como cliente quiero ver el menú con fotos y precios para elegir qué pedir.",Cliente,catalogo,Alta
+RF-04,Funcional,"Como cliente quiero agregar productos a un carrito para armar mi pedido antes de confirmar.",Cliente,pedidos,Alta
+RF-05,Funcional,"Como cliente quiero elegir variantes por producto (tamaño, tipo de leche, azúcar) para personalizar mi pedido.",Cliente,catalogo,Alta
+RF-06,Funcional,"Como cliente quiero guardar varias direcciones de entrega (casa, trabajo) para reutilizarlas.",Cliente,cuentas,Media
+RF-07,Funcional,"Como cliente quiero elegir forma de pago (efectivo contra entrega o tarjeta en línea) al confirmar.",Cliente,pedidos,Alta
+RF-08,Funcional,"Como cliente quiero que el sistema valide el pago con la pasarela externa y me confirme si fue exitoso.",Cliente,pagos,Alta
+RF-09,Funcional,"Como cliente quiero ver el estado de mi pedido en tiempo real (recibido, en preparación, en camino, entregado).",Cliente,pedidos,Alta
+RF-10,Funcional,"Como cliente quiero que el sitio funcione en el celular con buena visualización del menú y carrito.",Cliente,transversal,Alta
+RF-11,Funcional,"Como barista quiero ver los pedidos entrantes en orden con detalle de productos y variantes.",Barista,pedidos,Alta
+RF-12,Funcional,"Como barista quiero marcar el pedido como en preparación y luego listo para despacho.",Barista,pedidos,Alta
+RF-13,Funcional,"Como repartidor quiero ver los pedidos listos con dirección y contacto del cliente.",Repartidor,entregas,Alta
+RF-14,Funcional,"Como repartidor quiero marcar el pedido como en camino y entregado.",Repartidor,entregas,Alta
+RF-15,Funcional,"Como administrador quiero marcar productos como no disponible para que no aparezcan en el menú.",Administrador,catalogo,Media
+RF-16,Funcional,"Como administrador quiero crear códigos de descuento (ej: 10% primer pedido) con vigencia.",Administrador,promociones,Media
+RF-17,Funcional,"Como dueño quiero ver un panel con ventas del día y de la semana, y los productos más pedidos.",Dueño,reportes,Media
+RF-18,Funcional,"Como dueño quiero un ranking de repartidores según entregas realizadas y tiempo promedio.",Dueño,reportes,Baja
+RNF-01,No Funcional,"El sistema debe soportar 40 a 50 pedidos por hora sin degradar el tiempo de respuesta.",Sistema,transversal,Alta
+RNF-02,No Funcional,"La confirmación de un pedido debe completarse en pocos segundos; el usuario no debe percibir bloqueo.",Sistema,pedidos,Alta
+RNF-03,No Funcional,"Las contraseñas deben almacenarse con hash seguro; los números de tarjeta no se almacenan en el sistema.",Sistema,cuentas,Alta
+RNF-04,No Funcional,"La interfaz debe ser responsive y priorizar el uso en móvil.",Sistema,transversal,Alta
+RNF-05,No Funcional,"La integración con la pasarela de pago debe ser externa y recibir notificación de éxito o fallo.",Sistema,pagos,Alta
+RNF-06,No Funcional,"El seguimiento del pedido debe reflejarse en tiempo real (recarga automática o actualización).",Sistema,pedidos,Media
+RNF-07,No Funcional,"El sistema debe tener trazabilidad: cada pedido conserva historial de estados con fecha y hora.",Sistema,pedidos,Media
