@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8 col-lg-6">
+    <h1 class="h3 mb-4">Borrar direccion</h1>
+    <p>Estas seguro de borrar la direccion <strong>{{ object.alias }}</strong>?</p>
+    <form method="post" action="{% url 'cuentas:direccion_delete' object.pk %}">
+      {% csrf_token %}
+      <div class="d-flex flex-wrap gap-2">
+        <button type="submit" class="btn btn-danger btn-lg">Borrar</button>
+        <a class="btn btn-outline-secondary btn-lg" href="{% url 'cuentas:direccion_list' %}">Cancelar</a>
+      </div>
+    </form>
+  </div>
+</div>
+{% endblock %}

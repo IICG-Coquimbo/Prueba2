@@ -1,0 +1,75 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<h1 class="h3 mb-4">Mi carrito</h1>
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5">Items</h2>
+        {% if object.items.all %}
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Opciones</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th></th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in object.items.all %}
+              <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>
+                  {% for opcion in item.opciones.all %}
+                    <span class="badge text-bg-light border">{{ opcion.get_tipo_display }}: {{ opcion.nombre }}</span>
+                  {% empty %}
+                    <span class="text-muted">Sin opciones</span>
+                  {% endfor %}
+                </td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td>
+                  <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}">
+                    {% csrf_token %}
+                    <button type="submit" class="btn btn-outline-danger btn-sm">Quitar</button>
+                  </form>
+                </td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        {% else %}
+        <p class="text-muted mb-0">Tu carrito esta vacio.</p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h5">Totales</h2>
+        <p class="d-flex justify-content-between mb-1"><span>Subtotal</span><strong>${{ object.subtotal|floatformat:"0g" }}</strong></p>
+        <p class="d-flex justify-content-between mb-1"><span>Descuento</span><strong>${{ object.descuento|floatformat:"0g" }}</strong></p>
+        <p class="d-flex justify-content-between fs-5 mb-0"><span>Total</span><strong>${{ object.total|floatformat:"0g" }}</strong></p>
+      </div>
+    </div>
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h5">Codigo de descuento</h2>
+        <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+          {% csrf_token %}
+          {% include "parciales/form_campos.html" %}
+          <button type="submit" class="btn btn-outline-primary btn-lg w-100">Aplicar codigo</button>
+        </form>
+      </div>
+    </div>
+    <div class="d-grid">
+      <a class="btn btn-primary btn-lg" href="{% url 'pedidos:carrito_confirmar' %}">Confirmar pedido</a>
+    </div>
+  </div>
+</div>
+{% endblock %}

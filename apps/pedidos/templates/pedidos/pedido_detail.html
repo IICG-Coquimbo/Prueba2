@@ -1,0 +1,100 @@
+﻿{% extends "base.html" %}
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Pedido #{{ object.pk }}</h1>
+  <span class="badge text-bg-primary fs-6">{{ object.get_estado_display }}</span>
+</div>
+
+<div class="row g-4">
+  <div class="col-12 col-lg-8">
+    <div class="card shadow-sm mb-4">
+      <div class="card-body">
+        <h2 class="h5">Items</h2>
+        <div class="table-responsive">
+          <table class="table align-middle">
+            <thead>
+              <tr>
+                <th>Producto</th>
+                <th>Opciones</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for item in object.items.all %}
+              <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>
+                  {% for opcion in item.opciones.all %}
+                    <span class="badge text-bg-light border">{{ opcion.get_tipo_display }}: {{ opcion.nombre }}</span>
+                  {% empty %}
+                    <span class="text-muted">Sin opciones</span>
+                  {% endfor %}
+                </td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+        <div class="border-top pt-3">
+          <p class="d-flex justify-content-between mb-1"><span>Subtotal</span><strong>${{ object.subtotal|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between mb-1"><span>Descuento</span><strong>${{ object.descuento|floatformat:"0g" }}</strong></p>
+          <p class="d-flex justify-content-between fs-5 mb-0"><span>Total</span><strong>${{ object.total|floatformat:"0g" }}</strong></p>
+        </div>
+      </div>
+    </div>
+
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5">Historial de estados</h2>
+        <div class="table-responsive">
+          <table class="table table-sm align-middle mb-0">
+            <thead>
+              <tr>
+                <th>Estado</th>
+                <th>Fecha</th>
+              </tr>
+            </thead>
+            <tbody>
+              {% for h in historial %}
+              <tr>
+                <td>{{ h.get_estado_display }}</td>
+                <td>{{ h.fecha }}</td>
+              </tr>
+              {% empty %}
+              <tr>
+                <td colspan="2" class="text-muted">Sin historial.</td>
+              </tr>
+              {% endfor %}
+            </tbody>
+          </table>
+        </div>
+      </div>
+    </div>
+  </div>
+
+  <div class="col-12 col-lg-4">
+    <div class="card shadow-sm mb-3">
+      <div class="card-body">
+        <h2 class="h5">Informacion</h2>
+        <p class="mb-1"><strong>Cliente:</strong> {{ object.cliente.username }}</p>
+        <p class="mb-1"><strong>Metodo de pago:</strong> {{ object.get_metodo_pago_display|default:"-" }}</p>
+        {% if perms.pedidos.despachar_pedido or user.is_staff %}
+        <p class="mb-1"><strong>Direccion:</strong> {% if object.direccion %}{{ object.direccion.direccion }}{% else %}-{% endif %}</p>
+        <p class="mb-0"><strong>Telefono:</strong> {% if object.cliente.perfil %}{{ object.cliente.perfil.telefono }}{% else %}-{% endif %}</p>
+        {% endif %}
+      </div>
+    </div>
+    {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    <div class="d-grid">
+      <a class="btn btn-primary btn-lg" href="{% url 'pedidos:pedido_estado' object.pk %}">Cambiar estado</a>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

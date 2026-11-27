@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="row g-4">
+  <div class="col-12 col-lg-6">
+    <div class="card shadow-sm">
+      {% if object.imagen_url %}
+      <img src="{{ object.imagen_url }}" class="card-img-top" alt="{{ object.nombre }}">
+      {% endif %}
+      <div class="card-body">
+        <h1 class="h3">{{ object.nombre }}</h1>
+        <p class="text-muted">{{ object.categoria.nombre }}</p>
+        {% if object.descripcion %}
+        <p>{{ object.descripcion }}</p>
+        {% endif %}
+        <p class="fs-4 fw-bold">${{ object.precio|floatformat:"0g" }}</p>
+        {% if not object.disponible %}
+        <div class="alert alert-warning">Este producto no esta disponible.</div>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  <div class="col-12 col-lg-6">
+    {% if perms.pedidos.add_pedido and object.disponible %}
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h2 class="h5 mb-3">Agregar al carrito</h2>
+        <form method="post" action="{% url 'catalogo:producto_agregar' object.pk %}">
+          {% csrf_token %}
+          {% include "parciales/form_campos.html" %}
+          <button type="submit" class="btn btn-primary btn-lg w-100">Agregar al carrito</button>
+        </form>
+      </div>
+    </div>
+    {% endif %}
+    <a class="btn btn-outline-secondary btn-lg mt-3" href="{% url 'catalogo:producto_list' %}">Volver al menu</a>
+  </div>
+</div>
+{% endblock %}
