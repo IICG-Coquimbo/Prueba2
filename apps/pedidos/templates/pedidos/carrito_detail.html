@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Carrito{% endblock %}
+{% block content %}
+<h2>Carrito</h2>
+{% if pedido %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td>
+                    <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}" class="d-inline">
+                        {% csrf_token %}
+                        <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+                    </form>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+{% if pedido.descuento > 0 %}
+<p><strong>Descuento:</strong> -${{ pedido.descuento|floatformat:"0g" }}</p>
+{% endif %}
+<p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+
+<h3>Aplicar codigo de descuento</h3>
+<form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+    {% csrf_token %}
+    {{ form_codigo.codigo }}
+    {{ form_codigo.codigo.errors }}
+    <button type="submit" class="btn btn-primary btn-lg">Aplicar</button>
+</form>
+
+<h3>Confirmar pedido</h3>
+<form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+    {% csrf_token %}
+    {{ form_confirmar.direccion }}
+    {{ form_confirmar.direccion.errors }}
+    {{ form_confirmar.metodo_pago }}
+    {{ form_confirmar.metodo_pago.errors }}
+    <button type="submit" class="btn btn-primary btn-lg w-100">Confirmar pedido</button>
+</form>
+{% else %}
+<p>No hay carrito activo.</p>
+{% endif %}
+<a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary">Volver al menu</a>
+{% endblock %}

@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Mis direcciones{% endblock %}
+{% block content %}
+<h2>Mis direcciones</h2>
+{% if direcciones %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Alias</th><th>Direccion</th><th>Referencia</th><th>Acciones</th></tr>
+        </thead>
+        <tbody>
+            {% for d in direcciones %}
+            <tr>
+                <td>{{ d.alias }}</td>
+                <td>{{ d.direccion }}</td>
+                <td>{{ d.referencia|default:"-" }}</td>
+                <td>
+                    <a href="{% url 'cuentas:direccion_update' d.pk %}" class="btn btn-sm btn-primary">Editar</a>
+                    <a href="{% url 'cuentas:direccion_delete' d.pk %}" class="btn btn-sm btn-danger">Borrar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No tienes direcciones registradas.</p>
+{% endif %}
+<a href="{% url 'cuentas:direccion_create' %}" class="btn btn-primary btn-lg w-100">Nueva direccion</a>
+<a href="{% url 'inicio' %}" class="btn btn-secondary mt-2">Volver al inicio</a>
+{% endblock %}

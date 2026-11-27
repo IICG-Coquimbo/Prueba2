@@ -1,0 +1,41 @@
+{% extends 'base.html' %}
+{% block title %}Reportes{% endblock %}
+{% block content %}
+<h2>Panel de reportes</h2>
+<div class="row">
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ventas de hoy</h5>
+                <p class="card-text display-4">${{ ventas_hoy|floatformat:"0g" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-md-6 mb-3">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Ventas de la semana</h5>
+                <p class="card-text display-4">${{ ventas_semana|floatformat:"0g" }}</p>
+            </div>
+        </div>
+    </div>
+</div>
+<h3>Productos mas pedidos</h3>
+{% if productos_top %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Producto</th><th>Unidades vendidas</th></tr>
+        </thead>
+        <tbody>
+            {% for p in productos_top %}
+            <tr><td>{{ p.nombre }}</td><td>{{ p.total_unidades }}</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay productos pedidos.</p>
+{% endif %}
+<a href="{% url 'reportes:reporte_repartidores' %}" class="btn btn-primary btn-lg">Ver ranking de repartidores</a>
+{% endblock %}

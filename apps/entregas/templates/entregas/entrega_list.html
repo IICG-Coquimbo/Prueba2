@@ -1,0 +1,37 @@
+{% extends 'base.html' %}
+{% block title %}Entregas{% endblock %}
+{% block content %}
+<h2>Entregas</h2>
+{% if entregas %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Pedido</th>
+                <th>Repartidor</th>
+                <th>Estado del pedido</th>
+                <th>Inicio</th>
+                <th>Fin</th>
+                <th>Minutos</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for entrega in entregas %}
+            <tr>
+                <td>#{{ entrega.pedido.pk }}</td>
+                <td>{{ entrega.repartidor.username }}</td>
+                <td>{{ entrega.pedido.get_estado_display }}</td>
+                <td>{{ entrega.inicio|date:"d/m/Y H:i" }}</td>
+                <td>{{ entrega.fin|date:"d/m/Y H:i"|default:"-" }}</td>
+                <td>{{ entrega.minutos|default:"-" }}</td>
+                <td><a href="{% url 'pedidos:pedido_detail' entrega.pedido.pk %}" class="btn btn-primary btn-sm">Ver pedido</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay entregas pendientes.</p>
+{% endif %}
+{% endblock %}

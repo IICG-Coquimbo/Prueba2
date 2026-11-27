@@ -1,0 +1,26 @@
+{% extends 'base.html' %}
+{% block title %}Ranking de repartidores{% endblock %}
+{% block content %}
+<h2>Ranking de repartidores</h2>
+{% if ranking %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr><th>Repartidor</th><th>Entregas</th><th>Minutos promedio</th></tr>
+        </thead>
+        <tbody>
+            {% for r in ranking %}
+            <tr>
+                <td>{{ r.repartidor.username }}</td>
+                <td>{{ r.entregas }}</td>
+                <td>{{ r.minutos_promedio }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay entregas completadas.</p>
+{% endif %}
+<a href="{% url 'reportes:reporte_panel' %}" class="btn btn-secondary">Volver al panel</a>
+{% endblock %}

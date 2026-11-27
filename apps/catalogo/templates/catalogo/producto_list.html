@@ -1,0 +1,32 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>Menu</h2>
+{% if productos %}
+<div class="table-responsive">
+    <table class="table">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoria</th>
+                <th>Precio</th>
+                <th>Disponible</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio|floatformat:"0g" }}</td>
+                <td>{% if producto.disponible %}Si{% else %}No{% endif %}</td>
+                <td><a href="{% url 'catalogo:producto_detail' producto.pk %}" class="btn btn-primary btn-lg">Ver</a></td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% else %}
+<p>No hay productos disponibles.</p>
+{% endif %}
+{% endblock %}

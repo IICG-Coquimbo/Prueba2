@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Direccion{% endblock %}
+{% block content %}
+<h2>{% if object.pk %}Editar direccion{% else %}Nueva direccion{% endif %}</h2>
+<form method="post" action="">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-primary btn-lg w-100">Guardar</button>
+</form>
+<a href="{% url 'cuentas:direccion_list' %}" class="btn btn-secondary">Volver</a>
+{% endblock %}

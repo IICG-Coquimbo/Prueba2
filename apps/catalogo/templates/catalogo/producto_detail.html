@@ -1,0 +1,19 @@
+{% extends 'base.html' %}
+{% block content %}
+<h2>{{ producto.nombre }}</h2>
+<p>{{ producto.descripcion }}</p>
+<p><strong>Categoria:</strong> {{ producto.categoria.nombre }}</p>
+<p><strong>Precio:</strong> ${{ producto.precio|floatformat:"0g" }}</p>
+<p><strong>Disponible:</strong> {% if producto.disponible %}Si{% else %}No{% endif %}</p>
+
+{% if producto.disponible %}
+<form method="post" action="{% url 'catalogo:producto_agregar' producto.pk %}">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-primary btn-lg w-100">Agregar al carrito</button>
+</form>
+{% else %}
+<p class="text-danger">Este producto no esta disponible.</p>
+{% endif %}
+<a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary">Volver al menu</a>
+{% endblock %}
