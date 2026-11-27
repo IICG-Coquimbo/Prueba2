@@ -2,6 +2,7 @@ from django.contrib.auth.mixins import LoginRequiredMixin, PermissionRequiredMix
 from django.contrib.auth.views import LoginView, LogoutView
 from django.views.generic import CreateView, ListView, UpdateView, DeleteView
 from django.urls import reverse_lazy
+from django.shortcuts import redirect
 from django.contrib.auth.models import User, Group
 from django.contrib import messages
 from apps.cuentas.models import Direccion
@@ -30,7 +31,7 @@ class RegistroView(CreateView):
         grupo_cliente = Group.objects.get(name="Cliente")
         user.groups.add(grupo_cliente)
         messages.success(self.request, "Registro exitoso. Bienvenido!")
-        return super().form_valid(form)
+        return redirect(self.success_url)
 
 
 class DireccionListView(LoginRequiredMixin, PermissionRequiredMixin, ListView):
