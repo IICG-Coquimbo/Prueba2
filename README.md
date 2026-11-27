@@ -1,3 +1,6 @@
+Javier Alfredo Aguirre Urrutia
+
+21.988.505-9
 
 # Café Rincón: prueba de usuario paso a paso
 En este ejercicio **no programas el sistema**: lo construyen agentes de OpenCode a partir de los requerimientos de `docs/requerimientos.csv`, y tú lo **pruebas como usuario**. Escribes escenarios de prueba, los ejecutas, y subes las capturas de pantalla como evidencia a un issue de GitHub.

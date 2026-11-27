@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row">
+    <div class="col-12 col-md-8">
+      <h1>{{ object.nombre }}</h1>
+      <p class="lead">${{ object.precio|floatformat:"0g" }}</p>
+      <p><strong>Categoría:</strong> {{ object.categoria.nombre }}</p>
+      {% if object.descripcion %}<p>{{ object.descripcion }}</p>{% endif %}
+      {% if object.imagen_url %}
+        <img src="{{ object.imagen_url }}" alt="{{ object.nombre }}" class="img-fluid mb-3">
+      {% endif %}
+      <p><strong>Disponible:</strong> {% if object.disponible %}Si{% else %}No{% endif %}</p>
+
+      {% if perms.pedidos.add_pedido and object.disponible %}
+        <h2>Agregar al carrito</h2>
+        <form method="post" action="{% url 'catalogo:producto_agregar' object.pk %}">
+          {% csrf_token %}
+          {% include "parciales/form_campos.html" %}
+          <button type="submit" class="btn btn-lg btn-cafe">Agregar al carrito</button>
+        </form>
+      {% endif %}
+
+      <p><a href="{% url 'catalogo:producto_list' %}">Volver al menu</a></p>
+    </div>
+  </div>
+{% endblock %}

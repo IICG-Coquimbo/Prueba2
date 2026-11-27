@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% block content %}
+  <div class="row justify-content-center">
+    <div class="col-12 col-md-8 col-lg-6">
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h1 class="h3 mb-4">{% if object %}Editar dirección{% else %}Nueva dirección{% endif %}</h1>
+          <form method="post">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" %}
+            <button type="submit" class="btn btn-lg btn-cafe w-100">Guardar</button>
+          </form>
+          <a class="btn btn-lg btn-outline-cafe w-100 mt-2" href="{% url 'cuentas:direccion_list' %}">Cancelar</a>
+        </div>
+      </div>
+    </div>
+  </div>
+{% endblock %}

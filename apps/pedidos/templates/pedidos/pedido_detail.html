@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+{% block extra_head %}
+  <meta http-equiv="refresh" content="15">
+{% endblock %}
+{% block content %}
+  <h1>Pedido #{{ object.pk }}</h1>
+  <p><strong>Estado:</strong> {{ object.get_estado_display }}</p>
+  <p><strong>Fecha:</strong> {{ object.creado|date:"d/m/Y H:i" }}</p>
+  <p><strong>Cliente:</strong> {{ object.cliente.username }}</p>
+
+  {% if mostrar_datos_cliente %}
+    {% if object.direccion %}
+      <p><strong>Dirección:</strong> {{ object.direccion.direccion }}{% if object.direccion.referencia %} ({{ object.direccion.referencia }}){% endif %}</p>
+    {% endif %}
+    {% if object.cliente.perfil.telefono %}
+      <p><strong>Teléfono:</strong> {{ object.cliente.perfil.telefono }}</p>
+    {% endif %}
+  {% endif %}
+
+  <h2>Productos</h2>
+  <ul>
+    {% for item in items %}
+      <li>
+        {{ item.cantidad }} x {{ item.producto.nombre }} — ${{ item.precio_unitario|floatformat:"0g" }} c/u
+        {% if item.opciones.all %}
+          ({% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %})
+        {% endif %}
+      </li>
+    {% endfor %}
+  </ul>
+
+  <p>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+  <p>Descuento: ${{ object.descuento|floatformat:"0g" }}</p>
+  <p><strong>Total: ${{ object.total|floatformat:"0g" }}</strong></p>
+
+  {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    <p><a class="btn btn-lg btn-cafe" href="{% url 'pedidos:pedido_estado' object.pk %}">Cambiar estado</a></p>
+  {% endif %}
+
+  <h2>Historial de estados</h2>
+  <ul>
+    {% for cambio in historial %}
+      <li>{{ cambio.fecha|date:"d/m/Y H:i" }} — {{ cambio.get_estado_display }}{% if cambio.usuario %} ({{ cambio.usuario.username }}){% endif %}</li>
+    {% endfor %}
+  </ul>
+
+  <p><a href="{% url 'pedidos:pedido_list' %}">Volver a pedidos</a></p>
+{% endblock %}
