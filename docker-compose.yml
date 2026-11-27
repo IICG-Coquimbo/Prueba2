@@ -21,7 +21,7 @@ services:
     env_file:
       - .env
     environment:
-      DJANGO_SETTINGS_MODULE: proyecto.settings
+      DJANGO_SETTINGS_MODULE: cafe_proyecto.settings
     depends_on:
       - db
 
