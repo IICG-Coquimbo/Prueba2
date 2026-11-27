@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h1>
+  {% if object_list %}
+  <div class="row">
+    {% for pedido in object_list %}
+    <div class="col-md-6 mb-3">
+      <div class="card h-100">
+        <div class="card-body">
+          <h2 class="h5 card-title">Pedido {{ pedido.pk }}</h2>
+          <p class="card-text">Fecha: {{ pedido.creado }}</p>
+          <p class="card-text">Estado: {{ pedido.get_estado_display }}</p>
+          <p class="card-text">Cliente: {{ pedido.cliente }}</p>
+          <p class="card-text">Total: ${{ pedido.total|floatformat:"0g" }}</p>
+          <p class="card-text">Productos: {{ pedido.items.all|length }}</p>
+          <a class="btn btn-outline-primary" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Ver detalle</a>
+          {% url 'pedidos:pedido_estado' pedido.pk as url_estado %}
+          {% if url_estado %}
+          {% if pedido.estado == "recibido" or pedido.estado == "en_preparacion" %}
+          {% if perms.pedidos.preparar_pedido %}
+          <a class="btn btn-lg w-100 mt-2" href="{{ url_estado }}">Cambiar estado</a>
+          {% endif %}
+          {% elif pedido.estado == "listo_despacho" or pedido.estado == "en_camino" %}
+          {% if perms.pedidos.despachar_pedido %}
+          <a class="btn btn-lg w-100 mt-2" href="{{ url_estado }}">Cambiar estado</a>
+          {% endif %}
+          {% endif %}
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  </div>
+  {% else %}
+  <p>No hay pedidos para mostrar.</p>
+  {% endif %}
+</div>
+{% endblock %}

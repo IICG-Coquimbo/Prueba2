@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block content %}
+<div class="container">
+  <h1>Ranking de repartidores</h1>
+  {% if repartidores %}
+  <div class="table-responsive">
+    <table class="table table-striped">
+      <thead>
+        <tr>
+          <th>Repartidor</th>
+          <th>Entregas</th>
+          <th>Minutos promedio</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for fila in repartidores %}
+        <tr>
+          <td>{{ fila.repartidor }}</td>
+          <td>{{ fila.entregas }}</td>
+          <td>{{ fila.minutos_promedio|floatformat:2 }}</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No hay entregas finalizadas.</p>
+  {% endif %}
+  <a class="btn btn-lg w-100 mt-3" href="{% url 'reportes:reporte_panel' %}">Volver a reportes</a>
+</div>
+{% endblock %}

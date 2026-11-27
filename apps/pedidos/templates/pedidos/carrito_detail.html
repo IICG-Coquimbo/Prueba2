@@ -1,0 +1,58 @@
+{% extends "base.html" %}
+{% block title %}Carrito{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Carrito</h1>
+  {% if object.items.all %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio unitario</th>
+          <th>Subtotal</th>
+          <th>Opciones</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in object.items.all %}
+        <tr>
+          <td>{{ item.producto.nombre }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+          <td>{{ item.cantidad }} x ${{ item.precio_unitario|floatformat:"0g" }}</td>
+          <td>
+            {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}Sin opciones{% endfor %}
+          </td>
+          <td>
+            {% url 'pedidos:item_quitar' item.pk as url_quitar %}
+            {% if url_quitar and perms.pedidos.add_pedido %}
+            <a class="btn btn-lg btn-outline-danger" href="{{ url_quitar }}">Quitar</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <p>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+  <p>Descuento: ${{ object.descuento|floatformat:"0g" }}</p>
+  <p>Total: ${{ object.total|floatformat:"0g" }}</p>
+  <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+    {% csrf_token %}
+    {% with form=form_codigo %}{% include "parciales/form_campos.html" %}{% endwith %}
+    <button type="submit" class="btn btn-lg btn-outline-secondary">Aplicar código</button>
+  </form>
+  <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+    {% csrf_token %}
+    {% with form=confirmar_form %}{% include "parciales/form_campos.html" %}{% endwith %}
+    <button type="submit" class="btn btn-primary btn-lg w-100">Confirmar pedido</button>
+  </form>
+  {% else %}
+  <p>El carrito está vacío.</p>
+  <a class="btn btn-primary btn-lg" href="{% url 'catalogo:producto_list' %}">Ver menú</a>
+  {% endif %}
+</div>
+{% endblock %}

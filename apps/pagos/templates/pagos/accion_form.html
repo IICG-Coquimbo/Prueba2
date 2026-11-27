@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+{% block title %}{{ titulo }}{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>{{ titulo }}</h1>
+  <p class="text-muted">Esta es una pasarela simulada. No se piden ni se guardan datos de tarjeta.</p>
+  <div class="card mb-3">
+    <div class="card-body">
+      <p class="mb-1">Pedido N° {{ pedido.pk }}</p>
+      <p class="fs-4 fw-bold">Monto: ${{ pago.monto|floatformat:"0g" }}</p>
+    </div>
+  </div>
+  <form method="post">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-primary btn-lg w-100">{{ accion }}</button>
+  </form>
+  <a class="btn btn-link" href="{% url 'pedidos:pedido_detail' pk=pedido.pk %}">Volver al pedido</a>
+</div>
+{% endblock %}

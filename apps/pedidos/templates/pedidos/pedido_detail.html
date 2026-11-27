@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+{% block title %}Pedido {{ object.pk }}{% endblock %}
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Pedido {{ object.pk }}</h1>
+  <p>Estado: {{ object.get_estado_display }}</p>
+  <p>Fecha de creación: {{ object.creado }}</p>
+  {% if ver_datos_cliente %}
+  <p>Cliente: {{ object.cliente }}</p>
+  <p>Dirección: {{ object.direccion|default:"Sin dirección" }}</p>
+  <p>Teléfono: {{ object.cliente.perfil.telefono|default:"Sin teléfono" }}</p>
+  {% endif %}
+  <p>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</p>
+  <p>Descuento: ${{ object.descuento|floatformat:"0g" }}</p>
+  <p>Total: ${{ object.total|floatformat:"0g" }}</p>
+  <h2>Productos</h2>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Cantidad</th>
+          <th>Precio unitario</th>
+          <th>Opciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in object.items.all %}
+        <tr>
+          <td>{{ item.producto.nombre }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+          <td>
+            {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}Sin opciones{% endfor %}
+          </td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="4">Sin productos.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  <h2>Historial</h2>
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Estado</th>
+          <th>Fecha</th>
+          <th>Usuario</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for cambio in historial %}
+        <tr>
+          <td>{{ cambio.get_estado_display }}</td>
+          <td>{{ cambio.fecha }}</td>
+          <td>{{ cambio.usuario|default:"Sin usuario" }}</td>
+        </tr>
+        {% empty %}
+        <tr>
+          <td colspan="3">Sin cambios de estado.</td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% url 'pedidos:pedido_estado' object.pk as url_estado %}
+  {% if url_estado and puede_cambiar_estado %}
+  <a class="btn btn-lg w-100" href="{{ url_estado }}">Cambiar estado</a>
+  {% endif %}
+</div>
+{% endblock %}

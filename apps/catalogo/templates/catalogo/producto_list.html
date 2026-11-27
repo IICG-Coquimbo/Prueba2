@@ -1,0 +1,50 @@
+{% extends "base.html" %}
+{% block title %}Menú{% endblock %}
+{% block content %}
+<div class="container">
+  <h1>Menú</h1>
+  {% if object_list %}
+  <div class="table-responsive">
+    <table class="table table-striped align-middle">
+      <thead>
+        <tr>
+          <th>Imagen</th>
+          <th>Producto</th>
+          <th>Categoría</th>
+          <th>Precio</th>
+          <th>Disponible</th>
+          <th>Acciones</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for producto in object_list %}
+        <tr>
+          <td>
+            {% if producto.imagen_url %}
+            <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" height="60">
+            {% else %}
+            Sin imagen
+            {% endif %}
+          </td>
+          <td>{{ producto.nombre }}</td>
+          <td>{{ producto.categoria.nombre }}</td>
+          <td>${{ producto.precio|floatformat:"0g" }}</td>
+          <td>{% if producto.disponible %}Sí{% else %}No{% endif %}</td>
+          <td>
+            {% url 'catalogo:producto_detail' producto.pk as url_detalle %}
+            <a class="btn btn-outline-primary" href="{{ url_detalle }}">Detalle</a>
+            {% url 'catalogo:producto_agregar' producto.pk as url_agregar %}
+            {% if url_agregar and producto.disponible and perms.pedidos.add_pedido %}
+            <a class="btn btn-primary btn-lg" href="{{ url_agregar }}">Agregar</a>
+            {% endif %}
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+  </div>
+  {% else %}
+  <p>No hay productos disponibles.</p>
+  {% endif %}
+</div>
+{% endblock %}

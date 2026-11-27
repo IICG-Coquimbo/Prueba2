@@ -1,0 +1,42 @@
+:root {
+    --color-primario: #5D4037;
+    --color-secundario: #3E2723;
+    --color-acento: #E0A030;
+    --color-fondo: #FAF6F0;
+    --color-texto: #2B2B2B;
+    --bs-primary: var(--color-primario);
+    --bs-secondary: var(--color-secundario);
+    --bs-body-bg: var(--color-fondo);
+    --bs-body-color: var(--color-texto);
+    --bs-primary-rgb: 93, 64, 55;
+    --bs-secondary-rgb: 62, 39, 35;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+}
+
+.navbar.bg-primary,
+.btn-primary,
+.bg-primary {
+    background-color: var(--color-primario);
+}
+
+.bg-secondary,
+.footer-sitio {
+    background-color: var(--color-secundario);
+}
+
+.badge-acento {
+    background-color: var(--color-acento);
+    color: var(--color-secundario);
+}
+
+.navbar-brand img {
+    height: 40px;
+}
+
+main {
+    padding-bottom: 2rem;
+}
