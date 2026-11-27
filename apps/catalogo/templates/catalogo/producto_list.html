@@ -1,0 +1,47 @@
+{% extends 'base.html' %}
+{% block title %}Menu - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h2>Menu</h2>
+    {% if perms.pedidos.add_pedido %}
+    <a href="{% url 'pedidos:carrito_detail' %}" class="btn btn-primary">Ver carrito</a>
+    {% endif %}
+</div>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Categoria</th>
+                <th>Precio</th>
+                <th>Disponible</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for producto in productos %}
+            <tr>
+                <td>{{ producto.nombre }}</td>
+                <td>{{ producto.categoria.nombre }}</td>
+                <td>${{ producto.precio|floatformat:"0g" }}</td>
+                <td>
+                    {% if producto.disponible %}
+                    <span class="badge bg-success">Si</span>
+                    {% else %}
+                    <span class="badge bg-danger">No</span>
+                    {% endif %}
+                </td>
+                <td>
+                    <a href="{% url 'catalogo:producto_detail' producto.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                    {% if perms.pedidos.add_pedido and producto.disponible %}
+                    <a href="{% url 'catalogo:producto_agregar' producto.pk %}" class="btn btn-sm btn-primary">Agregar al carrito</a>
+                    {% endif %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="5">No hay productos disponibles.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+{% endblock %}
