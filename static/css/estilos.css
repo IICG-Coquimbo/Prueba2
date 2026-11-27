@@ -1,0 +1,108 @@
+:root {
+    --color-primario: #5D4037;
+    --color-secundario: #3E2723;
+    --color-acento: #E0A030;
+    --color-fondo: #FAF6F0;
+    --color-texto: #2B2B2B;
+}
+
+body {
+    background-color: var(--color-fondo);
+    color: var(--color-texto);
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, "Helvetica Neue", Arial, sans-serif;
+}
+
+.navbar {
+    background-color: var(--color-primario) !important;
+}
+
+.navbar-brand {
+    color: white !important;
+}
+
+.navbar-brand img {
+    height: 40px;
+    margin-right: 8px;
+}
+
+.nav-link {
+    color: rgba(255,255,255,0.9) !important;
+}
+
+.nav-link:hover {
+    color: var(--color-acento) !important;
+}
+
+.btn-primary {
+    background-color: var(--color-primario);
+    border-color: var(--color-primario);
+}
+
+.btn-primary:hover {
+    background-color: #4a3228;
+    border-color: #4a3228;
+}
+
+.btn-acento {
+    background-color: var(--color-acento);
+    border-color: var(--color-acento);
+    color: var(--color-texto);
+}
+
+.btn-acento:hover {
+    background-color: #c98d28;
+    border-color: #c98d28;
+    color: var(--color-texto);
+}
+
+footer {
+    background-color: var(--color-secundario) !important;
+    color: white;
+}
+
+.card {
+    border: none;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+.card-header {
+    background-color: var(--color-primario);
+    color: white;
+    border-bottom: none;
+}
+
+.table-responsive {
+    margin-bottom: 1rem;
+}
+
+.form-label {
+    font-weight: 500;
+}
+
+.alert {
+    border-radius: 0.5rem;
+}
+
+.badge {
+    font-size: 0.75rem;
+}
+
+.precio {
+    font-weight: 600;
+    color: var(--color-primario);
+}
+
+.estado-badge {
+    font-size: 0.8rem;
+    padding: 0.4rem 0.6rem;
+}
+
+@media (max-width: 767.98px) {
+    .btn-lg {
+        padding: 0.75rem 1.5rem;
+        font-size: 1.1rem;
+    }
+    .display-4 {
+        font-size: 2rem;
+    }
+}

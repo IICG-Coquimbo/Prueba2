@@ -1,0 +1,112 @@
+{% extends "base.html" %}
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="row">
+    <div class="col-12">
+        <h1 class="mb-4">Bienvenido, {{ user.get_username }} <small class="text-muted">({{ rol }})</small></h1>
+    </div>
+</div>
+<div class="row">
+    {% url 'catalogo:producto_list' as url_menu %}
+    {% if url_menu and perms.catalogo.view_producto %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-cup-hot display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Menu</h5>
+                <p class="card-text">Ver productos disponibles y agregar al carrito.</p>
+                <a href="{{ url_menu }}" class="btn btn-primary">Ir al Menu</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% url 'pedidos:carrito_detail' as url_carrito %}
+    {% if url_carrito and perms.pedidos.add_pedido %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-cart display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Carrito</h5>
+                <p class="card-text">Revisar y confirmar tu pedido.</p>
+                <a href="{{ url_carrito }}" class="btn btn-primary">Ver Carrito</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% url 'pedidos:pedido_list' as url_pedidos %}
+    {% if url_pedidos and perms.pedidos.view_pedido %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-receipt display-4 text-primary"></i>
+                <h5 class="card-title mt-3">{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h5>
+                <p class="card-text">Ver historial y estado de pedidos.</p>
+                <a href="{{ url_pedidos }}" class="btn btn-primary">Ver Pedidos</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% url 'cuentas:direccion_list' as url_direcciones %}
+    {% if url_direcciones and perms.cuentas.view_direccion %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-geo-alt display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Mis direcciones</h5>
+                <p class="card-text">Gestionar direcciones de entrega.</p>
+                <a href="{{ url_direcciones }}" class="btn btn-primary">Direcciones</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% url 'entregas:entrega_list' as url_entregas %}
+    {% if url_entregas and perms.pedidos.despachar_pedido %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-truck display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Entregas</h5>
+                <p class="card-text">Pedidos listos para despacho y en camino.</p>
+                <a href="{{ url_entregas }}" class="btn btn-primary">Entregas</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% url 'reportes:reporte_panel' as url_reportes %}
+    {% if url_reportes and perms.pedidos.ver_reportes %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-graph-up display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Reportes</h5>
+                <p class="card-text">Ventas del dia, semana y ranking de repartidores.</p>
+                <a href="{{ url_reportes }}" class="btn btn-primary">Reportes</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+
+    {% if user.is_staff %}
+    <div class="col-md-6 col-lg-4 mb-3">
+        <div class="card h-100">
+            <div class="card-body text-center">
+                <i class="bi bi-gear display-4 text-primary"></i>
+                <h5 class="card-title mt-3">Administracion</h5>
+                <p class="card-text">Gestionar productos, categorias, codigos y usuarios.</p>
+                <a href="{% url 'admin:index' %}" class="btn btn-primary">Admin</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% if not perms.catalogo.view_producto and not perms.pedidos.add_pedido and not perms.pedidos.view_pedido and not perms.cuentas.view_direccion and not perms.pedidos.despachar_pedido and not perms.pedidos.ver_reportes and not user.is_staff %}
+<div class="alert alert-info text-center">
+    Aun no hay modulos disponibles para tu rol.
+</div>
+{% endif %}
+{% endblock %}
