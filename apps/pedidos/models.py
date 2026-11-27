@@ -4,7 +4,7 @@ from django.db import models
 
 class Pedido(models.Model):
     class Estado(models.TextChoices):
-        CARTRITO = "carrito", "carrito"
+        CARRITO = "carrito", "carrito"
         PENDIENTE_PAGO = "pendiente_pago", "pendiente_pago"
         RECIBIDO = "recibido", "recibido"
         EN_PREPARACION = "en_preparacion", "en_preparacion"
@@ -24,7 +24,7 @@ class Pedido(models.Model):
     estado = models.CharField(
         max_length=20,
         choices=Estado.choices,
-        default=Estado.CARTRITO,
+        default=Estado.CARRITO,
     )
     direccion = models.ForeignKey(
         "cuentas.Direccion",
