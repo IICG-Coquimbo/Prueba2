@@ -1,0 +1,38 @@
+﻿:root {
+  --color-primario: #5D4037;
+  --color-secundario: #3E2723;
+  --color-acento: #E0A030;
+  --color-fondo: #FAF6F0;
+  --color-texto: #2B2B2B;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.navbar {
+  background-color: var(--color-primario);
+}
+
+.btn-primario {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: #fff;
+}
+
+.btn-primario:hover,
+.btn-primario:focus {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  color: #fff;
+}
+
+.footer {
+  background-color: var(--color-secundario);
+  color: #fff;
+}
+
+a {
+  color: var(--color-primario);
+}

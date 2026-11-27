@@ -1,0 +1,11 @@
+﻿{% extends "base.html" %}
+{% block title %}Ranking repartidores | Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Ranking de repartidores</h1>
+<div class="card shadow-sm"><div class="card-body">
+  <div class="table-responsive"><table class="table mb-0"><thead><tr><th>Repartidor</th><th>Entregas</th><th>Tiempo promedio (min)</th></tr></thead><tbody>
+  {% for r in ranking %}<tr><td>{{ r.nombre }}</td><td>{{ r.entregas }}</td><td>{% if r.promedio %}{{ r.promedio }}{% else %}-{% endif %}</td></tr>
+  {% empty %}<tr><td colspan="3">Sin datos.</td></tr>{% endfor %}
+  </tbody></table></div>
+</div></div>
+{% endblock %}

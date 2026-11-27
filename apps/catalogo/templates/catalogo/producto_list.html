@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Menú | Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+  <h1 class="h3 mb-0">Menú</h1>
+</div>
+
+<div class="row g-4">
+  {% for producto in productos %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100 shadow-sm">
+      {% if producto.imagen_url %}
+      <img src="{{ producto.imagen_url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 220px; object-fit: cover;">
+      {% endif %}
+      <div class="card-body d-flex flex-column">
+        <p class="text-muted small mb-1">{{ producto.categoria.nombre }}</p>
+        <h2 class="h5">{{ producto.nombre }}</h2>
+        {% if producto.descripcion %}<p class="mb-2">{{ producto.descripcion }}</p>{% endif %}
+        <p class="fw-bold mb-3">${{ producto.precio|floatformat:"0g" }}</p>
+        {% if not producto.disponible %}<span class="badge text-bg-secondary mb-3">No disponible</span>{% endif %}
+        <div class="mt-auto">
+          {% url 'catalogo:producto_detail' producto.pk as url_detalle %}
+          {% if url_detalle %}
+          <a href="{{ url_detalle }}" class="btn btn-primario w-100 btn-lg">Ver producto</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <div class="col-12">
+    <div class="alert alert-info mb-0">No hay productos para mostrar.</div>
+  </div>
+  {% endfor %}
+</div>
+{% endblock %}

@@ -1,0 +1,23 @@
+﻿{% extends "base.html" %}
+{% block title %}Entregas | Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Entregas</h1>
+<div class="row g-3">
+  {% for pedido in pedidos %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm h-100"><div class="card-body d-flex flex-column">
+      <div class="d-flex justify-content-between"><strong>#{{ pedido.id }}</strong><span class="badge text-bg-secondary">{{ pedido.get_estado_display }}</span></div>
+      <p class="text-muted small mb-2">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+      <p class="mb-1"><strong>Cliente:</strong> {{ pedido.cliente.first_name|default:pedido.cliente.username }}</p>
+      {% if pedido.cliente.perfil %}<p class="mb-1"><strong>Teléfono:</strong> {{ pedido.cliente.perfil.telefono }}</p>{% endif %}
+      {% if pedido.direccion %}<p class="mb-1"><strong>Dirección:</strong> {{ pedido.direccion.direccion }}</p>{% endif %}
+      <ul class="small mb-3 ps-3">{% for item in pedido.items.all %}<li>{{ item.cantidad }} x {{ item.producto.nombre }}</li>{% endfor %}</ul>
+      {% url 'pedidos:pedido_estado' pedido.pk as url_estado %}
+      {% if url_estado %}<a href="{{ url_estado }}" class="btn btn-primario btn-lg w-100 mt-auto">Cambiar estado</a>{% endif %}
+    </div></div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="alert alert-info">No hay entregas para mostrar.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

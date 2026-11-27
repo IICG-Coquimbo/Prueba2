@@ -1,0 +1,26 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Iniciar sesión | Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-5 col-lg-4">
+    <div class="card shadow-sm">
+      <div class="card-body p-4">
+        <h1 class="h4 mb-4 text-center">Iniciar sesión</h1>
+        <form method="post">
+          {% csrf_token %}
+          {% include "parciales/form_campos.html" %}
+          <button type="submit" class="btn btn-primario w-100">Ingresar</button>
+        </form>
+        {% url 'cuentas:registro' as url_registro %}
+        {% if url_registro %}
+        <p class="text-center mt-3 mb-0">
+          ¿No tienes cuenta? <a href="{{ url_registro }}">Regístrate</a>
+        </p>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

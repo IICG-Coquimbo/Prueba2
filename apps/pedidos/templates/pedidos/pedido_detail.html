@@ -1,0 +1,53 @@
+﻿{% extends "base.html" %}
+{% block title %}Pedido #{{ pedido.id }} | Cafe Rincon{% endblock %}
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1 class="h3 mb-0">Pedido #{{ pedido.id }}</h1>
+  <span class="badge text-bg-primary fs-6">{{ pedido.get_estado_display }}</span>
+</div>
+<div class="row g-4">
+  <div class="col-lg-7">
+    <div class="card shadow-sm mb-3"><div class="card-body">
+      <h2 class="h5">Productos</h2>
+      {% for item in pedido.items.all %}
+      <div class="border-bottom py-2">
+        <div class="d-flex justify-content-between"><span>{{ item.cantidad }} x {{ item.producto.nombre }}</span><strong>${{ item.subtotal|floatformat:"0g" }}</strong></div>
+        {% with opciones=item.opciones.all %}
+          {% if opciones %}<div class="small text-muted">{% for opcion in opciones %}{{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</div>{% endif %}
+        {% endwith %}
+      </div>
+      {% endfor %}
+      <div class="pt-2">
+        <p class="d-flex justify-content-between mb-1"><span>Subtotal</span><span>${{ pedido.subtotal|floatformat:"0g" }}</span></p>
+        <p class="d-flex justify-content-between mb-1"><span>Descuento</span><span>${{ pedido.descuento|floatformat:"0g" }}</span></p>
+        <p class="d-flex justify-content-between fw-bold mb-0"><span>Total</span><span>${{ pedido.total|floatformat:"0g" }}</span></p>
+      </div>
+    </div></div>
+    <div class="card shadow-sm"><div class="card-body">
+      <h2 class="h5">Historial de estados</h2>
+      <ul class="mb-0">
+        {% for h in historial %}
+        <li>{{ h.fecha|date:"d/m/Y H:i:s" }} - {{ h.get_estado_display }}{% if h.usuario %} ({{ h.usuario.first_name|default:h.usuario.username }}){% endif %}</li>
+        {% empty %}<li>Sin historial.</li>{% endfor %}
+      </ul>
+    </div></div>
+  </div>
+  <div class="col-lg-5">
+    <div class="card shadow-sm mb-3"><div class="card-body">
+      <h2 class="h5">Información</h2>
+      {% if mostrar_datos_cliente %}
+      <p class="mb-1"><strong>Cliente:</strong> {{ pedido.cliente.first_name|default:pedido.cliente.username }}</p>
+      {% if pedido.cliente.perfil %}<p class="mb-1"><strong>Teléfono:</strong> {{ pedido.cliente.perfil.telefono }}</p>{% endif %}
+      {% if pedido.direccion %}<p class="mb-1"><strong>Dirección:</strong> {{ pedido.direccion.direccion }}</p>{% endif %}
+      {% endif %}
+      <p class="mb-1"><strong>Método de pago:</strong> {{ pedido.get_metodo_pago_display|default:"-" }}</p>
+      {% if pedido.pago %}<p class="mb-0"><strong>Pago:</strong> {{ pedido.pago.get_estado_display }}</p>{% endif %}
+    </div></div>
+    {% if puede_cambiar_estado %}
+    {% url 'pedidos:pedido_estado' pedido.pk as url_estado %}
+    {% if url_estado %}<a href="{{ url_estado }}" class="btn btn-primario btn-lg w-100">Cambiar estado</a>{% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

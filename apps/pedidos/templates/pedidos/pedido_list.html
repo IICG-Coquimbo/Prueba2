@@ -1,0 +1,32 @@
+﻿{% extends "base.html" %}
+{% block title %}Pedidos | Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">{% if es_cliente %}Mis pedidos{% else %}Pedidos{% endif %}</h1>
+<div class="row g-3">
+  {% for pedido in pedidos %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card shadow-sm h-100"><div class="card-body d-flex flex-column">
+      <div class="d-flex justify-content-between"><strong>#{{ pedido.id }}</strong><span class="badge text-bg-secondary">{{ pedido.get_estado_display }}</span></div>
+      <p class="text-muted small mb-2">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+      {% if mostrar_cliente %}<p class="mb-1"><strong>Cliente:</strong> {{ pedido.cliente.first_name|default:pedido.cliente.username }}</p>{% endif %}
+      <ul class="small mb-2 ps-3">
+        {% for item in pedido.items.all %}
+        <li>{{ item.cantidad }} x {{ item.producto.nombre }}</li>
+        {% endfor %}
+      </ul>
+      <p class="fw-bold mb-3">Total: ${{ pedido.total|floatformat:"0g" }}</p>
+      <div class="mt-auto d-grid gap-2">
+        {% url 'pedidos:pedido_detail' pedido.pk as url_detalle %}
+        {% if url_detalle %}<a href="{{ url_detalle }}" class="btn btn-outline-primary">Ver detalle</a>{% endif %}
+        {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+        {% url 'pedidos:pedido_estado' pedido.pk as url_estado %}
+        {% if url_estado %}<a href="{{ url_estado }}" class="btn btn-primario btn-lg w-100">Cambiar estado</a>{% endif %}
+        {% endif %}
+      </div>
+    </div></div>
+  </div>
+  {% empty %}
+  <div class="col-12"><div class="alert alert-info">No hay pedidos para mostrar.</div></div>
+  {% endfor %}
+</div>
+{% endblock %}

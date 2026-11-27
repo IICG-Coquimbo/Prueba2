@@ -1,0 +1,38 @@
+﻿{% extends "base.html" %}
+
+{% block title %}Inicio | Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="py-4">
+  <h1 class="mb-3">Hola, {{ request.user.first_name|default:request.user.username }}</h1>
+  <p class="text-muted">Rol: {{ rol }}</p>
+
+  <div class="row g-3">
+    {% url 'catalogo:producto_list' as url_menu %}
+    {% if url_menu and perms.catalogo.view_producto %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Menú</h2>
+          <p>Revisa productos, fotos y precios.</p>
+          <a href="{{ url_menu }}" class="btn btn-primario btn-lg">Ver menú</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+
+    {% url 'pedidos:carrito_detail' as url_carrito %}
+    {% if url_carrito and perms.pedidos.add_pedido %}
+    <div class="col-md-4">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body">
+          <h2 class="h5">Carrito</h2>
+          <p>Revisa los productos que vas a pedir.</p>
+          <a href="{{ url_carrito }}" class="btn btn-primario btn-lg">Ver carrito</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

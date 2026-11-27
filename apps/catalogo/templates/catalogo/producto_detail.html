@@ -1,0 +1,41 @@
+﻿{% extends "base.html" %}
+
+{% block title %}{{ producto.nombre }} | Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row g-4">
+  <div class="col-lg-6">
+    {% if producto.imagen_url %}
+    <img src="{{ producto.imagen_url }}" class="img-fluid rounded shadow-sm w-100" alt="{{ producto.nombre }}">
+    {% endif %}
+  </div>
+  <div class="col-lg-6">
+    <p class="text-muted mb-1">{{ producto.categoria.nombre }}</p>
+    <h1 class="h3">{{ producto.nombre }}</h1>
+    {% if producto.descripcion %}<p>{{ producto.descripcion }}</p>{% endif %}
+    <p class="h4 mb-4">${{ producto.precio|floatformat:"0g" }}</p>
+
+    {% if producto.disponible and perms.pedidos.add_pedido %}
+      {% url 'catalogo:producto_agregar' producto.pk as url_agregar %}
+      {% if url_agregar %}
+      <div class="card shadow-sm">
+        <div class="card-body">
+          <h2 class="h5 mb-3">Personaliza tu pedido</h2>
+          <form method="post" action="{{ url_agregar }}">
+            {% csrf_token %}
+            {% with form=form_agregar %}
+              {% include "parciales/form_campos.html" %}
+            {% endwith %}
+            <button type="submit" class="btn btn-primario w-100 btn-lg">Agregar al carrito</button>
+          </form>
+        </div>
+      </div>
+      {% endif %}
+    {% elif not producto.disponible %}
+      <div class="alert alert-warning">Este producto no está disponible.</div>
+    {% else %}
+      <div class="alert alert-info">Inicia sesión como cliente para agregar productos al carrito.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

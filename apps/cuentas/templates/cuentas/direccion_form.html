@@ -1,0 +1,10 @@
+﻿{% extends "base.html" %}
+{% block title %}Dirección | Cafe Rincon{% endblock %}
+{% block content %}
+<div class="row justify-content-center"><div class="col-md-7 col-lg-5"><div class="card shadow-sm"><div class="card-body p-4">
+<h1 class="h4 mb-4">{% if object %}Editar dirección{% else %}Nueva dirección{% endif %}</h1>
+<form method="post">{% csrf_token %}{% include "parciales/form_campos.html" %}
+<div class="d-grid gap-2"><button type="submit" class="btn btn-primario btn-lg">Guardar</button>
+{% url 'cuentas:direccion_list' as url_volver %}{% if url_volver %}<a href="{{ url_volver }}" class="btn btn-outline-secondary">Cancelar</a>{% endif %}
+</div></form></div></div></div></div>
+{% endblock %}

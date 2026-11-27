@@ -1,0 +1,61 @@
+﻿{% extends "base.html" %}
+{% block title %}Carrito | Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="h3 mb-4">Carrito</h1>
+{% if items %}
+<div class="row g-4">
+  <div class="col-lg-8">
+    {% for item in items %}
+    <div class="card shadow-sm mb-3"><div class="card-body">
+      <div class="d-flex justify-content-between gap-3 flex-column flex-md-row">
+        <div>
+          <h2 class="h5 mb-1">{{ item.producto.nombre }}</h2>
+          <p class="mb-1">Cantidad: {{ item.cantidad }}</p>
+          <p class="mb-1">Precio unitario: ${{ item.precio_unitario|floatformat:"0g" }}</p>
+          {% with opciones=item.opciones.all %}
+            {% if opciones %}<p class="mb-1 small text-muted">Opciones: {% for opcion in opciones %}{{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>{% endif %}
+          {% endwith %}
+          <p class="fw-bold mb-0">Subtotal: ${{ item.subtotal|floatformat:"0g" }}</p>
+        </div>
+        <div class="d-flex align-items-start">
+          {% url 'pedidos:item_quitar' item.pk as url_quitar %}
+          {% if url_quitar %}<a href="{{ url_quitar }}" class="btn btn-outline-danger">Quitar</a>{% endif %}
+        </div>
+      </div>
+    </div></div>
+    {% endfor %}
+
+    <div class="card shadow-sm mb-3"><div class="card-body">
+      <h2 class="h5">Código de descuento</h2>
+      {% url 'pedidos:carrito_codigo' as url_codigo %}
+      {% if url_codigo %}
+      <form method="post" action="{{ url_codigo }}" class="row g-2 align-items-end">
+        {% csrf_token %}
+        <div class="col-sm-8">
+          <label class="form-label" for="{{ codigo_form.codigo.id_for_label }}">{{ codigo_form.codigo.label }}</label>
+          {{ codigo_form.codigo }}
+        </div>
+        <div class="col-sm-4"><button type="submit" class="btn btn-outline-primary w-100">Aplicar</button></div>
+      </form>
+      {% endif %}
+    </div></div>
+  </div>
+
+  <div class="col-lg-4">
+    <div class="card shadow-sm mb-3"><div class="card-body">
+      <h2 class="h5">Resumen</h2>
+      <p class="d-flex justify-content-between mb-1"><span>Subtotal</span><span>${{ carrito.subtotal|floatformat:"0g" }}</span></p>
+      <p class="d-flex justify-content-between mb-1"><span>Descuento</span><span>${{ carrito.descuento|floatformat:"0g" }}</span></p>
+      <hr>
+      <p class="d-flex justify-content-between fw-bold mb-3"><span>Total</span><span>${{ carrito.total|floatformat:"0g" }}</span></p>
+      {% url 'pedidos:carrito_confirmar' as url_confirmar %}
+      {% if url_confirmar %}<a href="{{ url_confirmar }}" class="btn btn-primario w-100 btn-lg">Confirmar pedido</a>{% endif %}
+    </div></div>
+  </div>
+</div>
+{% else %}
+<div class="alert alert-info">Tu carrito está vacío.</div>
+{% url 'catalogo:producto_list' as url_menu %}
+{% if url_menu %}<a href="{{ url_menu }}" class="btn btn-primario btn-lg">Ir al menú</a>{% endif %}
+{% endif %}
+{% endblock %}
