@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Pago fallido - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Pago fallido</h2>
+<div class="alert alert-danger">
+    <h4>Error en el pago</h4>
+    <p>Tu pago no pudo procesarse correctamente.</p>
+    <p>Referencia: {{ pago.referencia }}</p>
+    <p>Metodo: {{ pago.get_metodo_display }}</p>
+    <p>Monto: ${{ pago.monto|floatformat:"0g" }}</p>
+    <p>Fecha: {{ pago.fecha|date:"d/m/Y H:i" }}</p>
+</div>
+<a href="{% url 'pedidos:pedido_detail' pk=pago.pedido.pk %}" class="btn btn-primary">Volver al pedido</a>
+<a href="{% url 'inicio' %}" class="btn btn-secondary">Inicio</a>
+{% endblock %}

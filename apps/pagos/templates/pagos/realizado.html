@@ -1,0 +1,15 @@
+{% extends 'base.html' %}
+{% block title %}Pago realizado - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Pago realizado</h2>
+<div class="alert alert-success">
+    <h4>¡Gracias por tu pago!</h4>
+    <p>Tu pago ha sido procesado exitosamente.</p>
+    <p>Referencia: {{ pago.referencia }}</p>
+    <p>Metodo: {{ pago.get_metodo_display }}</p>
+    <p>Monto: ${{ pago.monto|floatformat:"0g" }}</p>
+    <p>Fecha: {{ pago.fecha|date:"d/m/Y H:i" }}</p>
+</div>
+<a href="{% url 'pedidos:pedido_detail' pk=pago.pedido.pk %}" class="btn btn-primary">Ver pedido</a>
+<a href="{% url 'inicio' %}" class="btn btn-secondary">Inicio</a>
+{% endblock %}

@@ -23,5 +23,6 @@ urlpatterns = [
     re_path(r"^$", HomeView.as_view(), name="inicio"),
     re_path(r"^", include("apps.catalogo.urls")),
     re_path(r"^", include("apps.pedidos.urls")),
+    re_path(r"^", include("apps.pagos.urls")),
     path("admin/", admin.site.urls),
 ]

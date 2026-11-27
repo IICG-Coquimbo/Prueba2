@@ -1,0 +1,20 @@
+{% extends 'base.html' %}
+{% block title %}Detalle del pago - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Detalle del pago</h2>
+<div class="card">
+    <div class="card-body">
+        <h5 class="card-title">Pago {{ pago.referencia }}</h5>
+        <p class="card-text"><strong>Metodo:</strong> {{ pago.get_metodo_display }}</p>
+        <p class="card-text"><strong>Estado:</strong> {{ pago.get_estado_display }}</p>
+        <p class="card-text"><strong>Monto:</strong> ${{ pago.monto|floatformat:"0g" }}</p>
+        <p class="card-text"><strong>Fecha:</strong> {{ pago.fecha|date:"d/m/Y H:i" }}</p>
+        <hr>
+        <p class="card-text"><strong>Pedido ID:</strong> {{ pago.pedido.id }}</p>
+    </div>
+</div>
+<div>
+    <a href="{% url 'pedidos:pedido_detail' pk=pago.pedido.pk %}" class="btn btn-secondary">Ver pedido completo</a>
+    <a href="{% url 'inicio' %}" class="btn btn-link">Volver al inicio</a>
+</div>
+{% endblock %}
