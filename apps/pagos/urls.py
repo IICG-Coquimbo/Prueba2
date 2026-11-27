@@ -4,5 +4,5 @@ from apps.pagos import views
 app_name = "pagos"
 
 urlpatterns = [
-    # path("pasarela/<uuid:referencia>/", views.PasarelaView.as_view(), name="pasarela"),
+    path("pasarela/<uuid:referencia>/", views.PasarelaView.as_view(), name="pasarela"),
 ]
