@@ -1,0 +1,55 @@
+{% extends "base.html" %}
+
+{% block title %}Reportes{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Panel de reportes</h2>
+    <div class="row mt-4">
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Ventas de hoy</h5>
+            <p class="card-text fs-4">${{ ventas_hoy|floatformat:"0g" }}</p>
+          </div>
+        </div>
+      </div>
+      <div class="col-md-6">
+        <div class="card">
+          <div class="card-body">
+            <h5 class="card-title">Ventas de la semana</h5>
+            <p class="card-text fs-4">${{ ventas_semana|floatformat:"0g" }}</p>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="mt-4">
+      <h3>Productos más pedidos</h3>
+      <div class="table-responsive">
+        <table class="table">
+          <thead>
+            <tr>
+              <th>Producto</th>
+              <th>Unidades</th>
+            </tr>
+          </thead>
+          <tbody>
+            {% for producto in productos_top %}
+            <tr>
+              <td>{{ producto.nombre }}</td>
+              <td>{{ producto.total_unidades }}</td>
+            </tr>
+            {% empty %}
+            <tr>
+              <td colspan="2">No hay datos.</td>
+            </tr>
+            {% endfor %}
+          </tbody>
+        </table>
+      </div>
+    </div>
+    <a href="{% url 'reportes:reporte_repartidores' %}" class="btn btn-primario">Ver ranking de repartidores</a>
+  </div>
+</div>
+{% endblock %}

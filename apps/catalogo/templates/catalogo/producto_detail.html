@@ -1,0 +1,32 @@
+{% extends "base.html" %}
+
+{% block title %}{{ producto.nombre }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2>{{ producto.nombre }}</h2>
+    <p>{{ producto.categoria.nombre }}</p>
+    <p>${{ producto.precio|floatformat:"0g" }}</p>
+    {% if producto.descripcion %}
+    <p>{{ producto.descripcion }}</p>
+    {% endif %}
+    {% if producto.imagen_url %}
+    <img src="{{ producto.imagen_url }}" alt="{{ producto.nombre }}" class="img-fluid mt-3">
+    {% endif %}
+
+    {% if perms.pedidos.add_pedido and producto.disponible %}
+    <div class="mt-4">
+      <h3>Agregar al carrito</h3>
+      <form method="post" action="{% url 'catalogo:producto_agregar' producto.pk %}">
+        {% csrf_token %}
+        {% include "parciales/form_campos.html" %}
+        <button type="submit" class="btn btn-primario btn-lg w-100">Agregar al carrito</button>
+      </form>
+    </div>
+    {% elif not producto.disponible %}
+    <div class="mt-4 alert alert-warning">Este producto no esta disponible.</div>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

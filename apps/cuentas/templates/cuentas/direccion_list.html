@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+
+{% block title %}Mis direcciones{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Mis direcciones</h2>
+    {% if perms.cuentas.add_direccion %}
+    <a href="{% url 'cuentas:direccion_create' %}" class="btn btn-primario btn-sm mb-3">Nueva direccion</a>
+    {% endif %}
+    {% if object_list %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Alias</th>
+            <th>Direccion</th>
+            <th>Referencia</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for direccion in object_list %}
+          <tr>
+            <td>{{ direccion.alias }}</td>
+            <td>{{ direccion.direccion }}</td>
+            <td>{{ direccion.referencia|default:"-" }}</td>
+            <td>
+              {% if perms.cuentas.change_direccion %}
+              <a href="{% url 'cuentas:direccion_update' direccion.pk %}" class="btn btn-outline-primary btn-sm">Editar</a>
+              {% endif %}
+              {% if perms.cuentas.delete_direccion %}
+              <a href="{% url 'cuentas:direccion_delete' direccion.pk %}" class="btn btn-outline-danger btn-sm">Borrar</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p>No tienes direcciones registradas.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

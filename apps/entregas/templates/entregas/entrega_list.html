@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+
+{% block title %}Entregas{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Entregas</h2>
+    {% if object_list %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Estado</th>
+            <th>Cliente</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pedido in object_list %}
+          <tr>
+            <td>#{{ pedido.pk }}</td>
+            <td>{{ pedido.get_estado_display }}</td>
+            <td>{{ pedido.cliente.get_username }}</td>
+            <td>
+              {% if pedido.estado == "listo_despacho" %}
+              <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primario btn-sm">Cambiar estado</a>
+              {% else %}
+              <a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="btn btn-outline-primary btn-sm">Ver</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p>No hay entregas asignadas.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block title %}Ranking de repartidores{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Ranking de repartidores</h2>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Repartidor</th>
+            <th>Entregas</th>
+            <th>Minutos promedio</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entrada in ranking %}
+          <tr>
+            <td>{{ entrada.repartidor }}</td>
+            <td>{{ entrada.total_entregas }}</td>
+            <td>{{ entrada.minutos_promedio }}</td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="3">No hay datos.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    <a href="{% url 'reportes:reporte_panel' %}" class="btn btn-primario">Volver al panel</a>
+  </div>
+</div>
+{% endblock %}

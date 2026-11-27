@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Cambiar estado - Pedido #{{ object.pk }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2>Cambiar estado - Pedido #{{ object.pk }}</h2>
+    <p><strong>Estado actual:</strong> {{ object.get_estado_display }}</p>
+    <form method="post" action="{% url 'pedidos:pedido_estado' object.pk %}">
+      {% csrf_token %}
+      {% include "parciales/form_campos.html" %}
+      <button type="submit" class="btn btn-primario btn-lg w-100">Cambiar estado</button>
+    </form>
+    <a href="{% url 'pedidos:pedido_detail' object.pk %}" class="btn btn-outline-secondary mt-2">Volver</a>
+  </div>
+</div>
+{% endblock %}

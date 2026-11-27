@@ -1,0 +1,54 @@
+{% extends "base.html" %}
+
+{% block title %}Menu{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Menu</h2>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Categoria</th>
+            <th>Precio</th>
+            <th>Disponible</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for producto in object_list %}
+          <tr>
+            <td>{{ producto.nombre }}</td>
+            <td>{{ producto.categoria.nombre }}</td>
+            <td>${{ producto.precio|floatformat:"0g" }}</td>
+            <td>
+              {% if producto.disponible %}
+              <span class="text-success">Si</span>
+              {% else %}
+              <span class="text-danger">No</span>
+              {% endif %}
+            </td>
+            <td>
+              {% if perms.pedidos.add_pedido and producto.disponible %}
+              <a
+                href="{% url 'catalogo:producto_agregar' producto.pk %}"
+                class="btn btn-primario btn-sm"
+              >
+                Agregar al carrito
+              </a>
+              {% endif %}
+            </td>
+          </tr>
+          {% empty %}
+          <tr>
+            <td colspan="5">No hay productos disponibles.</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+  </div>
+</div>
+{% endblock %}

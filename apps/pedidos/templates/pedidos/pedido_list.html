@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block title %}Mis pedidos{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Mis pedidos</h2>
+    {% if object_list %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Pedido</th>
+            <th>Estado</th>
+            <th>Total</th>
+            <th>Creado</th>
+            <th>Accion</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for pedido in object_list %}
+          <tr>
+            <td>#{{ pedido.pk }}</td>
+            <td>{{ pedido.get_estado_display }}</td>
+            <td>${{ pedido.total|floatformat:"0g" }}</td>
+            <td>{{ pedido.creado }}</td>
+            <td>
+              <a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="btn btn-outline-primary btn-sm">Ver</a>
+              {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+              <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primario btn-sm">Cambiar estado</a>
+              {% endif %}
+            </td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% else %}
+    <p>No hay pedidos.</p>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}

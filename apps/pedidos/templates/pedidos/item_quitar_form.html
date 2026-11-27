@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+
+{% block title %}Quitar item{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-8">
+    <h2>Quitar item del carrito</h2>
+    <p>¿Estas seguro de que quieres quitar este item?</p>
+    <form method="post" action="{% url 'pedidos:item_quitar' object.pk %}">
+      {% csrf_token %}
+      {% include "parciales/form_campos.html" %}
+      <button type="submit" class="btn btn-danger">Quitar</button>
+      <a href="{% url 'pedidos:carrito_detail' %}" class="btn btn-outline-secondary">Cancelar</a>
+    </form>
+  </div>
+</div>
+{% endblock %}

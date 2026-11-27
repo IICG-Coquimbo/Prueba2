@@ -1,0 +1,70 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido #{{ pedido.pk }}{% endblock %}
+
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-md-10">
+    <h2>Pedido #{{ pedido.pk }}</h2>
+    <p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+    <p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+    <p><strong>Creado:</strong> {{ pedido.creado }}</p>
+    {% if pedido.direccion %}
+    <p><strong>Direccion:</strong> {{ pedido.direccion.direccion }}</p>
+    {% endif %}
+    <p><strong>Metodo de pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
+
+    <h3>Items</h3>
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Producto</th>
+            <th>Cantidad</th>
+            <th>Precio unitario</th>
+            <th>Subtotal</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entrada in items_con_subtotal %}
+          <tr>
+            <td>{{ entrada.item.producto.nombre }}</td>
+            <td>{{ entrada.item.cantidad }}</td>
+            <td>${{ entrada.item.precio_unitario|floatformat:"0g" }}</td>
+            <td>${{ entrada.subtotal|floatformat:"0g" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+
+    <h3>Historial de estados</h3>
+    {% if historial %}
+    <div class="table-responsive">
+      <table class="table">
+        <thead>
+          <tr>
+            <th>Estado</th>
+            <th>Fecha</th>
+            <th>Usuario</th>
+          </tr>
+        </thead>
+        <tbody>
+          {% for entrada in historial %}
+          <tr>
+            <td>{{ entrada.get_estado_display }}</td>
+            <td>{{ entrada.fecha }}</td>
+            <td>{{ entrada.usuario.get_username|default:"-" }}</td>
+          </tr>
+          {% endfor %}
+        </tbody>
+      </table>
+    </div>
+    {% endif %}
+
+    {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primario btn-lg w-100 mt-3">Cambiar estado</a>
+    {% endif %}
+  </div>
+</div>
+{% endblock %}
