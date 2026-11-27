@@ -186,11 +186,30 @@ def productos_mas_pedidos(limite=5):
 
 
 def ranking_repartidores():
-    from django.db.models import Avg, Count
+    from django.db.models import Count
     from apps.entregas.models import Entrega
-    return Entrega.objects.filter(fin__isnull=False).values(
-        "repartidor__username", "repartidor__first_name", "repartidor__last_name"
-    ).annotate(
-        entregas=Count("id"),
-        minutos_promedio=Avg("minutos")
-    ).order_by("-entregas")
+    from collections import defaultdict
+
+    entregas = Entrega.objects.filter(fin__isnull=False).select_related("repartidor")
+
+    # Agrupar por repartidor en Python (minutos es @property, no campo DB)
+    datos = defaultdict(lambda: {"entregas": 0, "minutos_totales": 0})
+    for e in entregas:
+        key = (e.repartidor_id, e.repartidor.username, e.repartidor.first_name, e.repartidor.last_name)
+        datos[key]["entregas"] += 1
+        if e.minutos is not None:
+            datos[key]["minutos_totales"] += e.minutos
+
+    resultado = []
+    for (repartidor_id, username, first_name, last_name), d in datos.items():
+        minutos_promedio = round(d["minutos_totales"] / d["entregas"], 1) if d["entregas"] > 0 else None
+        resultado.append({
+            "repartidor__username": username,
+            "repartidor__first_name": first_name,
+            "repartidor__last_name": last_name,
+            "entregas": d["entregas"],
+            "minutos_promedio": minutos_promedio,
+        })
+
+    resultado.sort(key=lambda x: x["entregas"], reverse=True)
+    return resultado
