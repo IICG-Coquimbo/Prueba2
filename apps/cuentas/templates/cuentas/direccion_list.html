@@ -1,0 +1,41 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-3">
+  <h1>Mis direcciones</h1>
+  {% if perms.cuentas.add_direccion %}
+  <a class="btn btn-primary" href="{% url 'cuentas:direccion_create' %}">Nueva direccion</a>
+  {% endif %}
+</div>
+<div class="table-responsive">
+  <table class="table table-striped">
+    <thead>
+      <tr>
+        <th>Alias</th>
+        <th>Direccion</th>
+        <th>Referencia</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for direccion in object_list %}
+      <tr>
+        <td>{{ direccion.alias }}</td>
+        <td>{{ direccion.direccion }}</td>
+        <td>{{ direccion.referencia }}</td>
+        <td>
+          {% if perms.cuentas.change_direccion %}
+          <a class="btn btn-sm btn-outline-primary" href="{% url 'cuentas:direccion_update' direccion.pk %}">Editar</a>
+          {% endif %}
+          {% if perms.cuentas.delete_direccion %}
+          <a class="btn btn-sm btn-outline-danger" href="{% url 'cuentas:direccion_delete' direccion.pk %}">Borrar</a>
+          {% endif %}
+        </td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="4">No tienes direcciones guardadas.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endblock %}

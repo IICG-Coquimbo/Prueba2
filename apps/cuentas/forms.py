@@ -1,5 +1,6 @@
 from django import forms
-from django.contrib.auth.forms import AuthenticationForm
+from django.contrib.auth.forms import AuthenticationForm, UserCreationForm
+from django.contrib.auth.models import User
 
 from .models import Direccion, PerfilCliente
 
@@ -37,3 +38,35 @@ class DireccionForm(forms.ModelForm):
             "direccion": forms.TextInput(attrs={"class": "form-control"}),
             "referencia": forms.TextInput(attrs={"class": "form-control"}),
         }
+
+
+class RegistroForm(UserCreationForm):
+    telefono = forms.CharField(
+        label="Telefono",
+        max_length=20,
+        widget=forms.TextInput(attrs={"class": "form-control"}),
+    )
+
+    class Meta:
+        model = User
+        fields = ["username", "first_name", "email"]
+        labels = {
+            "first_name": "Nombre",
+            "username": "Usuario",
+            "email": "Correo",
+        }
+        widgets = {
+            "first_name": forms.TextInput(attrs={"class": "form-control"}),
+            "username": forms.TextInput(attrs={"class": "form-control"}),
+            "email": forms.EmailInput(attrs={"class": "form-control"}),
+        }
+
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        self.fields["password1"].label = "Contrasena"
+        self.fields["password2"].label = "Confirmar contrasena"
+        for campo in self.fields.values():
+            campo.widget.attrs.update({"class": "form-control"})
+        self.order_fields(
+            ["first_name", "username", "email", "telefono", "password1", "password2"]
+        )

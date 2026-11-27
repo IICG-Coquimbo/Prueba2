@@ -27,4 +27,5 @@ urlpatterns = [
     re_path(r"^", include("apps.pagos.urls")),
     re_path(r"^", include("apps.entregas.urls")),
     re_path(r"^", include("apps.reportes.urls")),
+    re_path(r"^", include("apps.cuentas.urls")),
 ]
