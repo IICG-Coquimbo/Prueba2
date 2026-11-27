@@ -1,0 +1,39 @@
+name: Defecto encontrado
+description: Algo que fallo al ejecutar un escenario de prueba
+title: "[DEFECTO] "
+labels: ["defecto"]
+body:
+  - type: input
+    id: escenario
+    attributes:
+      label: Escenario donde aparecio
+      placeholder: "#12 (TS_03)"
+    validations:
+      required: true
+  - type: textarea
+    id: esperado
+    attributes:
+      label: Resultado esperado
+    validations:
+      required: true
+  - type: textarea
+    id: obtenido
+    attributes:
+      label: Resultado obtenido (pega el mensaje de error y adjunta una captura)
+    validations:
+      required: true
+  - type: dropdown
+    id: clasificacion
+    attributes:
+      label: Clasificacion
+      options:
+        - Defecto del sistema
+        - Caso mal escrito
+        - Requerimiento ambiguo
+    validations:
+      required: true
+  - type: input
+    id: agente
+    attributes:
+      label: Agente que debe corregirlo
+      placeholder: "@vistas"
