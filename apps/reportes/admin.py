@@ -1,0 +1,1 @@
+# Reportes no tiene modelos propios

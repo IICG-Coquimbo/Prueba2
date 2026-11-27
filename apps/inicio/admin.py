@@ -1,0 +1,1 @@
+# Inicio no tiene modelos propios

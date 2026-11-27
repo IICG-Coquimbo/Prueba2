@@ -1,0 +1,1 @@
+# Promociones se administra solo en el admin de Django (RF-16)
