@@ -142,8 +142,8 @@ class PedidoEstadoView(LoginRequiredMixin, PermissionRequiredMixin, FormView):
     def get_permission_required(self):
         pedido = get_object_or_404(Pedido, pk=self.kwargs["pk"])
         if pedido.estado in [Pedido.Estado.RECIBIDO, Pedido.Estado.EN_PREPARACION]:
-            return "pedidos.preparar_pedido"
-        return "pedidos.despachar_pedido"
+            return ["pedidos.preparar_pedido"]
+        return ["pedidos.despachar_pedido"]
 
     def get_form_kwargs(self):
         kwargs = super().get_form_kwargs()
