@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Borrar producto - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12 col-md-6">
+        <h2>Borrar producto</h2>
+        <p>¿Estas seguro de que quieres borrar el producto "<strong>{{ object.nombre }}</strong>"?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-lg w-100">Confirmar borrado</button>
+            <a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

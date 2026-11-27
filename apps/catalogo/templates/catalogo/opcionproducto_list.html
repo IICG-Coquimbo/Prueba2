@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Opciones - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Opciones de producto</h2>
+        {% if perms.catalogo.add_opcionproducto %}
+        <a href="{% url 'catalogo:opcionproducto_create' %}" class="btn btn-primary btn-lg w-100 mb-3">Nueva opcion</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Tipo</th>
+                        <th>Nombre</th>
+                        <th>Recargo</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for opcion in object_list %}
+                    <tr>
+                        <td>{{ opcion.producto.nombre }}</td>
+                        <td>{{ opcion.get_tipo_display }}</td>
+                        <td>{{ opcion.nombre }}</td>
+                        <td>${{ opcion.recargo|floatformat:"0g" }}</td>
+                        <td>
+                            {% if perms.catalogo.view_opcionproducto %}
+                            <a href="{% url 'catalogo:opcionproducto_detail' opcion.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                            {% if perms.catalogo.change_opcionproducto %}
+                            <a href="{% url 'catalogo:opcionproducto_update' opcion.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            {% endif %}
+                            {% if perms.catalogo.delete_opcionproducto %}
+                            <a href="{% url 'catalogo:opcionproducto_delete' opcion.pk %}" class="btn btn-sm btn-outline-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No hay opciones.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

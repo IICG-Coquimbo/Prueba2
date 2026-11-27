@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Productos - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Productos</h2>
+        {% if perms.catalogo.add_producto %}
+        <a href="{% url 'catalogo:producto_create' %}" class="btn btn-primary btn-lg w-100 mb-3">Nuevo producto</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Categoria</th>
+                        <th>Precio</th>
+                        <th>Disponible</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for producto in object_list %}
+                    <tr>
+                        <td>{{ producto.nombre }}</td>
+                        <td>{{ producto.categoria.nombre }}</td>
+                        <td>${{ producto.precio|floatformat:"0g" }}</td>
+                        <td>{{ producto.disponible|yesno:"Si,No" }}</td>
+                        <td>
+                            {% if perms.catalogo.view_producto %}
+                            <a href="{% url 'catalogo:producto_detail' producto.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                            {% if perms.catalogo.change_producto %}
+                            <a href="{% url 'catalogo:producto_update' producto.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            {% endif %}
+                            {% if perms.catalogo.delete_producto %}
+                            <a href="{% url 'catalogo:producto_delete' producto.pk %}" class="btn btn-sm btn-outline-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No hay productos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

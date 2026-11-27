@@ -1,0 +1,18 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Borrar pago - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12 col-md-6">
+        <h2>Borrar pago</h2>
+        <p>¿Estas seguro de que quieres borrar el pago {{ pago.referencia }}?</p>
+        <form method="post">
+            {% csrf_token %}
+            <button type="submit" class="btn btn-danger btn-lg w-100">Confirmar borrado</button>
+            <a href="{% url 'pagos:pago_list' %}" class="btn btn-secondary w-100 mt-2">Cancelar</a>
+        </form>
+    </div>
+</div>
+{% endblock %}

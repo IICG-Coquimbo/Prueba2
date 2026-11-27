@@ -1,0 +1,23 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Opcion - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Opcion: {{ opcion.nombre }}</h2>
+        <p><strong>Producto:</strong> {{ opcion.producto.nombre }}</p>
+        <p><strong>Tipo:</strong> {{ opcion.get_tipo_display }}</p>
+        <p><strong>Recargo:</strong> ${{ opcion.recargo|floatformat:"0g" }}</p>
+
+        <a href="{% url 'catalogo:opcionproducto_list' %}" class="btn btn-secondary">Volver</a>
+        {% if perms.catalogo.change_opcionproducto %}
+        <a href="{% url 'catalogo:opcionproducto_update' object.pk %}" class="btn btn-primary btn-lg w-100">Editar</a>
+        {% endif %}
+        {% if perms.catalogo.delete_opcionproducto %}
+        <a href="{% url 'catalogo:opcionproducto_delete' object.pk %}" class="btn btn-danger btn-lg w-100">Borrar</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

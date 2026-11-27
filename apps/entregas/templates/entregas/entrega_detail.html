@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Entrega - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Entrega de pedido #{{ object.pedido.pk }}</h2>
+        <p><strong>Repartidor:</strong> {{ object.repartidor.get_username }}</p>
+        <p><strong>Estado del pedido:</strong> {{ object.pedido.get_estado_display }}</p>
+        <p><strong>Inicio:</strong> {{ object.inicio|date:"d/m/Y H:i" }}</p>
+        <p><strong>Fin:</strong> {{ object.fin|date:"d/m/Y H:i"|default:"-" }}</p>
+        <p><strong>Minutos:</strong> {{ object.minutos|default:"-" }}</p>
+
+        <a href="{% url 'entregas:entrega_list' %}" class="btn btn-secondary">Volver</a>
+        {% if perms.pedidos.despachar_pedido %}
+        <a href="{% url 'entregas:entrega_update' object.pk %}" class="btn btn-primary btn-lg w-100">Editar</a>
+        {% endif %}
+        {% if perms.pedidos.despachar_pedido %}
+        <a href="{% url 'entregas:entrega_delete' object.pk %}" class="btn btn-danger btn-lg w-100">Borrar</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,61 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Producto - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Producto: {{ object.nombre }}</h2>
+        <p><strong>Categoria:</strong> {{ object.categoria.nombre }}</p>
+        <p><strong>Precio:</strong> ${{ object.precio|floatformat:"0g" }}</p>
+        <p><strong>Descripcion:</strong> {{ object.descripcion|default:"Sin descripcion" }}</p>
+        <p><strong>Disponible:</strong> {{ object.disponible|yesno:"Si,No" }}</p>
+        {% if object.imagen_url %}
+        <p><strong>Imagen:</strong> <a href="{{ object.imagen_url }}" target="_blank">Ver foto</a></p>
+        {% endif %}
+
+        {% if object.disponible and perms.pedidos.add_pedido %}
+        <form method="post" action="{% url 'pedidos:producto_agregar' object.pk %}">
+            {% csrf_token %}
+            {% include "parciales/form_campos.html" %}
+            <button type="submit" class="btn btn-primary btn-lg w-100">Agregar al carrito</button>
+        </form>
+        {% elif not object.disponible %}
+        <p class="text-danger">Producto no disponible.</p>
+        {% endif %}
+
+        <a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary">Volver</a>
+        {% if perms.catalogo.change_producto %}
+        <a href="{% url 'catalogo:producto_update' object.pk %}" class="btn btn-primary btn-lg w-100">Editar</a>
+        {% endif %}
+        {% if perms.catalogo.delete_producto %}
+        <a href="{% url 'catalogo:producto_delete' object.pk %}" class="btn btn-danger btn-lg w-100">Borrar</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h3>Opciones</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>Tipo</th><th>Nombre</th><th>Recargo</th></tr>
+                </thead>
+                <tbody>
+                    {% for opcion in object.opciones.all %}
+                    <tr>
+                        <td>{{ opcion.get_tipo_display }}</td>
+                        <td>{{ opcion.nombre }}</td>
+                        <td>${{ opcion.recargo|floatformat:"0g" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">No hay opciones.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

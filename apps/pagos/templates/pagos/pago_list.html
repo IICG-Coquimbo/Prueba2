@@ -1,0 +1,60 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Pagos - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Pagos</h2>
+        {% if perms.pagos.add_pago %}
+        <a href="{% url 'pagos:pago_create' %}" class="btn btn-primary btn-lg w-100 mb-3">Nuevo pago</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Metodo</th>
+                        <th>Estado</th>
+                        <th>Referencia</th>
+                        <th>Monto</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pago in object_list %}
+                    <tr>
+                        <td>#{{ pago.pedido.pk }}</td>
+                        <td>{{ pago.get_metodo_display }}</td>
+                        <td>{{ pago.get_estado_display }}</td>
+                        <td>{{ pago.referencia }}</td>
+                        <td>${{ pago.monto|floatformat:"0g" }}</td>
+                        <td>{{ pago.fecha|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if perms.pagos.view_pago %}
+                            <a href="{% url 'pagos:pago_detail' pago.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                            {% if perms.pagos.change_pago %}
+                            <a href="{% url 'pagos:pago_update' pago.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            {% endif %}
+                            {% if perms.pagos.delete_pago %}
+                            <a href="{% url 'pagos:pago_delete' pago.pk %}" class="btn btn-sm btn-outline-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7">No hay pagos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Carrito - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Mi carrito</h2>
+        {% if pedido.pk %}
+        <a href="{% url 'pedidos:carrito_confirmar' %}" class="btn btn-primary btn-lg w-100 mb-3">Confirmar pedido</a>
+        {% else %}
+        <p class="text-muted">Tu carrito esta vacio.</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Producto</th>
+                        <th>Opciones</th>
+                        <th>Cantidad</th>
+                        <th>Precio unitario</th>
+                        <th>Subtotal</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for item in items %}
+                    <tr>
+                        <td>{{ item.producto.nombre }}</td>
+                        <td>
+                            {% for opcion in item.opciones.all %}
+                            <span class="badge bg-secondary">{{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if opcion.recargo > 0 %} (+${{ opcion.recargo|floatformat:"0g" }}){% endif %}</span>
+                            {% empty %}
+                            <span class="text-muted">Sin opciones</span>
+                            {% endfor %}
+                        </td>
+                        <td>{{ item.cantidad }}</td>
+                        <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                        <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                        <td>
+                            {% if perms.pedidos.add_pedido %}
+                            <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="btn btn-sm btn-danger">Quitar</button>
+                            </form>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="6">No hay items en el carrito.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Resumen</h5>
+                <p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+                {% if pedido.descuento > 0 %}
+                <p><strong>Descuento:</strong> -${{ pedido.descuento|floatformat:"0g" }}</p>
+                {% endif %}
+                <p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+            </div>
+        </div>
+    </div>
+    <div class="col-12 col-md-6">
+        <div class="card">
+            <div class="card-body">
+                <h5 class="card-title">Aplicar codigo de descuento</h5>
+                <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+                    {% csrf_token %}
+                    {{ codigo_form.codigo }}
+                    <button type="submit" class="btn btn-primary btn-lg w-100">Aplicar</button>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,43 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Categoria - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Categoria: {{ object.nombre }}</h2>
+        <a href="{% url 'catalogo:categoria_list' %}" class="btn btn-secondary">Volver</a>
+        {% if perms.catalogo.change_categoria %}
+        <a href="{% url 'catalogo:categoria_update' object.pk %}" class="btn btn-primary btn-lg w-100">Editar</a>
+        {% endif %}
+        {% if perms.catalogo.delete_categoria %}
+        <a href="{% url 'catalogo:categoria_delete' object.pk %}" class="btn btn-danger btn-lg w-100">Borrar</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h3>Productos</h3>
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr><th>Nombre</th><th>Precio</th><th>Disponible</th></tr>
+                </thead>
+                <tbody>
+                    {% for producto in object.productos.all %}
+                    <tr>
+                        <td>{{ producto.nombre }}</td>
+                        <td>${{ producto.precio|floatformat:"0g" }}</td>
+                        <td>{{ producto.disponible|yesno:"Si,No" }}</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">No hay productos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

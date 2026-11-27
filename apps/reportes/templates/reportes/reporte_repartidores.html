@@ -1,0 +1,45 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Ranking de repartidores - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Ranking de repartidores</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Repartidor</th>
+                        <th>Entregas realizadas</th>
+                        <th>Tiempo promedio (min)</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for repartidor in repartidores %}
+                    <tr>
+                        <td>{{ repartidor.get_username }}</td>
+                        <td>{{ repartidor.total_entregas }}</td>
+                        <td>-</td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">Sin datos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <a href="{% url 'reportes:reporte_panel' %}" class="btn btn-secondary btn-lg w-100">Volver al panel</a>
+    </div>
+</div>
+{% endblock %}

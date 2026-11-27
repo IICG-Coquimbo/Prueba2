@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Entregas - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Entregas</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Pedido</th>
+                        <th>Repartidor</th>
+                        <th>Estado</th>
+                        <th>Inicio</th>
+                        <th>Fin</th>
+                        <th>Minutos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for entrega in object_list %}
+                    <tr>
+                        <td>#{{ entrega.pedido.pk }}</td>
+                        <td>{{ entrega.repartidor.get_username }}</td>
+                        <td>{{ entrega.pedido.get_estado_display }}</td>
+                        <td>{{ entrega.inicio|date:"d/m/Y H:i" }}</td>
+                        <td>{{ entrega.fin|date:"d/m/Y H:i"|default:"-" }}</td>
+                        <td>{{ entrega.minutos|default:"-" }}</td>
+                        <td>
+                            {% if perms.pedidos.despachar_pedido %}
+                            <a href="{% url 'entregas:entrega_detail' entrega.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="7">No hay entregas.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,47 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mis pedidos - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Mis pedidos</h2>
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Numero</th>
+                        <th>Estado</th>
+                        <th>Total</th>
+                        <th>Fecha</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for pedido in object_list %}
+                    <tr>
+                        <td>#{{ pedido.pk }}</td>
+                        <td>{{ pedido.get_estado_display }}</td>
+                        <td>${{ pedido.total|floatformat:"0g" }}</td>
+                        <td>{{ pedido.creado|date:"d/m/Y H:i" }}</td>
+                        <td>
+                            {% if perms.pedidos.view_pedido %}
+                            <a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="5">No hay pedidos.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

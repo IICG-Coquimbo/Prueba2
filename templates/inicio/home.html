@@ -1,0 +1,117 @@
+{% extends "base.html" %}
+
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Bienvenido, {{ user.get_username }}</h2>
+        {% if user.groups.all %}
+        <p>Tu rol: {% for grupo in user.groups.all %}{{ grupo.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+        {% else %}
+        <p>Tu rol: sin grupo asignado</p>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row mt-4">
+    <div class="col-12">
+        <h3>Modulos disponibles</h3>
+        {% url 'catalogo:producto_list' as url_menu %}
+        {% url 'pedidos:carrito_detail' as url_carrito %}
+        {% url 'pedidos:pedido_list' as url_pedidos %}
+        {% url 'entregas:entrega_list' as url_entregas %}
+        {% url 'reportes:reporte_panel' as url_reportes %}
+        {% url 'cuentas:direccion_list' as url_direcciones %}
+        {% url 'admin:index' as url_admin %}
+
+        {% if url_menu and perms.catalogo.view_producto %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Menu</h5>
+                    <p class="card-text">Ver productos disponibles</p>
+                    <a href="{{ url_menu }}" class="btn btn-primary btn-lg w-100">Ir al menu</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_carrito and perms.pedidos.add_pedido %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Carrito</h5>
+                    <p class="card-text">Ver y gestionar tu carrito de compras</p>
+                    <a href="{{ url_carrito }}" class="btn btn-primary btn-lg w-100">Ir al carrito</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_pedidos and perms.pedidos.view_pedido %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Mis pedidos</h5>
+                    <p class="card-text">Ver el estado de tus pedidos</p>
+                    <a href="{{ url_pedidos }}" class="btn btn-primary btn-lg w-100">Ver pedidos</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_entregas and perms.pedidos.despachar_pedido %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Entregas</h5>
+                    <p class="card-text">Gestionar entregas asignadas</p>
+                    <a href="{{ url_entregas }}" class="btn btn-primary btn-lg w-100">Ver entregas</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_reportes and perms.pedidos.ver_reportes %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Reportes</h5>
+                    <p class="card-text">Ver ventas y ranking de repartidores</p>
+                    <a href="{{ url_reportes }}" class="btn btn-primary btn-lg w-100">Ver reportes</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_direcciones and perms.cuentas.view_direccion %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Mis direcciones</h5>
+                    <p class="card-text">Gestionar tus direcciones de entrega</p>
+                    <a href="{{ url_direcciones }}" class="btn btn-primary btn-lg w-100">Ver direcciones</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if url_admin and user.is_staff %}
+        <div class="col-md-4">
+            <div class="card h-100 shadow-sm">
+                <div class="card-body">
+                    <h5 class="card-title">Administracion</h5>
+                    <p class="card-text">Panel de administracion de Django</p>
+                    <a href="{{ url_admin }}" class="btn btn-primary btn-lg w-100">Ir a admin</a>
+                </div>
+            </div>
+        </div>
+        {% endif %}
+
+        {% if not perms.catalogo.view_producto and not perms.pedidos.add_pedido and not perms.pedidos.view_pedido and not perms.pedidos.despachar_pedido and not perms.pedidos.ver_reportes and not perms.cuentas.view_direccion and not user.is_staff %}
+        <p class="text-muted">Aun no hay modulos disponibles.</p>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

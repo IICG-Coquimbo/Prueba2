@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Categorias - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Categorias</h2>
+        {% if perms.catalogo.add_categoria %}
+        <a href="{% url 'catalogo:categoria_create' %}" class="btn btn-primary btn-lg w-100 mb-3">Nueva categoria</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Nombre</th>
+                        <th>Productos</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for categoria in object_list %}
+                    <tr>
+                        <td>{{ categoria.nombre }}</td>
+                        <td>{{ categoria.productos.count }}</td>
+                        <td>
+                            {% if perms.catalogo.view_categoria %}
+                            <a href="{% url 'catalogo:categoria_detail' categoria.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                            {% endif %}
+                            {% if perms.catalogo.change_categoria %}
+                            <a href="{% url 'catalogo:categoria_update' categoria.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            {% endif %}
+                            {% if perms.catalogo.delete_categoria %}
+                            <a href="{% url 'catalogo:categoria_delete' categoria.pk %}" class="btn btn-sm btn-outline-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="3">No hay categorias.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}

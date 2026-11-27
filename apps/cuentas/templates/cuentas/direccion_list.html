@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% load static %}
+
+{% block title %}Mis direcciones - Cafe Rincon{% endblock %}
+
+{% block content %}
+<div class="row mt-4">
+    <div class="col-12">
+        <h2>Mis direcciones</h2>
+        {% if perms.cuentas.add_direccion %}
+        <a href="{% url 'cuentas:direccion_create' %}" class="btn btn-primary btn-lg w-100 mb-3">Nueva direccion</a>
+        {% endif %}
+    </div>
+</div>
+
+<div class="row">
+    <div class="col-12">
+        <div class="table-responsive">
+            <table class="table">
+                <thead>
+                    <tr>
+                        <th>Alias</th>
+                        <th>Direccion</th>
+                        <th>Referencia</th>
+                        <th>Acciones</th>
+                    </tr>
+                </thead>
+                <tbody>
+                    {% for direccion in object_list %}
+                    <tr>
+                        <td>{{ direccion.alias }}</td>
+                        <td>{{ direccion.direccion }}</td>
+                        <td>{{ direccion.referencia|default:"-" }}</td>
+                        <td>
+                            {% if perms.cuentas.change_direccion %}
+                            <a href="{% url 'cuentas:direccion_update' direccion.pk %}" class="btn btn-sm btn-outline-primary">Editar</a>
+                            {% endif %}
+                            {% if perms.cuentas.delete_direccion %}
+                            <a href="{% url 'cuentas:direccion_delete' direccion.pk %}" class="btn btn-sm btn-outline-danger">Borrar</a>
+                            {% endif %}
+                        </td>
+                    </tr>
+                    {% empty %}
+                    <tr><td colspan="4">No hay direcciones.</td></tr>
+                    {% endfor %}
+                </tbody>
+            </table>
+        </div>
+    </div>
+</div>
+{% endblock %}
