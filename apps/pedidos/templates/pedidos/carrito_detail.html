@@ -1,0 +1,177 @@
+{% extends 'base.html' %}
+{% load static %}
+{% load pedidos_extras %}
+
+{% block title %}Carrito - Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'inicio:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Carrito</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Mi Carrito</h1>
+
+    {% if items %}
+    <div class="table-responsive mb-4">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>Producto</th>
+                    <th>Opciones</th>
+                    <th class="text-end">Precio unit.</th>
+                    <th class="text-center">Cantidad</th>
+                    <th class="text-end">Subtotal</th>
+                    <th></th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for item in items %}
+                <tr>
+                    <td>
+                        <div class="d-flex align-items-center">
+                            {% if item.producto.imagen_url %}
+                            <img src="{{ item.producto.imagen_url }}" alt="{{ item.producto.nombre }}" class="rounded me-3" style="width: 60px; height: 60px; object-fit: cover;">
+                            {% else %}
+                            <div class="bg-light rounded me-3 d-flex align-items-center justify-content-center" style="width: 60px; height: 60px;">
+                                <span class="text-muted small">Sin img</span>
+                            </div>
+                            {% endif %}
+                            <div>
+                                <h6 class="mb-0">{{ item.producto.nombre }}</h6>
+                            </div>
+                        </div>
+                    </td>
+                    <td>
+                        {% if item.opciones.all %}
+                        <ul class="list-unstyled mb-0 small">
+                            {% for opcion in item.opciones.all %}
+                            <li>{{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if opcion.recargo %} (+${{ opcion.recargo|floatformat:"0g" }}){% endif %}</li>
+                            {% endfor %}
+                        </ul>
+                        {% else %}
+                        <span class="text-muted small">Sin opciones</span>
+                        {% endif %}
+                    </td>
+                    <td class="text-end">${{ item.precio_unitario|floatformat:"0g" }}</td>
+                    <td class="text-center">{{ item.cantidad }}</td>
+                    <td class="text-end">${{ item.precio_unitario|mul:item.cantidad|floatformat:"0g" }}</td>
+                    <td>
+                        <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}" class="d-inline">
+                            {% csrf_token %}
+                            <button type="submit" class="btn btn-sm btn-outline-danger" title="Quitar">
+                                <svg class="bi" width="16" height="16"><use xlink:href="#trash"/></svg>
+                            </button>
+                        </form>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Totales y formularios -->
+    <div class="row">
+        <div class="col-md-6">
+            <!-- Formulario código de descuento -->
+            <div class="card mb-3">
+                <div class="card-header">Código de descuento</div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'pedidos:carrito_codigo' %}" class="d-flex gap-2">
+                        {% csrf_token %}
+                        {{ form_codigo.codigo }}
+                        <button type="submit" class="btn btn-outline-primary">Aplicar</button>
+                    </form>
+                    {% if form_codigo.non_field_errors %}
+                    <div class="alert alert-danger mt-2 mb-0">{{ form_codigo.non_field_errors }}</div>
+                    {% endif %}
+                </div>
+            </div>
+        </div>
+
+        <div class="col-md-6">
+            <!-- Resumen de totales -->
+            <div class="card mb-3">
+                <div class="card-header">Resumen</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6">Subtotal</dt>
+                        <dd class="col-sm-6 text-end">${{ pedido.subtotal|floatformat:"0g" }}</dd>
+
+                        {% if pedido.descuento > 0 %}
+                        <dt class="col-sm-6 text-success">Descuento ({{ pedido.codigo_descuento.porcentaje }}%)</dt>
+                        <dd class="col-sm-6 text-end text-success">-${{ pedido.descuento|floatformat:"0g" }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-6 fw-bold">Total</dt>
+                        <dd class="col-sm-6 text-end fw-bold">${{ pedido.total|floatformat:"0g" }}</dd>
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Formulario confirmar pedido -->
+            {% if pedido.items.exists %}
+            <div class="card">
+                <div class="card-header">Confirmar pedido</div>
+                <div class="card-body">
+                    <form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+                        {% csrf_token %}
+
+                        <div class="mb-3">
+                            <label for="{{ form_confirmar.direccion.id_for_label }}" class="form-label">{{ form_confirmar.direccion.label }} *</label>
+                            {{ form_confirmar.direccion }}
+                            {% for error in form_confirmar.direccion.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </div>
+
+                        <fieldset class="mb-3">
+                            <legend class="form-label">{{ form_confirmar.metodo_pago.label }} *</legend>
+                            <div class="row">
+                                {% for value, label in form_confirmar.metodo_pago.field.choices %}
+                                <div class="col-md-6">
+                                    <div class="form-check">
+                                        <input type="radio"
+                                               class="form-check-input"
+                                               name="{{ form_confirmar.metodo_pago.name }}"
+                                               id="{{ form_confirmar.metodo_pago.name }}_{{ value }}"
+                                               value="{{ value }}"
+                                               {% if form_confirmar.metodo_pago.value == value %}checked{% endif %}>
+                                        <label class="form-check-label" for="{{ form_confirmar.metodo_pago.name }}_{{ value }}">
+                                            {{ label }}
+                                        </label>
+                                    </div>
+                                </div>
+                                {% endfor %}
+                            </div>
+                            {% for error in form_confirmar.metodo_pago.errors %}
+                            <div class="text-danger small">{{ error }}</div>
+                            {% endfor %}
+                        </fieldset>
+
+                        {% if form_confirmar.non_field_errors %}
+                        <div class="alert alert-danger">{{ form_confirmar.non_field_errors }}</div>
+                        {% endif %}
+
+                        <button type="submit" class="btn btn-primary btn-lg w-100">Confirmar pedido (${{ pedido.total|floatformat:"0g" }})</button>
+                    </form>
+                </div>
+            </div>
+            {% else %}
+            <div class="alert alert-info">El carrito está vacío. <a href="{% url 'catalogo:producto_list' %}">Ver menú</a></div>
+            {% endif %}
+        </div>
+    </div>
+    {% else %}
+    <div class="text-center py-5">
+        <svg class="bi text-muted mb-3" width="64" height="64"><use xlink:href="#cart"/></svg>
+        <h3>Tu carrito está vacío</h3>
+        <p class="text-muted">Agrega productos del <a href="{% url 'catalogo:producto_list' %}">menú</a> para empezar tu pedido.</p>
+        <a href="{% url 'catalogo:producto_list' %}" class="btn btn-primary btn-lg">Ver menú</a>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

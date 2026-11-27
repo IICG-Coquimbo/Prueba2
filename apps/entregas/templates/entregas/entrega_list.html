@@ -1,0 +1,137 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Entregas - Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'inicio:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Entregas</li>
+        </ol>
+    </nav>
+
+    <h1 class="mb-4">Entregas</h1>
+
+    {% if entregas %}
+    <div class="table-responsive">
+        <table class="table table-hover align-middle">
+            <thead class="table-light">
+                <tr>
+                    <th>#</th>
+                    <th>Pedido</th>
+                    <th>Cliente</th>
+                    <th>Estado</th>
+                    <th>Repartidor</th>
+                    <th>Inicio</th>
+                    <th>Fin</th>
+                    <th>Minutos</th>
+                    <th>Acciones</th>
+                </tr>
+            </thead>
+            <tbody>
+                {% for entrega in entregas %}
+                <tr>
+                    <td>#{{ entrega.pedido.pk }}</td>
+                    <td>
+                        <a href="{% url 'entregas:entrega_detail' entrega.pk %}" class="text-decoration-none fw-medium">
+                            Pedido #{{ entrega.pedido.pk }}
+                        </a>
+                    </td>
+                    <td>{{ entrega.pedido.cliente.get_full_name|default:entrega.pedido.cliente.username }}</td>
+                    <td>
+                        <span class="badge 
+                            {% if entrega.pedido.estado == 'entregado' %}bg-success
+                            {% elif entrega.pedido.estado == 'en_camino' %}bg-info
+                            {% elif entrega.pedido.estado == 'listo_despacho' %}bg-warning text-dark
+                            {% else %}bg-secondary{% endif %}">
+                            {{ entrega.pedido.get_estado_display }}
+                        </span>
+                    </td>
+                    <td>
+                        {% if entrega.repartidor %}
+                            {{ entrega.repartidor.get_full_name|default:entrega.repartidor.username }}
+                        {% else %}
+                            <span class="text-muted">Sin asignar</span>
+                        {% endif %}
+                    </td>
+                    <td>{{ entrega.inicio|date:"d/m/Y H:i" }}</td>
+                    <td>
+                        {% if entrega.fin %}
+                            {{ entrega.fin|date:"d/m/Y H:i" }}
+                        {% else %}
+                            <span class="text-muted">En curso</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        {% if entrega.minutos is not None %}
+                            {{ entrega.minutos }} min
+                        {% else %}
+                            <span class="text-muted">—</span>
+                        {% endif %}
+                    </td>
+                    <td>
+                        <div class="d-flex flex-wrap gap-1">
+                            {% if entrega.pedido.estado == 'listo_despacho' and not entrega.repartidor %}
+                                <!-- Botón "Tomar" para repartidor sin asignar -->
+                                <form method="post" action="{% url 'pedidos:pedido_estado' entrega.pedido.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="estado" value="en_camino">
+                                    <button type="submit" class="btn btn-sm btn-success" title="Tomar entrega">
+                                        Tomar
+                                    </button>
+                                </form>
+                            {% elif entrega.pedido.estado == 'listo_despacho' and entrega.repartidor == request.user %}
+                                <!-- Botón "Iniciar" para repartidor asignado en listo_despacho -->
+                                <form method="post" action="{% url 'pedidos:pedido_estado' entrega.pedido.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="estado" value="en_camino">
+                                    <button type="submit" class="btn btn-sm btn-primary" title="Iniciar entrega">
+                                        Iniciar
+                                    </button>
+                                </form>
+                            {% elif entrega.pedido.estado == 'en_camino' and entrega.repartidor == request.user %}
+                                <!-- Botón "Finalizar" para repartidor en camino -->
+                                <form method="post" action="{% url 'pedidos:pedido_estado' entrega.pedido.pk %}" class="d-inline">
+                                    {% csrf_token %}
+                                    <input type="hidden" name="estado" value="entregado">
+                                    <button type="submit" class="btn btn-sm btn-warning text-dark" title="Finalizar entrega">
+                                        Finalizar
+                                    </button>
+                                </form>
+                            {% endif %}
+                            <!-- Botón "Ver" siempre visible -->
+                            <a href="{% url 'entregas:entrega_detail' entrega.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                        </div>
+                    </td>
+                </tr>
+                {% endfor %}
+            </tbody>
+        </table>
+    </div>
+
+    <!-- Paginación -->
+    {% if is_paginated %}
+    <nav aria-label="Paginación de entregas">
+        <ul class="pagination justify-content-center">
+            {% if page_obj.has_previous %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+            {% endif %}
+            <li class="page-item disabled"><span class="page-link">Página {{ page_obj.number }} de {{ paginator.num_pages }}</span></li>
+            {% if page_obj.has_next %}
+            <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+            {% endif %}
+        </ul>
+    </nav>
+    {% endif %}
+
+    {% else %}
+    <div class="text-center py-5">
+        <svg class="bi text-muted mb-3" width="64" height="64"><use xlink:href="#truck"/></svg>
+        <h3>No hay entregas</h3>
+        <p class="text-muted">No hay entregas asignadas o pendientes.</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}

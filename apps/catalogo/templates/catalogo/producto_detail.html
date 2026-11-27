@@ -1,0 +1,78 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}{{ producto.nombre }} - Café Rincón{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'inicio:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'catalogo:producto_list' %}">Menú</a></li>
+            <li class="breadcrumb-item active" aria-current="page">{{ producto.nombre }}</li>
+        </ol>
+    </nav>
+    
+    <div class="row">
+        <div class="col-md-6">
+            {% if producto.imagen_url %}
+            <img src="{{ producto.imagen_url }}" class="img-fluid rounded" alt="{{ producto.nombre }}">
+            {% else %}
+            <div class="bg-light rounded d-flex align-items-center justify-content-center" style="height: 400px;">
+                <span class="text-muted">Sin imagen</span>
+            </div>
+            {% endif %}
+        </div>
+        
+        <div class="col-md-6">
+            <h1>{{ producto.nombre }}</h1>
+            
+            {% if producto.descripcion %}
+            <p class="lead">{{ producto.descripcion }}</p>
+            {% endif %}
+            
+            <p class="h4 text-primary">${{ producto.precio|floatformat:"0g" }}</p>
+            
+            <form method="post" action="{% url 'catalogo:producto_agregar' producto.pk %}" class="mt-4">
+                {% csrf_token %}
+                
+                {{ form.producto_id }}
+                {{ form.cantidad }}
+                
+                {% if form.opciones_tamano %}
+                <div class="mb-3">
+                    <label for="{{ form.opciones_tamano.id_for_label }}" class="form-label">{{ form.opciones_tamano.label }}</label>
+                    {{ form.opciones_tamano }}
+                    {% if form.opciones_tamano.help_text %}<div class="form-text">{{ form.opciones_tamano.help_text }}</div>{% endif %}
+                    {% for error in form.opciones_tamano.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                {% endif %}
+                
+                {% if form.opciones_leche %}
+                <div class="mb-3">
+                    <label for="{{ form.opciones_leche.id_for_label }}" class="form-label">{{ form.opciones_leche.label }}</label>
+                    {{ form.opciones_leche }}
+                    {% if form.opciones_leche.help_text %}<div class="form-text">{{ form.opciones_leche.help_text }}</div>{% endif %}
+                    {% for error in form.opciones_leche.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                {% endif %}
+                
+                {% if form.opciones_azucar %}
+                <div class="mb-3">
+                    <label for="{{ form.opciones_azucar.id_for_label }}" class="form-label">{{ form.opciones_azucar.label }}</label>
+                    {{ form.opciones_azucar }}
+                    {% if form.opciones_azucar.help_text %}<div class="form-text">{{ form.opciones_azucar.help_text }}</div>{% endif %}
+                    {% for error in form.opciones_azucar.errors %}<div class="text-danger small">{{ error }}</div>{% endfor %}
+                </div>
+                {% endif %}
+                
+                {% if form.non_field_errors %}
+                <div class="alert alert-danger">{{ form.non_field_errors }}</div>
+                {% endif %}
+                
+                <button type="submit" class="btn btn-primary btn-lg w-100">Agregar al carrito</button>
+            </form>
+        </div>
+    </div>
+</div>
+{% endblock %}

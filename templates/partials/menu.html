@@ -1,0 +1,105 @@
+{% load static %}
+<header class="navbar navbar-expand-lg navbar-dark bg-primary fixed-top">
+    <div class="container">
+        <a class="navbar-brand d-flex align-items-center" href="{% url 'inicio:home' %}">
+            <img src="{% static 'img/logo.svg' %}" alt="Logo" height="40" class="me-2">
+            <span class="fw-bold">Café Rincón</span>
+        </a>
+        <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarNav" aria-controls="navbarNav" aria-expanded="false" aria-label="Toggle navigation">
+            <span class="navbar-toggler-icon"></span>
+        </button>
+        <div class="collapse navbar-collapse" id="navbarNav">
+            <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+                <li class="nav-item">
+                    {% url 'inicio:home' as url_inicio %}
+                    {% if url_inicio %}
+                    <a class="nav-link" href="{{ url_inicio }}">Inicio</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'catalogo:producto_list' as url_menu %}
+                    {% if url_menu and perms.catalogo.view_producto %}
+                    <a class="nav-link" href="{{ url_menu }}">Menú</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'pedidos:carrito' as url_carrito %}
+                    {% if url_carrito and perms.pedidos.add_pedido %}
+                    <a class="nav-link" href="{{ url_carrito }}">Carrito</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'pedidos:pedido_list' as url_pedidos %}
+                    {% if url_pedidos and perms.pedidos.view_pedido %}
+                    <a class="nav-link" href="{{ url_pedidos }}">
+                        {% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}
+                    </a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'entregas:entrega_list' as url_entregas %}
+                    {% if url_entregas and perms.pedidos.despachar_pedido %}
+                    <a class="nav-link" href="{{ url_entregas }}">Entregas</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'reportes:reporte_ventas' as url_reportes %}
+                    {% if url_reportes and perms.pedidos.ver_reportes %}
+                    <a class="nav-link" href="{{ url_reportes }}">Reportes</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'cuentas:direccion_list' as url_direcciones %}
+                    {% if url_direcciones and perms.cuentas.view_direccion %}
+                    <a class="nav-link" href="{{ url_direcciones }}">Mis direcciones</a>
+                    {% endif %}
+                </li>
+            </ul>
+            <ul class="navbar-nav ms-auto">
+                {% if user.is_authenticated %}
+                <li class="nav-item dropdown">
+                    <a class="nav-link dropdown-toggle" href="#" id="userDropdown" role="button" data-bs-toggle="dropdown" aria-expanded="false">
+                        {{ user.get_username }}
+                    </a>
+                    <ul class="dropdown-menu dropdown-menu-end" aria-labelledby="userDropdown">
+                        <li>
+                            {% url 'cuentas:perfil' as url_perfil %}
+                            {% if url_perfil %}
+                            <a class="dropdown-item" href="{{ url_perfil }}">Perfil</a>
+                            {% endif %}
+                        </li>
+                        <li><hr class="dropdown-divider"></li>
+                        <li>
+                            <form method="post" action="{% url 'logout' %}" class="d-inline">
+                                {% csrf_token %}
+                                <button type="submit" class="dropdown-item">Cerrar sesión</button>
+                            </form>
+                        </li>
+                    </ul>
+                </li>
+                {% else %}
+                <li class="nav-item">
+                    {% url 'login' as url_login %}
+                    {% if url_login %}
+                    <a class="nav-link" href="{{ url_login }}">Iniciar sesión</a>
+                    {% endif %}
+                </li>
+                <li class="nav-item">
+                    {% url 'registro' as url_registro %}
+                    {% if url_registro %}
+                    <a class="nav-link" href="{{ url_registro }}">Registrarse</a>
+                    {% endif %}
+                </li>
+                {% endif %}
+                {% if user.is_staff %}
+                <li class="nav-item">
+                    {% url 'admin:index' as url_admin %}
+                    {% if url_admin %}
+                    <a class="nav-link" href="{{ url_admin }}">Administración</a>
+                    {% endif %}
+                </li>
+                {% endif %}
+            </ul>
+        </div>
+    </div>
+</header>

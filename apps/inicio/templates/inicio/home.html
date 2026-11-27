@@ -1,20 +1,38 @@
-<!DOCTYPE html>
-<html lang="es">
-<head>
-    <meta charset="UTF-8">
-    <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Café Rincón</title>
-    <style>
-        body { font-family: sans-serif; max-width: 800px; margin: 2rem auto; padding: 0 1rem; }
-        h1 { color: #333; }
-        .nav a { margin-right: 1rem; text-decoration: none; color: #0066cc; }
-    </style>
-</head>
-<body>
-    <h1>Café Rincón</h1>
-    <div class="nav">
-        <a href="{% url 'admin:index' %}">Admin</a>
+{% extends 'base.html' %}
+
+{% block title %}Inicio - Café Rincón{% endblock %}
+
+{% block content %}
+<section class="hero">
+    <div class="container">
+        <h1>Bienvenido a Café Rincón</h1>
+        <p>Tu pedido de café en línea.</p>
+        {% url 'catalogo:producto_list' as url_catalogo %}
+        {% if url_catalogo and perms.catalogo.view_producto %}
+        <a href="{{ url_catalogo }}" class="btn btn-primary btn-lg">Ver catálogo</a>
+        {% endif %}
     </div>
-    <p>Bienvenido a Café Rincón. Tu pedido de café en línea.</p>
-</body>
-</html>
+</section>
+
+<section class="features">
+    <div class="container">
+        <div class="grid grid-auto">
+            <article class="feature-card">
+                <div class="feature-icon">☕</div>
+                <h3>Variedad premium</h3>
+                <p>Granos seleccionados, múltiples orígenes y tuestes artesanales para todos los gustos.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon">🚚</div>
+                <h3>Entrega rápida</h3>
+                <p>Tu pedido llega fresco y caliente en menos de 30 minutos a la puerta de tu casa u oficina.</p>
+            </article>
+            <article class="feature-card">
+                <div class="feature-icon">🎁</div>
+                <h3>Promociones exclusivas</h3>
+                <p>Descuentos especiales, códigos de bienvenida y ofertas solo para nuestros clientes registrados.</p>
+            </article>
+        </div>
+    </div>
+</section>
+{% endblock %}

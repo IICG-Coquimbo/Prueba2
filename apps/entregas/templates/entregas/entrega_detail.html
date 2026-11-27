@@ -1,0 +1,254 @@
+{% extends 'base.html' %}
+{% load static %}
+
+{% block title %}Entrega Pedido #{{ pedido.pk }} - Café Rincón{% endblock %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+
+{% block content %}
+<div class="container py-4">
+    <nav aria-label="breadcrumb">
+        <ol class="breadcrumb">
+            <li class="breadcrumb-item"><a href="{% url 'inicio:home' %}">Inicio</a></li>
+            <li class="breadcrumb-item"><a href="{% url 'entregas:entrega_list' %}">Entregas</a></li>
+            <li class="breadcrumb-item active" aria-current="page">Pedido #{{ pedido.pk }}</li>
+        </ol>
+    </nav>
+
+    <div class="d-flex justify-content-between align-items-center mb-4">
+        <h1>Entrega - Pedido #{{ pedido.pk }}</h1>
+        <span class="badge 
+            {% if pedido.estado == 'entregado' %}bg-success
+            {% elif pedido.estado == 'en_camino' %}bg-info
+            {% elif pedido.estado == 'listo_despacho' %}bg-warning text-dark
+            {% else %}bg-secondary{% endif %} fs-6 px-3 py-2">
+            {{ pedido.get_estado_display }}
+        </span>
+    </div>
+
+    <div class="row">
+        <!-- Información de la entrega -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">Información de la entrega</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Pedido</dt>
+                        <dd class="col-sm-8"><a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="text-decoration-none">#{{ pedido.pk }}</a></dd>
+
+                        <dt class="col-sm-4">Estado actual</dt>
+                        <dd class="col-sm-8">
+                            <span class="badge 
+                                {% if pedido.estado == 'entregado' %}bg-success
+                                {% elif pedido.estado == 'en_camino' %}bg-info
+                                {% elif pedido.estado == 'listo_despacho' %}bg-warning text-dark
+                                {% else %}bg-secondary{% endif %} fs-6">
+                                {{ pedido.get_estado_display }}
+                            </span>
+                        </dd>
+
+                        {% if puede_ver_contacto %}
+                        <dt class="col-sm-4">Cliente</dt>
+                        <dd class="col-sm-8">{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</dd>
+
+                        <dt class="col-sm-4">Teléfono</dt>
+                        <dd class="col-sm-8">{{ pedido.cliente.perfil.telefono|default:"No registrado" }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-4">Dirección</dt>
+                        <dd class="col-sm-8">
+                            {% if pedido.direccion %}
+                            {{ pedido.direccion.alias }}: {{ pedido.direccion.direccion }}
+                            {% if pedido.direccion.referencia %} ({{ pedido.direccion.referencia }}){% endif %}
+                            {% else %}
+                            <span class="text-muted">No especificada</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Repartidor</dt>
+                        <dd class="col-sm-8">
+                            {% if entrega.repartidor %}
+                                {{ entrega.repartidor.get_full_name|default:entrega.repartidor.username }}
+                            {% else %}
+                                <span class="text-muted">Sin asignar</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Método de pago</dt>
+                        <dd class="col-sm-8">{{ pedido.get_metodo_pago_display|default:"No especificado" }}</dd>
+
+                        {% if pedido.codigo_descuento %}
+                        <dt class="col-sm-4">Código descuento</dt>
+                        <dd class="col-sm-8">{{ pedido.codigo_descuento.codigo }} ({{ pedido.codigo_descuento.porcentaje }}%)</dd>
+                        {% endif %}
+                    </dl>
+                </div>
+            </div>
+
+            <!-- Tiempos de entrega -->
+            <div class="card mt-3">
+                <div class="card-header">Tiempos de entrega</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-4">Inicio</dt>
+                        <dd class="col-sm-8">{{ entrega.inicio|date:"d/m/Y H:i:s" }}</dd>
+
+                        <dt class="col-sm-4">Fin</dt>
+                        <dd class="col-sm-8">
+                            {% if entrega.fin %}
+                            {{ entrega.fin|date:"d/m/Y H:i:s" }}
+                            {% else %}
+                            <span class="text-muted">En curso</span>
+                            {% endif %}
+                        </dd>
+
+                        <dt class="col-sm-4">Duración</dt>
+                        <dd class="col-sm-8">
+                            {% if minutos is not None %}
+                            <strong>{{ minutos }} minutos</strong>
+                            {% else %}
+                            <span class="text-muted">—</span>
+                            {% endif %}
+                        </dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+
+        <!-- Items del pedido -->
+        <div class="col-md-6 mb-4">
+            <div class="card">
+                <div class="card-header">Productos del pedido</div>
+                <div class="card-body p-0">
+                    <div class="table-responsive">
+                        <table class="table table-hover mb-0">
+                            <thead class="table-light">
+                                <tr>
+                                    <th>Producto</th>
+                                    <th class="text-center">Cant.</th>
+                                    <th class="text-end">Precio unit.</th>
+                                    <th class="text-end">Subtotal</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                                {% for item in items %}
+                                <tr>
+                                    <td>
+                                        <div class="d-flex align-items-center">
+                                            {% if item.producto.imagen_url %}
+                                            <img src="{{ item.producto.imagen_url }}" alt="{{ item.producto.nombre }}" class="rounded me-2" style="width: 40px; height: 40px; object-fit: cover;">
+                                            {% endif %}
+                                            <div>
+                                                <div class="fw-medium">{{ item.producto.nombre }}</div>
+                                                {% if item.opciones.all %}
+                                                <small class="text-muted">
+                                                    {% for opcion in item.opciones.all %}
+                                                    {{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if opcion.recargo %} (+${{ opcion.recargo|floatformat:"0g" }}){% endif %}{% if not forloop.last %}; {% endif %}
+                                                    {% endfor %}
+                                                </small>
+                                                {% endif %}
+                                            </div>
+                                        </div>
+                                    </td>
+                                    <td class="text-center">{{ item.cantidad }}</td>
+                                    <td class="text-end">${{ item.precio_unitario|floatformat:"0g" }}</td>
+                                    <td class="text-end">${{ item.precio_unitario|mul:item.cantidad|floatformat:"0g" }}</td>
+                                </tr>
+                                {% endfor %}
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+            </div>
+
+            <!-- Totales -->
+            <div class="card mt-3">
+                <div class="card-header">Totales</div>
+                <div class="card-body">
+                    <dl class="row mb-0">
+                        <dt class="col-sm-6">Subtotal</dt>
+                        <dd class="col-sm-6 text-end">${{ pedido.subtotal|floatformat:"0g" }}</dd>
+
+                        {% if pedido.descuento > 0 %}
+                        <dt class="col-sm-6 text-success">Descuento ({{ pedido.codigo_descuento.porcentaje }}%)</dt>
+                        <dd class="col-sm-6 text-end text-success">-${{ pedido.descuento|floatformat:"0g" }}</dd>
+                        {% endif %}
+
+                        <dt class="col-sm-6 fw-bold">Total</dt>
+                        <dd class="col-sm-6 text-end fw-bold">${{ pedido.total|floatformat:"0g" }}</dd>
+                    </dl>
+                </div>
+            </div>
+        </div>
+    </div>
+
+    <!-- Historial de estados -->
+    <div class="card mb-4">
+        <div class="card-header d-flex justify-content-between align-items-center">
+            <span>Historial de estados del pedido</span>
+            <small class="text-muted">Se actualiza automáticamente cada 15s</small>
+        </div>
+        <div class="card-body p-0">
+            <div class="table-responsive">
+                <table class="table table-hover mb-0">
+                    <thead class="table-light">
+                        <tr>
+                            <th>Fecha y hora</th>
+                            <th>Estado</th>
+                            <th>Usuario</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                        {% for h in historial %}
+                        <tr>
+                            <td>{{ h.fecha|date:"d/m/Y H:i:s" }}</td>
+                            <td>
+                                <span class="badge 
+                                    {% if h.estado == 'entregado' %}bg-success
+                                    {% elif h.estado == 'en_camino' %}bg-info
+                                    {% elif h.estado == 'listo_despacho' %}bg-warning text-dark
+                                    {% elif h.estado == 'en_preparacion' %}bg-primary
+                                    {% elif h.estado == 'recibido' %}bg-secondary
+                                    {% elif h.estado == 'pendiente_pago' %}bg-warning text-dark
+                                    {% else %}bg-light text-dark{% endif %}">
+                                    {{ h.get_estado_display }}
+                                </span>
+                            </td>
+                            <td>{{ h.usuario.get_full_name|default:h.usuario.username|default:"Sistema" }}</td>
+                        </tr>
+                        {% empty %}
+                        <tr>
+                            <td colspan="3" class="text-center text-muted py-4">Sin historial</td>
+                        </tr>
+                        {% endfor %}
+                    </tbody>
+                </table>
+            </div>
+        </div>
+    </div>
+
+    <!-- Botones de acción según estado y rol -->
+    {% if estados_siguientes %}
+    <div class="card">
+        <div class="card-header">Acciones de entrega</div>
+        <div class="card-body">
+            <form method="post" action="{% url 'pedidos:pedido_estado' pedido.pk %}" class="d-flex flex-wrap gap-2">
+                {% csrf_token %}
+                <input type="hidden" name="estado" id="estado_actual" value="">
+                {% for value, label in estados_siguientes %}
+                <button type="submit"
+                        class="btn btn-primary btn-lg flex-fill"
+                        name="estado"
+                        value="{{ value }}"
+                        onclick="document.getElementById('estado_actual').value='{{ value }}'">
+                    {{ label }}
+                </button>
+                {% endfor %}
+            </form>
+        </div>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
