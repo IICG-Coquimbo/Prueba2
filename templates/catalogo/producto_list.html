@@ -1,0 +1,51 @@
+{% extends "base.html" %}
+{% block title %}Menu - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Menu</h1>
+    {% if perms.catalogo.change_producto %}
+    <a href="{% url 'admin:catalogo_producto_add' %}" class="btn btn-primary">Nuevo producto</a>
+    {% endif %}
+</div>
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+    {% for producto in productos %}
+    <div class="col">
+        <div class="card h-100">
+            {% if producto.imagen_url %}
+            <img src="{{ producto.imagen_url }}" class="card-img-top" alt="{{ producto.nombre }}" style="height: 200px; object-fit: cover;">
+            {% else %}
+            <div class="card-img-top bg-light d-flex align-items-center justify-content-center" style="height: 200px;">
+                <i class="bi bi-cup-hot display-4 text-muted"></i>
+            </div>
+            {% endif %}
+            <div class="card-body">
+                <h5 class="card-title">{{ producto.nombre }}</h5>
+                <p class="card-text text-muted small">{{ producto.categoria.nombre }}</p>
+                <p class="card-text">{{ producto.descripcion|truncatechars:80 }}</p>
+                <div class="d-flex justify-content-between align-items-center">
+                    <span class="precio fs-5">${{ producto.precio|floatformat:"0g" }}</span>
+                    <a href="{% url 'catalogo:producto_detail' producto.pk %}" class="btn btn-sm btn-outline-primary">Ver</a>
+                </div>
+            </div>
+        </div>
+    </div>
+    {% empty %}
+    <div class="col-12 text-center py-5">
+        <p class="text-muted">No hay productos disponibles.</p>
+    </div>
+    {% endfor %}
+</div>
+{% if is_paginated %}
+<nav aria-label="Paginacion">
+    <ul class="pagination justify-content-center">
+        {% if page_obj.has_previous %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.previous_page_number }}">Anterior</a></li>
+        {% endif %}
+        <li class="page-item disabled"><span class="page-link">Pagina {{ page_obj.number }} de {{ page_obj.paginator.num_pages }}</span></li>
+        {% if page_obj.has_next %}
+        <li class="page-item"><a class="page-link" href="?page={{ page_obj.next_page_number }}">Siguiente</a></li>
+        {% endif %}
+    </ul>
+</nav>
+{% endif %}
+{% endblock %}

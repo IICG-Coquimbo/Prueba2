@@ -1,0 +1,116 @@
+{% extends "base.html" %}
+{% block title %}Pedido #{{ pedido.pk }} - Cafe Rincon{% endblock %}
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+{% block content %}
+<div class="d-flex justify-content-between align-items-center mb-4">
+    <h1>Pedido #{{ pedido.pk }}</h1>
+    <span class="badge estado-badge
+        {% if pedido.estado == 'carrito' %}bg-secondary
+        {% elif pedido.estado == 'pendiente_pago' %}bg-warning text-dark
+        {% elif pedido.estado == 'recibido' %}bg-info
+        {% elif pedido.estado == 'en_preparacion' %}bg-primary
+        {% elif pedido.estado == 'listo_despacho' %}bg-success
+        {% elif pedido.estado == 'en_camino' %}bg-warning text-dark
+        {% elif pedido.estado == 'entregado' %}bg-dark{% endif %} fs-6">
+        {{ pedido.get_estado_display }}
+    </span>
+</div>
+
+<div class="row mb-4">
+    <div class="col-md-6">
+        <h5>Informacion del pedido</h5>
+        <p><strong>Fecha:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+        <p><strong>Cliente:</strong> {{ pedido.cliente.get_username }}</p>
+        {% if puede_ver_datos_cliente %}
+        {% if pedido.cliente.perfil.telefono %}
+        <p><strong>Telefono:</strong> {{ pedido.cliente.perfil.telefono }}</p>
+        {% endif %}
+        {% endif %}
+        {% if pedido.direccion %}
+        <p><strong>Direccion:</strong> {{ pedido.direccion.direccion }}{% if pedido.direccion.referencia %} ({{ pedido.direccion.referencia }}){% endif %}</p>
+        {% endif %}
+        {% if pedido.metodo_pago %}
+        <p><strong>Pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
+        {% endif %}
+        {% if pedido.codigo_descuento %}
+        <p><strong>Descuento:</strong> {{ pedido.codigo_descuento.codigo }} ({{ pedido.codigo_descuento.porcentaje }}%)</p>
+        {% endif %}
+    </div>
+    <div class="col-md-6">
+        <h5>Totales</h5>
+        <p><strong>Subtotal:</strong> ${{ pedido.subtotal|floatformat:"0g" }}</p>
+        <p><strong>Descuento:</strong> -${{ pedido.descuento|floatformat:"0g" }}</p>
+        <h4 class="precio">Total: ${{ pedido.total|floatformat:"0g" }}</h4>
+    </div>
+</div>
+
+<h5 class="mb-3">Items</h5>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th class="text-center">Cant.</th>
+                <th class="text-end">Precio unit.</th>
+                <th class="text-end">Subtotal</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.items.all %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td class="text-center">{{ item.cantidad }}</td>
+                <td class="text-end">${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td class="text-end">${{ item.subtotal|floatformat:"0g" }}</td>
+                <td>
+                    {% for opcion in item.opciones.all %}
+                    <span class="badge bg-light text-dark me-1">{{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if opcion.recargo %} (+${{ opcion.recargo|floatformat:"0g" }}){% endif %}</span>
+                    {% endfor %}
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h5 class="mb-3">Historial de estados</h5>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in historial %}
+            <tr>
+                <td><span class="badge bg-secondary">{{ h.get_estado_display }}</span></td>
+                <td>{{ h.fecha|date:"d/m/Y H:i:s" }}</td>
+                <td>{{ h.usuario.get_username|default:"Sistema" }}</td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if pedido.estado in 'recibido,en_preparacion,listo_despacho' and perms.pedidos.preparar_pedido %}
+<div class="mt-4">
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Cambiar estado</a>
+</div>
+{% elif pedido.estado == 'listo_despacho' and perms.pedidos.despachar_pedido %}
+<div class="mt-4">
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Despachar</a>
+</div>
+{% elif pedido.estado == 'en_camino' and perms.pedidos.despachar_pedido and pedido.entrega.repartidor == request.user %}
+<div class="mt-4">
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-success btn-lg w-100">Marcar entregado</a>
+</div>
+{% endif %}
+
+<a href="{% url 'pedidos:pedido_list' %}" class="btn btn-outline-secondary mt-3">Volver a la lista</a>
+{% endblock %}

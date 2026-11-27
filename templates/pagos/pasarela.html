@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+{% block title %}Pasarela de pago - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="row justify-content-center">
+    <div class="col-md-6">
+        <div class="card">
+            <div class="card-header text-center">
+                <h4>Pasarela de pago simulada</h4>
+            </div>
+            <div class="card-body">
+                <p class="text-center mb-4">
+                    <strong>Monto a pagar:</strong>
+                    <span class="precio fs-3 ms-2">${{ pago.monto|floatformat:"0g" }}</span>
+                </p>
+                <form method="post">
+                    {% csrf_token %}
+                    {% include "parciales/form_campos.html" %}
+                    <div class="d-grid gap-2 mt-4">
+                        <button type="submit" name="resultado" value="exitoso" class="btn btn-success btn-lg">
+                            <i class="bi bi-check-circle"></i> Pago exitoso
+                        </button>
+                        <button type="submit" name="resultado" value="fallido" class="btn btn-danger btn-lg">
+                            <i class="bi bi-x-circle"></i> Pago fallido
+                        </button>
+                    </div>
+                </form>
+            </div>
+        </div>
+    </div>
+</div>
+{% endblock %}

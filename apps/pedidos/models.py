@@ -83,6 +83,10 @@ class ItemPedido(models.Model):
     def __str__(self):
         return f"{self.cantidad} x {self.producto.nombre} (Pedido #{self.pedido.pk})"
 
+    @property
+    def subtotal(self):
+        return self.cantidad * self.precio_unitario
+
 
 class HistorialEstado(models.Model):
     pedido = models.ForeignKey(
