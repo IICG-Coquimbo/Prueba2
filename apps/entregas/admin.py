@@ -1,3 +1,9 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Entrega
+
+
+@admin.register(Entrega)
+class EntregaAdmin(admin.ModelAdmin):
+    list_display = ("pedido", "repartidor", "inicio", "fin")
+    search_fields = ("repartidor__username",)

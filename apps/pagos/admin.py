@@ -1,3 +1,10 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Pago
+
+
+@admin.register(Pago)
+class PagoAdmin(admin.ModelAdmin):
+    list_display = ("pedido", "metodo", "estado", "monto", "referencia")
+    list_filter = ("metodo", "estado")
+    search_fields = ("referencia",)
