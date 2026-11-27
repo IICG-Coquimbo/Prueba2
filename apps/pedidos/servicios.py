@@ -113,7 +113,7 @@ def confirmar_pedido(pedido, direccion, metodo_pago):
         raise ValidationError("Solo se puede confirmar un carrito.")
     if not pedido.items.exists():
         raise ValidationError("El carrito esta vacio.")
-    if not direccion or direccion.cliente != pedido.cliente:
+    if not direccion or direccion.usuario != pedido.cliente:
         raise ValidationError("Direccion invalida.")
     pedido.direccion = direccion
     pedido.metodo_pago = metodo_pago
