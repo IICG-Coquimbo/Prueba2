@@ -1,0 +1,31 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row g-4">
+    {% if object.imagen_url %}
+        <div class="col-md-5">
+            <img src="{{ object.imagen_url }}" class="img-fluid rounded" alt="{{ object.nombre }}">
+        </div>
+    {% endif %}
+    <div class="col-md-7">
+        <h1>{{ object.nombre }}</h1>
+        <p class="text-body-secondary">{{ object.categoria }}</p>
+        {% if object.descripcion %}
+            <p>{{ object.descripcion|linebreaksbr }}</p>
+        {% endif %}
+        <p class="fs-4 fw-semibold">${{ object.precio|floatformat:"0g" }}</p>
+        {% if not object.disponible %}
+            <p class="alert alert-warning">Este producto no está disponible.</p>
+        {% elif perms.pedidos.add_pedido %}
+            <form method="post" action="{% url 'catalogo:producto_agregar' object.pk %}" class="mb-3">
+                {% csrf_token %}
+                {% include "parciales/form_campos.html" %}
+                <button class="btn btn-primary btn-lg w-100" type="submit">Agregar al carrito</button>
+            </form>
+        {% endif %}
+        {% if perms.catalogo.view_producto %}
+            <a class="btn btn-outline-primary btn-lg" href="{% url 'catalogo:producto_list' %}">Volver al menú</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

@@ -1,0 +1,8 @@
+<strong>{{ item.cantidad }} × {{ item.producto.nombre }}</strong>
+{% if item.opciones.all %}
+<div class="small">
+  {% for opcion in item.opciones.all %}
+  {{ opcion.get_tipo_display }}: {{ opcion.nombre }}{% if not forloop.last %} · {% endif %}
+  {% endfor %}
+</div>
+{% endif %}

@@ -1,0 +1,48 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1 class="mb-4">Entregas</h1>
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+  {% for pedido in object_list %}
+  <div class="col">
+    <article class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="h5 card-title">Pedido #{{ pedido.pk }}</h2>
+        <p class="small">{{ pedido.get_estado_display }} · {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+        <ul class="ps-3">
+          {% for item in pedido.items.all %}
+          <li>{% include "pedidos/_item.html" %}</li>
+          {% empty %}
+          <li>Sin productos.</li>
+          {% endfor %}
+        </ul>
+        {% if perms.pedidos.despachar_pedido %}
+        <dl class="text-break">
+          <dt>Dirección</dt>
+          <dd>
+            {% if pedido.direccion %}
+            {{ pedido.direccion.direccion }}{% if pedido.direccion.referencia %} · {{ pedido.direccion.referencia }}{% endif %}
+            {% else %}
+            Sin dirección registrada.
+            {% endif %}
+          </dd>
+          <dt>Teléfono</dt>
+          <dd>{{ pedido.cliente.perfil.telefono|default:"Sin teléfono registrado." }}</dd>
+        </dl>
+        {% endif %}
+        <div class="mt-auto d-grid gap-2">
+          {% if perms.pedidos.view_pedido %}
+          <a class="btn btn-outline-secondary" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Ver detalle</a>
+          {% endif %}
+          {% if perms.pedidos.despachar_pedido and pedido.pk in pedidos_con_avance %}
+          <a class="btn btn-primary btn-lg w-100" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+          {% endif %}
+        </div>
+      </div>
+    </article>
+  </div>
+  {% empty %}
+  <div class="col"><p>No hay pedidos listos para despachar ni entregas asignadas a ti.</p></div>
+  {% endfor %}
+</div>
+{% endblock %}

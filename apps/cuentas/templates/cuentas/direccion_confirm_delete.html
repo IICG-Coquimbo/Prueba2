@@ -1,0 +1,14 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Borrar dirección</h1>
+<p>¿Quieres borrar la dirección «{{ object.alias }}»?</p>
+<form method="post">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button class="btn btn-danger" type="submit">Borrar</button>
+    {% if perms.cuentas.view_direccion %}
+        <a class="btn btn-outline-secondary" href="{% url 'cuentas:direccion_list' %}">Cancelar</a>
+    {% endif %}
+</form>
+{% endblock %}

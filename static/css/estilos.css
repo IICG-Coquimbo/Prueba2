@@ -1,0 +1,36 @@
+:root {
+    --color-primario: #5D4037;
+    --color-secundario: #3E2723;
+    --color-acento: #E0A030;
+    --color-fondo: #FAF6F0;
+    --color-texto: #2B2B2B;
+    --bs-body-bg: var(--color-fondo);
+    --bs-body-color: var(--color-texto);
+}
+
+.navbar-cafe {
+    background-color: var(--color-primario);
+    --bs-navbar-color: var(--color-fondo);
+    --bs-navbar-hover-color: var(--color-acento);
+    --bs-navbar-active-color: var(--color-acento);
+}
+
+.footer-cafe {
+    background-color: var(--color-secundario);
+}
+
+.btn-primary {
+    --bs-btn-bg: var(--color-primario);
+    --bs-btn-border-color: var(--color-primario);
+    --bs-btn-hover-bg: var(--color-secundario);
+    --bs-btn-hover-border-color: var(--color-secundario);
+    --bs-btn-active-bg: var(--color-secundario);
+    --bs-btn-active-border-color: var(--color-secundario);
+    --bs-btn-disabled-bg: var(--color-primario);
+    --bs-btn-disabled-border-color: var(--color-primario);
+    --bs-btn-focus-box-shadow: 0 0 0 0.25rem var(--color-acento);
+}
+
+.alert-warning {
+    --bs-alert-border-color: var(--color-acento);
+}

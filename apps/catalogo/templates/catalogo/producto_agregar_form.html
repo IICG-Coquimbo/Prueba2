@@ -1,0 +1,20 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+    <div class="col-md-7">
+        <h1>Agregar al carrito</h1>
+        <p class="fs-5">{{ producto.nombre }} · ${{ producto.precio|floatformat:"0g" }}</p>
+        {% if perms.pedidos.add_pedido %}
+            <form method="post" action="{% url 'catalogo:producto_agregar' producto.pk %}" class="mb-3">
+                {% csrf_token %}
+                {% include "parciales/form_campos.html" %}
+                <button class="btn btn-primary btn-lg w-100" type="submit">Agregar al carrito</button>
+            </form>
+        {% endif %}
+        {% if perms.catalogo.view_producto %}
+            <a class="btn btn-outline-primary btn-lg" href="{% url 'catalogo:producto_detail' producto.pk %}">Volver al producto</a>
+        {% endif %}
+    </div>
+</div>
+{% endblock %}

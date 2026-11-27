@@ -1,0 +1,56 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+
+{% block content %}
+<h1>Pedido #{{ object.pk }}</h1>
+<p>Estado actual: <strong>{{ object.get_estado_display }}</strong></p>
+{% if volver_carrito and perms.pedidos.add_pedido %}
+<div class="alert alert-warning">
+  El pago no se completó. Tu pedido volvió al carrito y puedes intentar pagarlo de nuevo.
+</div>
+<p><a class="btn btn-primary btn-lg" href="{% url 'pedidos:carrito_detail' %}">Volver al carrito</a></p>
+{% endif %}
+
+<h2 class="h4">Productos</h2>
+<ul class="list-group mb-3">
+  {% for item in items %}
+  <li class="list-group-item">{% include "pedidos/_item.html" %}</li>
+  {% empty %}
+  <li class="list-group-item">No hay productos en este pedido.</li>
+  {% endfor %}
+</ul>
+{% include "pedidos/_totales.html" with pedido=object %}
+
+{% if mostrar_contacto and perms.pedidos.despachar_pedido %}
+<h2 class="h4">Datos de entrega</h2>
+<dl>
+  <dt>Dirección</dt>
+  <dd>
+    {% if direccion %}
+    {{ direccion.direccion }}{% if direccion.referencia %} · {{ direccion.referencia }}{% endif %}
+    {% else %}Sin dirección registrada.{% endif %}
+  </dd>
+  <dt>Teléfono</dt>
+  <dd>{{ telefono|default:"Sin teléfono registrado." }}</dd>
+</dl>
+{% endif %}
+
+<h2 class="h4">Historial de estados</h2>
+<ol class="list-group list-group-numbered mb-3">
+  {% for cambio in historial %}
+  <li class="list-group-item">{{ cambio.fecha|date:"d/m/Y H:i:s" }} · {{ cambio.get_estado_display }}</li>
+  {% empty %}
+  <li class="list-group-item">Aún no hay cambios de estado.</li>
+  {% endfor %}
+</ol>
+
+{% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+  {% if puede_avanzar %}
+  <p><a class="btn btn-primary btn-lg w-100" href="{% url 'pedidos:pedido_estado' object.pk %}">Cambiar estado</a></p>
+  {% endif %}
+{% endif %}
+<p><a href="{% url 'pedidos:pedido_list' %}">Volver a pedidos</a></p>
+{% endblock %}

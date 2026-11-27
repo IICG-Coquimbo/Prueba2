@@ -1,0 +1,24 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ titulo }}{% if pedido %} — Pedido #{{ pedido.pk }}{% endif %}</h1>
+{% if pedido %}<p>Estado actual: {{ pedido.get_estado_display }}</p>{% endif %}
+{% if item %}<p>¿Quieres quitar {{ item.producto.nombre }} del carrito?</p>{% endif %}
+{% if carrito %}<p>Total: <strong>${{ carrito.total|floatformat:"0g" }}</strong></p>{% endif %}
+<form method="post" class="mb-3">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  {% if pedido %}
+    {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    <button type="submit" class="btn btn-primary btn-lg">{{ etiqueta_boton }}</button>
+    {% endif %}
+  {% elif perms.pedidos.add_pedido %}
+  <button type="submit" class="btn btn-primary btn-lg">{{ etiqueta_boton }}</button>
+  {% endif %}
+</form>
+{% if pedido and perms.pedidos.view_pedido %}
+<a href="{% url 'pedidos:pedido_detail' pedido.pk %}">Volver al pedido</a>
+{% elif perms.pedidos.add_pedido %}
+<a href="{% url 'pedidos:carrito_detail' %}">Volver al carrito</a>
+{% endif %}
+{% endblock %}

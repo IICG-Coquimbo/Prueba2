@@ -1,0 +1,36 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Carrito</h1>
+{% if items %}
+<ul class="list-group mb-3">
+  {% for item in items %}
+  <li class="list-group-item">
+    {% include "pedidos/_item.html" %}
+    <p class="mb-2">Precio unitario: ${{ item.precio_unitario|floatformat:"0g" }}</p>
+    {% if perms.pedidos.add_pedido %}
+    <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}">
+      {% csrf_token %}
+      <button type="submit" class="btn btn-outline-secondary">Quitar {{ item.producto.nombre }}</button>
+    </form>
+    {% endif %}
+  </li>
+  {% endfor %}
+</ul>
+{% else %}
+<p>Tu carrito está vacío.</p>
+{% endif %}
+
+{% include "pedidos/_totales.html" with pedido=object %}
+
+{% if perms.pedidos.add_pedido %}
+<form method="post" action="{% url 'pedidos:carrito_codigo' %}" class="mb-3">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-outline-secondary">Aplicar código</button>
+</form>
+{% if items %}
+<a class="btn btn-primary btn-lg" href="{% url 'pedidos:carrito_confirmar' %}">Confirmar pedido</a>
+{% endif %}
+{% endif %}
+{% endblock %}
