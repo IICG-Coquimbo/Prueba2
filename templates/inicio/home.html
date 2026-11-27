@@ -1,0 +1,130 @@
+{% extends 'base.html' %}
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container">
+  <div class="row mb-4">
+    <div class="col">
+      <h1>Hola, {{ user.get_username }}</h1>
+      {% with grupo=user.groups.first %}
+        {% if grupo %}
+          <p>Tu rol es: <strong>{{ grupo.name }}</strong></p>
+        {% else %}
+          <p>Sin rol asignado.</p>
+        {% endif %}
+      {% endwith %}
+    </div>
+  </div>
+  <div class="row">
+    {% url 'catalogo:producto_list' as url_menu %}
+    {% if url_menu and perms.catalogo.view_producto %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Menu</h5>
+          <p class="card-text">Explora los productos disponibles.</p>
+          <a href="{{ url_menu }}" class="btn btn-lg w-100">Ver menu</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% url 'pedidos:carrito' as url_carrito %}
+    {% if url_carrito and perms.pedidos.add_pedido %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Carrito</h5>
+          <p class="card-text">Agrega productos y confirma tu pedido.</p>
+          <a href="{{ url_carrito }}" class="btn btn-lg w-100">Ir al carrito</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% url 'pedidos:pedido_list' as url_pedidos %}
+    {% if url_pedidos and perms.pedidos.view_pedido %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h5>
+          <p class="card-text">Revisa el estado de tus pedidos.</p>
+          <a href="{{ url_pedidos }}" class="btn btn-lg w-100">Ver pedidos</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% url 'pedidos:entrega_list' as url_entregas %}
+    {% if url_entregas and perms.pedidos.despachar_pedido %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Entregas</h5>
+          <p class="card-text">Gestiona las entregas a domicilio.</p>
+          <a href="{{ url_entregas }}" class="btn btn-lg w-100">Ver entregas</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% url 'pedidos:reporte_list' as url_reportes %}
+    {% if url_reportes and perms.pedidos.ver_reportes %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Reportes</h5>
+          <p class="card-text">Consulta los reportes del negocio.</p>
+          <a href="{{ url_reportes }}" class="btn btn-lg w-100">Ver reportes</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% url 'cuentas:direccion_list' as url_direcciones %}
+    {% if url_direcciones and perms.cuentas.view_direccion %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Mis direcciones</h5>
+          <p class="card-text">Administra tus direcciones de entrega.</p>
+          <a href="{{ url_direcciones }}" class="btn btn-lg w-100">Ver direcciones</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% if user.is_staff %}
+    {% url 'admin:index' as url_admin %}
+    {% if url_admin %}
+    <div class="col-md-4 mb-3">
+      <div class="card tarjeta-modulo h-100">
+        <div class="card-body">
+          <h5 class="card-title">Administracion</h5>
+          <p class="card-text">Panel de administracion del sistema.</p>
+          <a href="{{ url_admin }}" class="btn btn-lg w-100">Ir al admin</a>
+        </div>
+      </div>
+    </div>
+    {% endif %}
+    {% endif %}
+  </div>
+  {% url 'catalogo:producto_list' as url_menu %}
+  {% url 'pedidos:carrito' as url_carrito %}
+  {% url 'pedidos:pedido_list' as url_pedidos %}
+  {% url 'pedidos:entrega_list' as url_entregas %}
+  {% url 'pedidos:reporte_list' as url_reportes %}
+  {% url 'cuentas:direccion_list' as url_direcciones %}
+  {% url 'admin:index' as url_admin %}
+  {% if not url_menu or not perms.catalogo.view_producto %}
+    {% if not url_carrito or not perms.pedidos.add_pedido %}
+      {% if not url_pedidos or not perms.pedidos.view_pedido %}
+        {% if not url_entregas or not perms.pedidos.despachar_pedido %}
+          {% if not url_reportes or not perms.pedidos.ver_reportes %}
+            {% if not url_direcciones or not perms.cuentas.view_direccion %}
+              {% if not user.is_staff or not url_admin %}
+                <div class="col-12">
+                  <p>Aun no hay modulos disponibles</p>
+                </div>
+              {% endif %}
+            {% endif %}
+          {% endif %}
+        {% endif %}
+      {% endif %}
+    {% endif %}
+  {% endif %}
+</div>
+{% endblock %}

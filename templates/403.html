@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Sin permiso - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="container py-5">
+  <div class="row justify-content-center">
+    <div class="col-md-6 text-center">
+      <h1>No tienes permiso para ver esta pagina</h1>
+      <p class="text-muted">No cuentas con los permisos necesarios para acceder a esta seccion.</p>
+      {% url 'inicio' as url_inicio %}
+      <a href="{% if url_inicio %}{{ url_inicio }}{% endif %}" class="btn btn-primary btn-lg">Ir al inicio</a>
+    </div>
+  </div>
+</div>
+{% endblock %}
