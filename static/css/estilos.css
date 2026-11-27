@@ -1,0 +1,27 @@
+:root {
+  --color-primario: #5D4037;   /* cafe: menu, botones principales */
+  --color-secundario: #3E2723; /* cafe oscuro: pie de pagina */
+  --color-acento: #E0A030;     /* ambar: detalles y alertas */
+  --color-fondo: #FAF6F0;      /* fondo de la pagina */
+  --color-texto: #2B2B2B;      /* texto */
+}
+
+/* Links y texto */
+a { color: var(--color-primario); }
+.text-primary { color: var(--color-primario); }
+.text-secondary { color: var(--color-secundario); }
+.text-acento { color: var(--color-acento); }
+.text-fondo { color: var(--color-fondo); }
+.text-texto { color: var(--color-texto); }
+
+/* Botones */
+.btn-primario { background-color: var(--color-primario); color: white; border-color: var(--color-primario); }
+.btn-primario:hover { background-color: #4e342e; border-color: #4e342e; }
+.btn-secundario { background-color: var(--color-secundario); color: white; border-color: var(--color-secundario); }
+.btn-secundario:hover { background-color: #2d1b1e; border-color: #2d1b1e; }
+.btn-acento { background-color: var(--color-acento); color: #2B2B2B; border-color: var(--color-acento); }
+.btn-acento:hover { background-color: #d4962b; border-color: #d4962b; }
+
+/* Formularios y inputs */
+.form-control { border-color: #ced4da; }
+.form-control:focus { border-color: var(--color-primario); box-shadow: 0 0 0 0.25rem rgba(93, 64, 55, 0.25); }

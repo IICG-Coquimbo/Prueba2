@@ -1,0 +1,30 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+
+{% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h2>Bienvenido, {{ nombre_usuario }}</h2>
+    <p class="text-secondary">Grupo: {{ grupo|join:", "|default:"Sin grupo" }}</p>
+  </div>
+</div>
+
+{% if modulos %}
+<div class="row">
+  {% for modulo in modulos %}
+  <div class="col-md-4 mb-3">
+    <div class="card h-100">
+      <div class="card-body">
+        <h5 class="card-title">{{ modulo.nombre }}</h5>
+        <a href="{{ modulo.url_name }}" class="btn btn-primary w-100">Ver</a>
+      </div>
+    </div>
+  </div>
+  {% endfor %}
+</div>
+{% else %}
+<div class="alert alert-info">
+  Aun no hay modulos disponibles
+</div>
+{% endif %}
+{% endblock %}

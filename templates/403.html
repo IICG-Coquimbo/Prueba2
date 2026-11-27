@@ -1,0 +1,10 @@
+{% extends "base.html" %}
+{% block title %}Acceso Denegado{% endblock %}
+{% block content %}
+<div class="container my-5">
+  <div class="alert alert-danger" role="alert">
+    No tienes permiso para ver esta pagina.
+  </div>
+  <a href="{% url 'inicio' %}" class="btn btn-primary mt-3">Volver al inicio</a>
+</div>
+{% endblock %}
