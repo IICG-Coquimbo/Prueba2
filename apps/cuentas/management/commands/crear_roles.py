@@ -12,6 +12,7 @@ from apps.promociones.models import CodigoDescuento
 
 CLAVE_DEMO = "clave1234"
 APPS_ADMIN = [
+    "auth",
     "cuentas",
     "catalogo",
     "promociones",
