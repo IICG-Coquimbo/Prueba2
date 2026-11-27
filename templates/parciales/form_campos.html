@@ -1,3 +1,4 @@
+{% load form_tags %}
 {% if form.non_field_errors %}
 <div class="alert alert-danger">{{ form.non_field_errors }}</div>
 {% endif %}
@@ -8,6 +9,11 @@
     <div class="form-check">
       {{ campo }}
       <label class="form-check-label" for="{{ campo.id_for_label }}">{{ campo.label }}</label>
+    </div>
+    {% elif campo|widget_type == "RadioSelect" %}
+    <label class="form-label">{{ campo.label }}{% if campo.field.required %} *{% endif %}</label>
+    <div class="form-check">
+      {{ campo }}
     </div>
     {% else %}
     <label class="form-label" for="{{ campo.id_for_label }}">{{ campo.label }}{% if campo.field.required %} *{% endif %}</label>
