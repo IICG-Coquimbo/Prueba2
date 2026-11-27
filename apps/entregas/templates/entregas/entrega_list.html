@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+{% block title %}Entregas - Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="mb-4">Entregas</h1>
+<div class="row g-3">
+  {% for pedido in object_list %}
+  <div class="col-12 col-md-6 col-lg-4">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <div class="d-flex justify-content-between align-items-start">
+          <h5 class="card-title mb-1">Pedido #{{ pedido.pk }}</h5>
+          <span class="badge {% if pedido.estado == 'listo_despacho' %}bg-success{% elif pedido.estado == 'en_preparacion' %}bg-warning text-dark{% else %}bg-secondary{% endif %}">
+            {{ pedido.get_estado_display }}
+          </span>
+        </div>
+        <p class="small text-muted mb-2">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+
+        <h6>Detalle</h6>
+        <ul class="small">
+          {% for item in pedido.items.all %}
+          <li>{{ item.cantidad }} x {{ item.producto.nombre }}
+            {% if item.opciones.all %}(<em>{% for o in item.opciones.all %}{{ o.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</em>){% endif %}
+          </li>
+          {% endfor %}
+        </ul>
+
+        <h6 class="mt-2">Direccion y contacto</h6>
+        <p class="small mb-1">{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</p>
+        {% if pedido.cliente.perfil %}<p class="small mb-1">Tel: {{ pedido.cliente.perfil.telefono }}</p>{% endif %}
+        {% if pedido.direccion %}
+        <p class="small mb-1">{{ pedido.direccion.direccion }}</p>
+        {% if pedido.direccion.referencia %}<p class="small text-muted mb-1">Ref: {{ pedido.direccion.referencia }}</p>{% endif %}
+        {% endif %}
+
+        <a class="btn btn-primary btn-lg w-100 mt-auto" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+        <a class="btn btn-outline-secondary mt-2" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Ver pedido</a>
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No hay pedidos para entregar.</p>
+  {% endfor %}
+</div>
+{% endblock %}

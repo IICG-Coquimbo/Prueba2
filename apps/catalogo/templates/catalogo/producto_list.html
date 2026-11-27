@@ -1,0 +1,26 @@
+{% extends "base.html" %}
+{% block title %}Menu - Cafe Rincon{% endblock %}
+{% block content %}
+<h1 class="mb-4">Menu</h1>
+<div class="table-responsive">
+  <div class="row g-3">
+    {% for producto in object_list %}
+    <div class="col-12 col-md-6 col-lg-4">
+      <div class="card h-100 {% if not producto.disponible %}opacity-50{% endif %}">
+        {% if producto.imagen_url %}<img src="{{ producto.imagen_url }}" class="card-img-top" alt="{{ producto.nombre }}">{% endif %}
+        <div class="card-body d-flex flex-column">
+          <h5 class="card-title">{{ producto.nombre }}</h5>
+          <p class="text-muted small">{{ producto.categoria.nombre }}</p>
+          {% if producto.descripcion %}<p class="card-text">{{ producto.descripcion }}</p>{% endif %}
+          <p class="fw-bold mt-auto">${{ producto.precio|floatformat:"0g" }}</p>
+          {% if not producto.disponible %}<span class="badge bg-secondary">No disponible</span>{% endif %}
+          <a class="btn btn-primary btn-lg mt-2" href="{% url 'catalogo:producto_detail' producto.pk %}">Ver</a>
+        </div>
+      </div>
+    </div>
+    {% empty %}
+    <p>No hay productos.</p>
+    {% endfor %}
+  </div>
+</div>
+{% endblock %}

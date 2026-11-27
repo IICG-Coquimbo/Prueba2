@@ -1,0 +1,46 @@
+{% extends "base.html" %}
+{% block title %}Pedido #{{ pedido.pk }} - Cafe Rincon{% endblock %}
+{% block extra_head %}<meta http-equiv="refresh" content="15">{% endblock %}
+{% block content %}
+<h1>Pedido #{{ pedido.pk }}</h1>
+<span class="badge bg-primary fs-6">{{ pedido.get_estado_display }}</span>
+<p class="text-muted">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+
+<div class="table-responsive mt-3">
+  <table class="table">
+    <thead><tr><th>Producto</th><th>Opciones</th><th>Cantidad</th><th>Precio</th></tr></thead>
+    <tbody>
+      {% for item in pedido.items.all %}
+      <tr>
+        <td>{{ item.producto.nombre }}</td>
+        <td>{% for o in item.opciones.all %}{{ o.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}</td>
+        <td>{{ item.cantidad }}</td>
+        <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+      </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+
+<p>Subtotal: <strong>${{ pedido.subtotal|floatformat:"0g" }}</strong></p>
+<p>Descuento: <strong>${{ pedido.descuento|floatformat:"0g" }}</strong></p>
+<p>Total: <strong>${{ pedido.total|floatformat:"0g" }}</strong></p>
+<p>Metodo de pago: {{ pedido.get_metodo_pago_display }}</p>
+
+{% if ver_contacto %}
+<h5 class="mt-4">Datos de entrega</h5>
+<p>{{ pedido.cliente.get_full_name|default:pedido.cliente.username }}</p>
+{% if pedido.cliente.perfil %}<p>Tel: {{ pedido.cliente.perfil.telefono }}</p>{% endif %}
+{% if pedido.direccion %}<p>{{ pedido.direccion.direccion }}{% if pedido.direccion.referencia %} ({{ pedido.direccion.referencia }}){% endif %}</p>{% endif %}
+{% endif %}
+
+<h5 class="mt-4">Historial</h5>
+<ul>
+  {% for h in pedido.historial.all %}<li>{{ h.estado }} - {{ h.fecha|date:"d/m/Y H:i" }}</li>{% endfor %}
+</ul>
+
+{% if siguientes %}
+<a class="btn btn-primary btn-lg w-100 mt-3" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+{% endif %}
+<a class="btn btn-outline-secondary mt-3" href="{% url 'pedidos:pedido_list' %}">Volver</a>
+{% endblock %}

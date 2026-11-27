@@ -1,0 +1,9 @@
+{% extends "base.html" %}
+{% block title %}Accion - Cafe Rincon{% endblock %}
+{% block content %}
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+</form>
+{% endblock %}

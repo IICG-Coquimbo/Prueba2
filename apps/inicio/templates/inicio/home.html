@@ -1,0 +1,42 @@
+{% extends "base.html" %}
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+{% block content %}
+<h1>Hola {{ user.first_name|default:user.username }}</h1>
+{% if user.groups.all %}
+<p>Rol: {% for grupo in user.groups.all %}{{ grupo.name }}{% if not forloop.last %}, {% endif %}{% endfor %}</p>
+{% endif %}
+
+<div class="row g-3 mt-2">
+  {% url 'inicio' as url_inicio %}
+  {% if url_inicio %}
+  <div class="col-12 col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <h5 class="card-title">Inicio</h5>
+      <a class="btn btn-primary btn-lg w-100" href="{{ url_inicio }}">Ir</a>
+    </div></div>
+  </div>
+  {% endif %}
+  {% url 'catalogo:producto_list' as url_menu %}
+  {% if url_menu and perms.catalogo.view_producto %}
+  <div class="col-12 col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <h5 class="card-title">Menu</h5>
+      <a class="btn btn-primary btn-lg w-100" href="{{ url_menu }}">Ir</a>
+    </div></div>
+  </div>
+  {% endif %}
+  {% url 'cuentas:direccion_list' as url_direcciones %}
+  {% if url_direcciones and perms.cuentas.view_direccion %}
+  <div class="col-12 col-md-4">
+    <div class="card h-100"><div class="card-body">
+      <h5 class="card-title">Mis direcciones</h5>
+      <a class="btn btn-primary btn-lg w-100" href="{{ url_direcciones }}">Ir</a>
+    </div></div>
+  </div>
+  {% endif %}
+</div>
+
+{% if not perms.catalogo.view_producto and not perms.pedidos.view_pedido and not perms.cuentas.view_direccion and not user.is_staff %}
+<p class="mt-4">Aun no hay modulos disponibles</p>
+{% endif %}
+{% endblock %}
