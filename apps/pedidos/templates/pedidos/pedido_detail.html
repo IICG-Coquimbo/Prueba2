@@ -1,0 +1,64 @@
+{% extends "base.html" %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+
+{% block content %}
+<h1>Pedido #{{ object.pk }}</h1>
+<p><strong>Estado:</strong> {{ object.get_estado_display }}</p>
+<p><strong>Fecha:</strong> {{ object.creado|date:"d/m/Y H:i" }}</p>
+<p><strong>Cliente:</strong> {{ object.cliente.username }}</p>
+
+{% if perms.pedidos.despachar_pedido or user.is_staff %}
+<h2 class="h4">Entrega</h2>
+<dl class="row">
+  <dt class="col-sm-3">Dirección</dt>
+  <dd class="col-sm-9">
+    {% if object.direccion %}
+      {{ object.direccion.alias }} - {{ object.direccion.direccion }}
+      {% if object.direccion.referencia %}({{ object.direccion.referencia }}){% endif %}
+    {% else %}
+      Sin dirección registrada.
+    {% endif %}
+  </dd>
+  <dt class="col-sm-3">Teléfono</dt>
+  <dd class="col-sm-9">
+    {% if object.cliente.perfil.telefono %}{{ object.cliente.perfil.telefono }}{% else %}Sin teléfono registrado.{% endif %}
+  </dd>
+</dl>
+{% endif %}
+
+<h2 class="h4">Productos</h2>
+<ul class="list-unstyled">
+  {% for item in object.items.all %}
+  <li>
+    {{ item.cantidad }} x {{ item.producto.nombre }}
+    {% for opcion in item.opciones.all %}({{ opcion.nombre }}){% endfor %}
+    - ${{ item.precio_unitario|floatformat:"0g" }} c/u
+  </li>
+  {% empty %}
+  <li>Este pedido no tiene productos.</li>
+  {% endfor %}
+</ul>
+
+<h2 class="h4">Resumen</h2>
+<ul class="list-unstyled">
+  <li>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</li>
+  <li>Descuento: ${{ object.descuento|floatformat:"0g" }}</li>
+  <li><strong>Total: ${{ object.total|floatformat:"0g" }}</strong></li>
+</ul>
+
+<h2 class="h4">Historial de estados</h2>
+<ul>
+  {% for evento in object.historial.all|dictsort:"fecha" %}
+  <li>{{ evento.fecha|date:"d/m/Y H:i" }} - {{ evento.get_estado_display }}{% if evento.usuario %} por {{ evento.usuario.username }}{% endif %}</li>
+  {% empty %}
+  <li>Sin historial todavía.</li>
+  {% endfor %}
+</ul>
+
+<p>
+  <a class="btn btn-lg btn-secondary" href="{% url 'pedidos:pedido_list' %}">Volver a pedidos</a>
+</p>
+{% endblock %}

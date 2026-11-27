@@ -1,0 +1,69 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h1>
+{% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+<div class="row row-cols-1 g-3">
+  {% for pedido in object_list %}
+  <div class="col">
+    <div class="card">
+      <div class="card-body">
+        <h2 class="h5">Pedido #{{ pedido.pk }}</h2>
+        <p class="text-muted mb-2">Hora: {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+        <p class="mb-1"><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+        <ul class="list-unstyled mb-3">
+          {% for item in pedido.items.all %}
+          <li>{{ item.cantidad }} x {{ item.producto.nombre }}{% for opcion in item.opciones.all %} ({{ opcion.nombre }}){% endfor %}</li>
+          {% empty %}
+          <li>Sin productos.</li>
+          {% endfor %}
+        </ul>
+        {% if pedido.estado == "recibido" or pedido.estado == "en_preparacion" %}
+          {% if perms.pedidos.preparar_pedido %}
+          <a class="btn btn-lg w-100 btn-primary" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+          {% endif %}
+        {% elif pedido.estado == "listo_despacho" or pedido.estado == "en_camino" %}
+          {% if perms.pedidos.despachar_pedido %}
+          <a class="btn btn-lg w-100 btn-primary" href="{% url 'pedidos:pedido_estado' pedido.pk %}">Cambiar estado</a>
+          {% endif %}
+        {% endif %}
+      </div>
+    </div>
+  </div>
+  {% empty %}
+  <p>No hay pedidos para mostrar.</p>
+  {% endfor %}
+</div>
+{% else %}
+<div class="table-responsive">
+  <table class="table align-middle">
+    <thead>
+      <tr>
+        <th>Número</th>
+        <th>Fecha</th>
+        <th>Estado</th>
+        <th>Productos</th>
+        <th>Total</th>
+        <th>Acciones</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for pedido in object_list %}
+      <tr>
+        <td><a href="{% url 'pedidos:pedido_detail' pedido.pk %}">#{{ pedido.pk }}</a></td>
+        <td>{{ pedido.creado|date:"d/m/Y H:i" }}</td>
+        <td>{{ pedido.get_estado_display }}</td>
+        <td>
+          {% for item in pedido.items.all %}{{ item.cantidad }} x {{ item.producto.nombre }}{% if not forloop.last %}, {% endif %}{% endfor %}
+        </td>
+        <td>${{ pedido.total|floatformat:"0g" }}</td>
+        <td><a class="btn btn-lg btn-outline-primary" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Ver</a></td>
+      </tr>
+      {% empty %}
+      <tr><td colspan="6">No tienes pedidos para mostrar.</td></tr>
+      {% endfor %}
+    </tbody>
+  </table>
+</div>
+{% endif %}
+{% endblock %}

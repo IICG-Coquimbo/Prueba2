@@ -1,0 +1,44 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>Carrito</h1>
+{% with items=object.items.all %}
+{% for item in items %}
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5">{{ item.cantidad }} x {{ item.producto.nombre }}</h2>
+    <p class="mb-1">
+      Opciones:
+      {% for opcion in item.opciones.all %}{{ opcion.nombre }}{% if not forloop.last %}, {% endif %}{% empty %}Sin opciones{% endfor %}
+    </p>
+    <p class="mb-1">Precio unitario: ${{ item.precio_unitario|floatformat:"0g" }}</p>
+    {% if perms.pedidos.add_pedido %}
+    <a class="btn btn-lg btn-outline-danger" href="{% url 'pedidos:item_quitar' item.pk %}">Quitar</a>
+    {% endif %}
+  </div>
+</div>
+{% empty %}
+<p class="lead">Tu carrito está vacío. Agrega productos desde el menú para comenzar.</p>
+<a class="btn btn-lg btn-primary" href="{% url 'catalogo:producto_list' %}">Ir al menú</a>
+{% endfor %}
+
+{% if items %}
+<h2 class="h4">Resumen</h2>
+<ul class="list-unstyled">
+  <li>Subtotal: ${{ object.subtotal|floatformat:"0g" }}</li>
+  <li>Descuento: ${{ object.descuento|floatformat:"0g" }}</li>
+  <li><strong>Total: ${{ object.total|floatformat:"0g" }}</strong></li>
+</ul>
+{% if object.codigo_descuento %}
+<p>Código aplicado: {{ object.codigo_descuento.codigo }}</p>
+{% endif %}
+<h2 class="h4">Código de descuento</h2>
+<form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-outline-primary">Aplicar código</button>
+</form>
+<a class="btn btn-lg btn-success mt-3" href="{% url 'pedidos:carrito_confirmar' %}">Confirmar pedido</a>
+{% endif %}
+{% endwith %}
+{% endblock %}
