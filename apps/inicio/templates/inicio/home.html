@@ -1,0 +1,40 @@
+{% extends "base.html" %}
+{% block title %}Inicio{% endblock %}
+{% block content %}
+  <h1>Hola, {{ user.get_full_name|default:user.username }}</h1>
+  <p class="text-muted">Rol: {{ user.groups.first.name|default:"Sin rol" }}</p>
+  {% url 'catalogo:producto_list' as url_menu %}
+  {% url 'pedidos:carrito_detail' as url_carrito %}
+  {% url 'pedidos:pedido_list' as url_pedidos %}
+  {% url 'pedidos:entrega_list' as url_entregas %}
+  {% url 'pedidos:reporte_panel' as url_reportes %}
+  {% url 'cuentas:direccion_list' as url_direcciones %}
+  {% url 'admin:index' as url_admin %}
+  {% if perms.catalogo.view_producto or perms.pedidos.add_pedido or perms.pedidos.view_pedido or perms.pedidos.despachar_pedido or perms.pedidos.ver_reportes or perms.cuentas.view_direccion or user.is_staff %}
+    <div class="row g-3">
+      {% if url_menu and perms.catalogo.view_producto %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Menu</h5><a class="btn btn-primary" href="{{ url_menu }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_carrito and perms.pedidos.add_pedido %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Carrito</h5><a class="btn btn-primary" href="{{ url_carrito }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_pedidos and perms.pedidos.view_pedido %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h5><a class="btn btn-primary" href="{{ url_pedidos }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_entregas and perms.pedidos.despachar_pedido %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Entregas</h5><a class="btn btn-primary" href="{{ url_entregas }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_reportes and perms.pedidos.ver_reportes %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Reportes</h5><a class="btn btn-primary" href="{{ url_reportes }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_direcciones and perms.cuentas.view_direccion %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Mis direcciones</h5><a class="btn btn-primary" href="{{ url_direcciones }}">Ir</a></div></div></div>
+      {% endif %}
+      {% if url_admin and user.is_staff %}
+        <div class="col-md-4"><div class="card h-100"><div class="card-body"><h5 class="card-title">Administracion</h5><a class="btn btn-primary" href="{{ url_admin }}">Ir</a></div></div></div>
+      {% endif %}
+    </div>
+  {% else %}
+    <p>Aun no hay modulos disponibles.</p>
+  {% endif %}
+{% endblock %}

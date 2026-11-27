@@ -1,0 +1,77 @@
+{% load static %}
+{% url 'inicio' as url_inicio %}
+<nav class="navbar navbar-expand-lg" style="background-color: var(--color-primario);">
+  <div class="container">
+    <a class="navbar-brand d-flex align-items-center text-white" href="{% if url_inicio %}{{ url_inicio }}{% endif %}">
+      <img src="{% static 'img/logo.svg' %}" alt="Logo" height="40" class="me-2">
+      Cafe Rincon
+    </a>
+    <button class="navbar-toggler" type="button" data-bs-toggle="collapse" data-bs-target="#navbarMain" aria-controls="navbarMain" aria-expanded="false" aria-label="Toggle navigation">
+      <span class="navbar-toggler-icon"></span>
+    </button>
+    <div class="collapse navbar-collapse" id="navbarMain">
+      <ul class="navbar-nav me-auto mb-2 mb-lg-0">
+        {% if url_inicio %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_inicio }}">Inicio</a></li>
+        {% endif %}
+        {% url 'catalogo:producto_list' as url_menu %}
+        {% if url_menu and perms.catalogo.view_producto %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_menu }}">Menu</a></li>
+        {% endif %}
+        {% url 'pedidos:carrito_detail' as url_carrito %}
+        {% if url_carrito and perms.pedidos.add_pedido %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_carrito }}">Carrito</a></li>
+        {% endif %}
+        {% url 'pedidos:pedido_list' as url_pedidos %}
+        {% if url_pedidos and perms.pedidos.view_pedido %}
+          <li class="nav-item">
+            <a class="nav-link text-white" href="{{ url_pedidos }}">
+              {% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}
+            </a>
+          </li>
+        {% endif %}
+        {% url 'pedidos:entrega_list' as url_entregas %}
+        {% if url_entregas and perms.pedidos.despachar_pedido %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_entregas }}">Entregas</a></li>
+        {% endif %}
+        {% url 'pedidos:reporte_panel' as url_reportes %}
+        {% if url_reportes and perms.pedidos.ver_reportes %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_reportes }}">Reportes</a></li>
+        {% endif %}
+        {% url 'cuentas:direccion_list' as url_direcciones %}
+        {% if url_direcciones and perms.cuentas.view_direccion %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_direcciones }}">Mis direcciones</a></li>
+        {% endif %}
+        {% url 'admin:index' as url_admin %}
+        {% if url_admin and user.is_staff %}
+          <li class="nav-item"><a class="nav-link text-white" href="{{ url_admin }}">Administracion</a></li>
+        {% endif %}
+      </ul>
+      <ul class="navbar-nav ms-auto mb-2 mb-lg-0 align-items-lg-center">
+        {% url 'notificaciones:list' as url_notif %}
+        {% if url_notif and notificaciones_sin_leer %}
+          <li class="nav-item me-2">
+            <a class="nav-link text-white" href="{{ url_notif }}">Notificaciones <span class="badge bg-warning text-dark">{{ notificaciones_sin_leer }}</span></a>
+          </li>
+        {% endif %}
+        {% url 'cuentas:login' as url_login %}
+        {% url 'cuentas:logout' as url_logout %}
+        {% if user.is_authenticated %}
+          <li class="nav-item me-2"><span class="nav-link text-white">{{ user.username }}</span></li>
+          {% if url_logout %}
+            <li class="nav-item">
+              <form method="post" action="{{ url_logout }}" class="d-inline">
+                {% csrf_token %}
+                <button type="submit" class="btn btn-sm btn-outline-light">Salir</button>
+              </form>
+            </li>
+          {% endif %}
+        {% else %}
+          {% if url_login %}
+            <li class="nav-item"><a class="nav-link text-white" href="{{ url_login }}">Iniciar sesion</a></li>
+          {% endif %}
+        {% endif %}
+      </ul>
+    </div>
+  </div>
+</nav>
