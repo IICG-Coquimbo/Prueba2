@@ -1,0 +1,35 @@
+﻿{% extends "base.html" %}
+{% block content %}
+<div class="row justify-content-center">
+  <div class="col-12 col-md-8 col-lg-6">
+    <div class="card shadow-sm">
+      <div class="card-body">
+        <h1 class="h4 mb-3">Accion del pedido</h1>
+        {% if estados_disponibles is not None and not estados_disponibles %}
+        <p class="text-muted mb-3">No hay cambios de estado disponibles.</p>
+        <div class="d-grid">
+          {% if pedido %}
+          <a class="btn btn-outline-secondary btn-lg" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Volver al pedido</a>
+          {% else %}
+          <a class="btn btn-outline-secondary btn-lg" href="{% url 'pedidos:carrito_detail' %}">Volver al carrito</a>
+          {% endif %}
+        </div>
+        {% else %}
+        <form method="post">
+          {% csrf_token %}
+          {% include "parciales/form_campos.html" %}
+          <div class="d-grid gap-2">
+            <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+            {% if pedido %}
+            <a class="btn btn-outline-secondary btn-lg" href="{% url 'pedidos:pedido_detail' pedido.pk %}">Volver al pedido</a>
+            {% else %}
+            <a class="btn btn-outline-secondary btn-lg" href="{% url 'pedidos:carrito_detail' %}">Volver al carrito</a>
+            {% endif %}
+          </div>
+        </form>
+        {% endif %}
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

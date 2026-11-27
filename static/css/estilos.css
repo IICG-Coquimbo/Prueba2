@@ -1,0 +1,62 @@
+:root {
+  --color-primario: #5D4037;
+  --color-secundario: #3E2723;
+  --color-acento: #E0A030;
+  --color-fondo: #FAF6F0;
+  --color-texto: #2B2B2B;
+}
+
+body {
+  background-color: var(--color-fondo);
+  color: var(--color-texto);
+}
+
+.bg-primario {
+  background-color: var(--color-primario) !important;
+}
+
+.bg-secundario {
+  background-color: var(--color-secundario) !important;
+}
+
+.bg-acento {
+  background-color: var(--color-acento) !important;
+}
+
+.text-primario {
+  color: var(--color-primario) !important;
+}
+
+.text-acento {
+  color: var(--color-acento) !important;
+}
+
+.border-acento {
+  border-color: var(--color-acento) !important;
+}
+
+.btn-primario {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-fondo);
+}
+
+.btn-primario:hover,
+.btn-primario:focus {
+  background-color: var(--color-secundario);
+  border-color: var(--color-secundario);
+  color: var(--color-fondo);
+}
+
+.btn-acento {
+  background-color: var(--color-acento);
+  border-color: var(--color-acento);
+  color: var(--color-texto);
+}
+
+.btn-acento:hover,
+.btn-acento:focus {
+  background-color: var(--color-primario);
+  border-color: var(--color-primario);
+  color: var(--color-fondo);
+}
