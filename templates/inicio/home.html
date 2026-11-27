@@ -1,0 +1,101 @@
+{% extends 'base.html' %}
+{% block title %}Home{% endblock %}
+{% block content %}
+<div class="row mb-4">
+    <div class="col-12">
+        <h2>Hola, {{ user.username }}</h2>
+        <p>Tu rol es: {% if user.groups.all %}{{ user.groups.first.name }}{% else %}Sin grupo asignado{% endif %}</p>
+    </div>
+</div>
+<div class="row g-3">
+    {% url 'producto_list' as url_menu %}
+    {% url 'carrito_detail' as url_carrito %}
+    {% url 'pedido_list' as url_pedidos %}
+    {% url 'direccion_list' as url_direcciones %}
+    {% url 'entrega_list' as url_entregas %}
+    {% url 'reporte_panel' as url_reportes %}
+    {% url 'admin:index' as url_admin %}
+    {% if url_menu and perms.catalogo.view_producto %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Menu</h5>
+                <p class="card-text">Ver productos disponibles</p>
+                <a href="{{ url_menu }}" class="btn btn-primary btn-lg w-100">Ir al menu</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_carrito and perms.pedidos.add_pedido %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Carrito</h5>
+                <p class="card-text">Armá tu pedido</p>
+                <a href="{{ url_carrito }}" class="btn btn-primary btn-lg w-100">Ir al carrito</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_pedidos and perms.pedidos.view_pedido %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Pedidos</h5>
+                <p class="card-text">Ver tus pedidos</p>
+                <a href="{{ url_pedidos }}" class="btn btn-primary btn-lg w-100">Ver pedidos</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_direcciones and perms.cuentas.view_direccion %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Mis direcciones</h5>
+                <p class="card-text">Gestionar direcciones de entrega</p>
+                <a href="{{ url_direcciones }}" class="btn btn-primary btn-lg w-100">Gestionar direcciones</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_entregas and perms.pedidos.despachar_pedido %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Entregas</h5>
+                <p class="card-text">Gestionar entregas</p>
+                <a href="{{ url_entregas }}" class="btn btn-primary btn-lg w-100">Ver entregas</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_reportes and perms.pedidos.ver_reportes %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Reportes</h5>
+                <p class="card-text">Ver panel de reportes</p>
+                <a href="{{ url_reportes }}" class="btn btn-primary btn-lg w-100">Ver reportes</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if url_admin and user.is_staff %}
+    <div class="col-md-4">
+        <div class="card h-100 shadow-sm">
+            <div class="card-body">
+                <h5 class="card-title">Administracion</h5>
+                <p class="card-text">Panel de administracion</p>
+                <a href="{{ url_admin }}" class="btn btn-primary btn-lg w-100">Ir al admin</a>
+            </div>
+        </div>
+    </div>
+    {% endif %}
+    {% if not perms.catalogo.view_producto and not perms.pedidos.add_pedido and not perms.pedidos.view_pedido and not perms.cuentas.view_direccion and not perms.pedidos.despachar_pedido and not perms.pedidos.ver_reportes and not user.is_staff %}
+    <div class="col-12">
+        <p class="text-muted">Aun no hay modulos disponibles</p>
+    </div>
+    {% endif %}
+</div>
+{% endblock %}
