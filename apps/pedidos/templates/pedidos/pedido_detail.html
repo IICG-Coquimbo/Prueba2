@@ -1,0 +1,74 @@
+{% extends "base.html" %}
+
+{% block title %}Pedido #{{ object.pk }} | Cafe Rincon{% endblock %}
+
+{% block extra_head %}
+<meta http-equiv="refresh" content="15">
+{% endblock %}
+
+{% block content %}
+<div class="d-flex justify-content-between align-items-start mb-3">
+  <div>
+    <h1 class="h3 mb-1">Pedido #{{ object.pk }}</h1>
+    <p class="mb-0"><strong>Estado:</strong> {{ object.get_estado_display }}</p>
+  </div>
+  {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+  <a href="{% url 'pedidos:pedido_estado' object.pk %}" class="btn btn-primary btn-lg">Cambiar estado</a>
+  {% endif %}
+</div>
+
+{% if mostrar_contacto %}
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5">Contacto</h2>
+    <p class="mb-1"><strong>Cliente:</strong> {{ object.cliente.get_username }}</p>
+    {% if object.cliente.perfil %}
+    <p class="mb-1"><strong>Telefono:</strong> {{ object.cliente.perfil.telefono }}</p>
+    {% endif %}
+    {% if object.direccion %}
+    <p class="mb-1"><strong>Direccion:</strong> {{ object.direccion.direccion }}</p>
+    {% if object.direccion.referencia %}<p class="mb-0"><strong>Referencia:</strong> {{ object.direccion.referencia }}</p>{% endif %}
+    {% endif %}
+  </div>
+</div>
+{% endif %}
+
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5">Items</h2>
+    <ul class="mb-0">
+      {% for item in object.items.all %}
+      <li>
+        {{ item.cantidad }} x {{ item.producto.nombre }} - ${{ item.precio_unitario|floatformat:"0g" }}
+        {% for opcion in item.opciones.all %}
+          <span class="text-muted">({{ opcion.get_tipo_display }}: {{ opcion.nombre }})</span>
+        {% endfor %}
+      </li>
+      {% empty %}
+      <li>Sin items.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="card mb-3">
+  <div class="card-body">
+    <p class="mb-1">Subtotal: <strong>${{ object.subtotal|floatformat:"0g" }}</strong></p>
+    <p class="mb-1">Descuento: <strong>${{ object.descuento|floatformat:"0g" }}</strong></p>
+    <p class="mb-0 fs-5">Total: <strong>${{ object.total|floatformat:"0g" }}</strong></p>
+  </div>
+</div>
+
+<div class="card">
+  <div class="card-body">
+    <h2 class="h5">Historial de estado</h2>
+    <ul class="mb-0">
+      {% for h in object.historial.all %}
+      <li>{{ h.fecha|date:"d/m/Y H:i" }} - {{ h.get_estado_display }}{% if h.usuario %} ({{ h.usuario.get_username }}){% endif %}</li>
+      {% empty %}
+      <li>Sin historial.</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+{% endblock %}

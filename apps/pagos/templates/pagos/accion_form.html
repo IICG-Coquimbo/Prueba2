@@ -1,0 +1,17 @@
+{% extends "base.html" %}
+
+{% block title %}{% if titulo %}{{ titulo }} | {% endif %}Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">{% if titulo %}{{ titulo }}{% else %}Accion{% endif %}</h1>
+{% if pago %}
+<div class="alert alert-info">
+  Monto a pagar: <strong>${{ pago.monto|floatformat:"0g" }}</strong>
+</div>
+{% endif %}
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-primary btn-lg">Confirmar</button>
+</form>
+{% endblock %}

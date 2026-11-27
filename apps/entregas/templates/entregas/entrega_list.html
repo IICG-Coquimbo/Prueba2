@@ -1,0 +1,25 @@
+{% extends "base.html" %}
+
+{% block title %}Entregas | Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">Entregas</h1>
+
+{% for pedido in object_list %}
+<div class="card mb-3">
+  <div class="card-body">
+    <h2 class="h5 mb-1">Pedido #{{ pedido.pk }}</h2>
+    <p class="mb-1 text-muted">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+    <p class="mb-1"><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+    {% if pedido.direccion %}
+    <p class="mb-1"><strong>Direccion:</strong> {{ pedido.direccion.direccion }}</p>
+    {% if pedido.direccion.referencia %}<p class="mb-1"><strong>Referencia:</strong> {{ pedido.direccion.referencia }}</p>{% endif %}
+    {% endif %}
+    <p class="mb-2"><strong>Cliente:</strong> {{ pedido.cliente.get_username }}{% if pedido.cliente.perfil %} - {{ pedido.cliente.perfil.telefono }}{% endif %}</p>
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Cambiar estado</a>
+  </div>
+</div>
+{% empty %}
+<div class="alert alert-info">No hay entregas para mostrar.</div>
+{% endfor %}
+{% endblock %}

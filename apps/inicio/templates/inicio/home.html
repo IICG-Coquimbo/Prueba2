@@ -1,0 +1,111 @@
+{% extends "base.html" %}
+
+{% block content %}
+<div class="row">
+  <div class="col-12">
+    <h1 class="h3">Hola, {{ user.username }}</h1>
+    <p class="lead">Tu rol: {{ rol }}</p>
+  </div>
+</div>
+
+{% if not modulos %}
+<div class="row">
+  <div class="col-12">
+    <p>Aun no hay modulos disponibles</p>
+  </div>
+</div>
+{% endif %}
+
+<div class="row row-cols-1 row-cols-md-2 row-cols-lg-3 g-3">
+  {% url 'catalogo:producto_list' as url_menu %}
+  {% if url_menu and perms.catalogo.view_producto %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Menu</h2>
+        <p class="card-text">Ver la carta de Cafe Rincon.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_menu }}">Ir a Menu</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'pedidos:carrito_detail' as url_carrito %}
+  {% if url_carrito and perms.pedidos.add_pedido %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Carrito</h2>
+        <p class="card-text">Revisa tu pedido en preparacion.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_carrito }}">Ir al Carrito</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'pedidos:pedido_list' as url_pedidos %}
+  {% if url_pedidos and perms.pedidos.view_pedido %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">{% if perms.pedidos.add_pedido %}Mis pedidos{% else %}Pedidos{% endif %}</h2>
+        <p class="card-text">Consulta el estado de los pedidos.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_pedidos }}">Ver pedidos</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'entregas:entrega_list' as url_entregas %}
+  {% if url_entregas and perms.pedidos.despachar_pedido %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Entregas</h2>
+        <p class="card-text">Gestiona las entregas en curso.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_entregas }}">Ver entregas</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'reportes:reporte_panel' as url_reportes %}
+  {% if url_reportes and perms.pedidos.ver_reportes %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Reportes</h2>
+        <p class="card-text">Revisa los reportes del negocio.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_reportes }}">Ver reportes</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'cuentas:direccion_list' as url_direcciones %}
+  {% if url_direcciones and perms.cuentas.view_direccion %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Mis direcciones</h2>
+        <p class="card-text">Administra tus direcciones de entrega.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_direcciones }}">Ver direcciones</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+
+  {% url 'admin:index' as url_admin %}
+  {% if url_admin and user.is_staff %}
+  <div class="col">
+    <div class="card h-100">
+      <div class="card-body d-flex flex-column">
+        <h2 class="card-title h5">Administracion</h2>
+        <p class="card-text">Accede al administrador de Django.</p>
+        <a class="btn btn-lg btn-primario w-100 mt-auto" href="{{ url_admin }}">Ir a Administracion</a>
+      </div>
+    </div>
+  </div>
+  {% endif %}
+</div>
+{% endblock %}

@@ -1,0 +1,34 @@
+{% extends "base.html" %}
+
+{% block title %}Pedidos | Cafe Rincon{% endblock %}
+
+{% block content %}
+<h1 class="h3 mb-3">Pedidos</h1>
+
+{% for pedido in object_list %}
+<div class="card mb-3">
+  <div class="card-body">
+    <div class="d-flex justify-content-between align-items-start">
+      <div>
+        <h2 class="h5 mb-1">Pedido #{{ pedido.pk }}</h2>
+        <p class="mb-1 text-muted">{{ pedido.creado|date:"d/m/Y H:i" }}</p>
+        <p class="mb-1"><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+      </div>
+      <a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="btn btn-outline-primary btn-sm">Ver detalle</a>
+    </div>
+    <p class="mb-2"><strong>Productos:</strong>
+      {% for item in pedido.items.all %}
+        {{ item.cantidad }} x {{ item.producto.nombre }}{% for opcion in item.opciones.all %} ({{ opcion.get_tipo_display }}: {{ opcion.nombre }}){% endfor %}{% if not forloop.last %}, {% endif %}
+      {% empty %}
+        Sin items
+      {% endfor %}
+    </p>
+    {% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+    <a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Cambiar estado</a>
+    {% endif %}
+  </div>
+</div>
+{% empty %}
+<div class="alert alert-info">No hay pedidos para mostrar.</div>
+{% endfor %}
+{% endblock %}
