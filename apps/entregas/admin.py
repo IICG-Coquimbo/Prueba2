@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import Entrega
+
+
+@admin.register(Entrega)
+class EntregaAdmin(admin.ModelAdmin):
+    pass

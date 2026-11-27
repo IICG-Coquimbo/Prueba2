@@ -1,3 +1,8 @@
 from django.contrib import admin
 
-# Register your models here.
+from .models import CodigoDescuento
+
+
+@admin.register(CodigoDescuento)
+class CodigoDescuentoAdmin(admin.ModelAdmin):
+    pass
