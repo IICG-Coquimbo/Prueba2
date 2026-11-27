@@ -1,0 +1,11 @@
+{% extends 'base.html' %}
+{% block title %}Cambiar estado - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Cambiar estado del pedido #{{ pedido.pk }}</h2>
+<form method="post" action="">
+    {% csrf_token %}
+    {% include "parciales/form_campos.html" %}
+    <button type="submit" class="btn btn-primary btn-lg w-100">Cambiar estado</button>
+    <a href="{% url 'pedidos:pedido_detail' pedido.pk %}" class="btn btn-secondary mt-3">Cancelar</a>
+</form>
+{% endblock %}

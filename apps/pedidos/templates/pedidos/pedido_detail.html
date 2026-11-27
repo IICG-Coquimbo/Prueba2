@@ -1,0 +1,72 @@
+{% extends 'base.html' %}
+{% block title %}Pedido #{{ pedido.pk }} - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Pedido #{{ pedido.pk }}</h2>
+<p><strong>Cliente:</strong> {{ pedido.cliente.username }}</p>
+<p><strong>Estado:</strong> {{ pedido.get_estado_display }}</p>
+<p><strong>Metodo de pago:</strong> {{ pedido.get_metodo_pago_display }}</p>
+<p><strong>Total:</strong> ${{ pedido.total|floatformat:"0g" }}</p>
+<p><strong>Creado:</strong> {{ pedido.creado|date:"d/m/Y H:i" }}</p>
+
+<h3>Items</h3>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Opciones</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in pedido.items.all %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td>
+                    {% for opcion in item.opciones.all %}
+                    {{ opcion.nombre }} ({{ opcion.get_tipo_display }})
+                    {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    -
+                    {% endfor %}
+                </td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="4">Sin items.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+<h3>Historial de estados</h3>
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Estado</th>
+                <th>Fecha</th>
+                <th>Usuario</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for h in pedido.historial.all %}
+            <tr>
+                <td>{{ h.get_estado_display }}</td>
+                <td>{{ h.fecha|date:"d/m/Y H:i" }}</td>
+                <td>{{ h.user.username|default:"-" }}</td>
+            </tr>
+            {% empty %}
+            <tr><td colspan="3">Sin historial.</td></tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+
+{% if perms.pedidos.preparar_pedido or perms.pedidos.despachar_pedido %}
+<a href="{% url 'pedidos:pedido_estado' pedido.pk %}" class="btn btn-primary btn-lg w-100">Cambiar estado</a>
+{% endif %}
+<a href="{% url 'pedidos:pedido_list' %}" class="btn btn-secondary mt-3">Volver</a>
+{% endblock %}

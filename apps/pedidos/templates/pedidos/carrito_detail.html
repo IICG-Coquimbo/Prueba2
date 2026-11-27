@@ -1,0 +1,60 @@
+{% extends 'base.html' %}
+{% block title %}Carrito - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Mi carrito</h2>
+{% if items %}
+<div class="table-responsive">
+    <table class="table table-striped">
+        <thead>
+            <tr>
+                <th>Producto</th>
+                <th>Opciones</th>
+                <th>Cantidad</th>
+                <th>Precio unitario</th>
+                <th>Accion</th>
+            </tr>
+        </thead>
+        <tbody>
+            {% for item in items %}
+            <tr>
+                <td>{{ item.producto.nombre }}</td>
+                <td>
+                    {% for opcion in item.opciones.all %}
+                    {{ opcion.nombre }}
+                    {% if not forloop.last %}, {% endif %}
+                    {% empty %}
+                    -
+                    {% endfor %}
+                </td>
+                <td>{{ item.cantidad }}</td>
+                <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+                <td>
+                    <a href="{% url 'pedidos:item_quitar' item.pk %}" class="btn btn-sm btn-danger">Quitar</a>
+                </td>
+            </tr>
+            {% endfor %}
+        </tbody>
+    </table>
+</div>
+<div class="row mb-4">
+    <div class="col-md-4"><strong>Subtotal:</strong> ${{ carrito.subtotal|floatformat:"0g" }}</div>
+    <div class="col-md-4"><strong>Descuento:</strong> ${{ carrito.descuento|floatformat:"0g" }}</div>
+    <div class="col-md-4"><strong>Total:</strong> ${{ carrito.total|floatformat:"0g" }}</div>
+</div>
+<form method="post" action="{% url 'pedidos:carrito_codigo' %}" class="mb-4">
+    <h3>Aplicar codigo de descuento</h3>
+    {% csrf_token %}
+    {{ form_codigo.non_field_errors }}
+    {{ form_codigo.codigo.errors }}
+    <label for="{{ form_codigo.codigo.id_for_label }}">{{ form_codigo.codigo.label }}</label>
+    {{ form_codigo.codigo }}
+    <button type="submit" class="btn btn-primary mt-2">Aplicar</button>
+</form>
+{% if perms.pedidos.add_pedido %}
+<a href="{% url 'pedidos:carrito_confirmar' %}" class="btn btn-primary btn-lg w-100">Confirmar pedido</a>
+{% endif %}
+{% else %}
+<p class="text-muted">Tu carrito esta vacio.</p>
+{% endif %}
+<a href="{% url 'catalogo:producto_list' %}" class="btn btn-secondary mt-3">Seguir comprando</a>
+{% endblock %}
