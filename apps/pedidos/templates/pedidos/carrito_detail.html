@@ -1,0 +1,76 @@
+{% extends 'base.html' %}
+{% block title %}Carrito - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="row">
+  <div class="col-12 col-md-8">
+    <h2>Carrito</h2>
+    {% if carrito.items.exists %}
+    <table class="table">
+      <thead>
+        <tr>
+          <th>Producto</th>
+          <th>Precio unitario</th>
+          <th>Cantidad</th>
+          <th>Subtotal</th>
+          <th>Accion</th>
+        </tr>
+      </thead>
+      <tbody>
+        {% for item in carrito.items.all %}
+        <tr>
+          <td>{{ item.producto.nombre }}</td>
+          <td>${{ item.precio_unitario|floatformat:"0g" }}</td>
+          <td>{{ item.cantidad }}</td>
+          <td>${{ item.cantidad|mul:item.precio_unitario|floatformat:"0g" }}</td>
+          <td>
+            <form method="post" action="{% url 'pedidos:item_quitar' item.pk %}" class="d-inline" onsubmit="return confirm('¿Quieres quitar este item?');">
+              {% csrf_token %}
+              <button type="submit" class="btn btn-danger btn-sm">Quitar</button>
+            </form>
+          </td>
+        </tr>
+        {% endfor %}
+      </tbody>
+    </table>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <strong>Subtotal: ${{ carrito.subtotal|floatformat:"0g" }}</strong>
+      {% if carrito.descuento > 0 %}
+      <span class="text-success">Descuento: -${{ carrito.descuento|floatformat:"0g" }}</span>
+      {% endif %}
+    </div>
+    <div class="d-flex justify-content-between align-items-center mb-3">
+      <strong>Total: ${{ carrito.total|floatformat:"0g" }}</strong>
+    </div>
+    {% if carrito.codigo_descuento %}
+    <p class="text-success">Codigo aplicado: {{ carrito.codigo_descuento.codigo }} (-{{ carrito.codigo_descuento.porcentaje }}%)</p>
+    {% endif %}
+    <form method="post" action="{% url 'pedidos:carrito_codigo' %}">
+      {% csrf_token %}
+      <div class="input-group mb-3">
+        {{ form.codigo }}
+        <button type="submit" class="btn btn-primario">Aplicar codigo</button>
+      </div>
+    </form>
+    {% if perms.pedidos.add_pedido %}
+    <a href="{% url 'pedidos:carrito_confirmar' %}" class="btn btn-primario btn-lg w-100">Confirmar pedido</a>
+    {% endif %}
+    {% else %}
+    <div class="alert alert-info">Tu carrito esta vacio.</div>
+    <a href="{% url 'catalogo:producto_list' %}" class="btn btn-primario">Ver menu</a>
+    {% endif %}
+  </div>
+  <div class="col-12 col-md-4">
+    <div class="card">
+      <div class="card-body">
+        <h5>Resumen</h5>
+        <p>Items: {{ carrito.items.count }}</p>
+        <p>Subtotal: ${{ carrito.subtotal|floatformat:"0g" }}</p>
+        {% if carrito.descuento > 0 %}
+        <p class="text-success">Descuento: -${{ carrito.descuento|floatformat:"0g" }}</p>
+        {% endif %}
+        <p class="fw-bold">Total: ${{ carrito.total|floatformat:"0g" }}</p>
+      </div>
+    </div>
+  </div>
+</div>
+{% endblock %}

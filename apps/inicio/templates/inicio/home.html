@@ -1,0 +1,31 @@
+{% extends 'base.html' %}
+{% block title %}Inicio - Cafe Rincon{% endblock %}
+{% block content %}
+<div class="row mb-4">
+  <div class="col-12">
+    <h2>Hola, {{ user.first_name|default:user.username }}!</h2>
+    <p class="text-muted">Rol: {{ user.groups.first.name|default:"Sin rol asignado" }}</p>
+  </div>
+</div>
+
+<div class="row row-cols-1 row-cols-sm-2 row-cols-md-3 row-cols-lg-4 g-4">
+  {% if modulos %}
+    {% for modulo in modulos %}
+    <div class="col">
+      <div class="card h-100 shadow-sm">
+        <div class="card-body text-center">
+          <h5 class="card-title">{{ modulo.label }}</h5>
+          {% if modulo.url %}
+            <a href="{{ modulo.url }}" class="btn btn-primario w-100">Ir</a>
+          {% endif %}
+        </div>
+      </div>
+    </div>
+    {% endfor %}
+  {% else %}
+    <div class="col-12">
+      <p>Aun no hay modulos disponibles.</p>
+    </div>
+  {% endif %}
+</div>
+{% endblock %}

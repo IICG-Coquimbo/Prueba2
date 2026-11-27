@@ -1,0 +1,14 @@
+{% extends 'base.html' %}
+{% block title %}Confirmar pedido - Cafe Rincon{% endblock %}
+{% block content %}
+<h2>Confirmar pedido</h2>
+<form method="post" action="{% url 'pedidos:carrito_confirmar' %}">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <div class="alert alert-info mt-3">
+    <strong>Total a pagar:</strong> ${{ carrito.total|floatformat:"0g" }}
+  </div>
+  <button type="submit" class="btn btn-primario btn-lg w-100">Confirmar pedido</button>
+  <a href="{% url 'pedidos:carrito' %}" class="btn btn-outline-secondary mt-2 w-100">Volver al carrito</a>
+</form>
+{% endblock %}
