@@ -1,0 +1,13 @@
+{% extends "base.html" %}
+
+{% block content %}
+<h1>{{ titulo|default:"Pasarela de pago" }}</h1>
+<p>Pasarela simulada</p>
+<p>Referencia: {{ pago.referencia }}</p>
+<p>Monto: ${{ pago.monto|floatformat:"0g" }}</p>
+<form method="post">
+  {% csrf_token %}
+  {% include "parciales/form_campos.html" %}
+  <button type="submit" class="btn btn-lg btn-primary">Confirmar</button>
+</form>
+{% endblock %}
